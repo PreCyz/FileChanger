@@ -1,5 +1,7 @@
 package pg.picturefilechanger;
 
+import static pg.picturefilechanger.exceptions.ProgramException.ErrorCode.NO_ARGUMENTS;
+import static pg.picturefilechanger.exceptions.ProgramException.ErrorCode.NULL_ARGUMENT;
 import pg.picturefilechanger.exceptions.ProgramException;
 
 /**
@@ -34,14 +36,16 @@ public class PictureFileChanger {
         fileChanger = new FileChanger(args);
     }
 
-    protected static void argumentsValidation(String[] args) throws ProgramException {
+    protected static void argumentsValidation(String[] args) 
+            throws ProgramException {
+        
         if(args == null || args.length == 0){
-            throw new ProgramException(ProgramException.ErrorCode.NO_ARGUMENTS, null);
+            throw new ProgramException(NO_ARGUMENTS, null);
         }
         
         for(String arg : args){
             if(isArgumentEmpty(arg)){
-                throw new ProgramException(ProgramException.ErrorCode.NULL_ARGUMENT, arg);
+                throw new ProgramException(NULL_ARGUMENT, arg);
             }
         }
     }
