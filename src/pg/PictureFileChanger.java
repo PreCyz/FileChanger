@@ -1,5 +1,7 @@
-package pg.picturefilechanger;
+package pg;
 
+import pg.picturefilechanger.AbstractFileChanger;
+import pg.picturefilechanger.impl.FileChangerImpl;
 import static pg.picturefilechanger.exceptions.ProgramException.ErrorCode.NO_ARGUMENTS;
 import static pg.picturefilechanger.exceptions.ProgramException.ErrorCode.NULL_ARGUMENT;
 import pg.picturefilechanger.exceptions.ProgramException;
@@ -10,7 +12,7 @@ import pg.picturefilechanger.exceptions.ProgramException;
  */
 public class PictureFileChanger {
     
-    private static FileChanger fileChanger;
+    private static AbstractFileChanger fileChanger;
 
     /**
      * @param args the command line arguments
@@ -30,10 +32,11 @@ public class PictureFileChanger {
     protected static void runProgram(String[] args) throws ProgramException {
         argumentsValidation(args);
         prepareObjects(args);
+        fileChanger.run();
     }
 
     protected static void prepareObjects(String[] args) {
-        fileChanger = new FileChanger(args);
+        fileChanger = new FileChangerImpl(args);
     }
 
     protected static void argumentsValidation(String[] args) 

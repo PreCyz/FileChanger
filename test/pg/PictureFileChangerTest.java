@@ -1,4 +1,4 @@
-package pg.picturefilechanger;
+package pg;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -6,7 +6,7 @@ import pg.picturefilechanger.exceptions.ProgramException;
 
 /**
  *
- * @author Paweł Gawedzki
+ * @author premik
  */
 public class PictureFileChangerTest {
     
@@ -42,6 +42,5 @@ public class PictureFileChangerTest {
     public void testPictureFileChanger_isArgumentEmpty() throws Exception{
         String arg = null;
         assertTrue(PictureFileChanger.isArgumentEmpty(arg));
-    }
-    
+    }   
 }
