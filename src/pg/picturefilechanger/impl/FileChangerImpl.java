@@ -79,8 +79,14 @@ public class FileChangerImpl extends AbstractFileChanger{
     }
 
     private int findFileExtensionMaxIndex(ChangeDetails changeDetails) {
+        File destination = new File(changeDetails.getDestinationDir());
+        if (!destination.exists()) {
+            int newIdx = 0;
+            System.out.println(String.format("Maksymalny indeks dla plików %s=%d", changeDetails.getFileExtension(), newIdx));
+            return newIdx;
+        }
         int max = 1;
-        for (File file : new File(changeDetails.getDestinationDir()).listFiles()) {
+        for (File file : destination.listFiles()) {
             if (file.getName().contains(changeDetails.getFileExtension())) {
                 int num = extractFileIndex(file, changeDetails);
                 if (num > max) {

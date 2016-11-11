@@ -80,15 +80,6 @@ public class FileChangerImplTest {
             assertNotNull(ex);
         }
         
-        properties.put("destination", "");
-        properties.put("nameConnector", "_");
-        try{
-            changer.createMaxIndexMap(properties);
-            fail("Should be NullPointerException");
-        } catch(NullPointerException ex){
-            assertNotNull(ex);
-        }
-        
         properties.put("destination", "d:\\testy\\dst\\");
         properties.put("nameConnector", "");
         try{
@@ -98,6 +89,16 @@ public class FileChangerImplTest {
             assertNotNull(ex);
         }
         
+    }
+    
+    @Test
+    public void givenNotExistingDestinationWhenCreateChangeDetailsThenReturnZeros() {
+        properties.put("destination", "d:\\testy\\notExists\\");
+        Map<String, Integer> indexMap = changer.createMaxIndexMap(properties);
+        assertEquals("Map should not be empty.", 4, indexMap.size());
+        indexMap.entrySet().stream().forEach((entry) -> {
+            assertEquals("Index of "+entry.getKey()+" should be eq 1.", Integer.valueOf(1), entry.getValue());
+        });
     }
 
     @Test
