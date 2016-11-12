@@ -139,7 +139,7 @@ public class FileChangerImplTest {
         changer.createDestinationIfNotExists(details);
         File destination = new File(details.getDestinationDir());
         assertTrue("Destination should exists.", destination.exists());
-        //destination.deleteOnExit();
+        destination.deleteOnExit();
     }
     
     private class FileChanger extends FileChangerImpl{
