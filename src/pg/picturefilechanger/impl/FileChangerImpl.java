@@ -11,9 +11,9 @@ import pg.picturefilechanger.AbstractFileChanger;
  *
  * @author Paweł Gawędzki
  */
-public class FileChangerImpl extends AbstractFileChanger{
-    
-    public FileChangerImpl(String[] params){
+public class FileChangerImpl extends AbstractFileChanger {
+
+    public FileChangerImpl(String[] params) {
         super(params);
     }
 
@@ -22,9 +22,9 @@ public class FileChangerImpl extends AbstractFileChanger{
         Map<String, Integer> maxExtIdxMap = new HashMap<>();
         for (Extentions ext : Extentions.values()) {
             ChangeDetails changeDetails = new ChangeDetails(
-                    null, 
-                    properties.getProperty(Params.destination.name()), 
-                    null, 
+                    null,
+                    properties.getProperty(Params.destination.name()),
+                    null,
                     properties.getProperty(Params.nameConnector.name())
             );
             changeDetails.setFileExtension(ext.name());
@@ -39,12 +39,12 @@ public class FileChangerImpl extends AbstractFileChanger{
         for (File file : dirContent) {
             if (file.isFile()) {
                 processChangeFile(file, idxMap, changeDetails);
-            } else if(file.isDirectory()) {
+            } else if (file.isDirectory()) {
                 String dirPath = String.format("%s%s", file.getPath(), FILE_SEPARATOR);
                 ChangeDetails dirChangeDetails = new ChangeDetails(
-                        dirPath, 
-                        changeDetails.getDestinationDir(), 
-                        changeDetails.getFileNamePrefix(), 
+                        dirPath,
+                        changeDetails.getDestinationDir(),
+                        changeDetails.getFileNamePrefix(),
                         changeDetails.getFileNameIndexConnector()
                 );
                 processChange(idxMap, dirChangeDetails);
@@ -58,9 +58,9 @@ public class FileChangerImpl extends AbstractFileChanger{
             int maxIdx = maxIdxMap.get(fileExt);
             changeDetails.setFileIndex(maxIdx);
             changeDetails.setFileExtension(fileExt);
-            
+
             changeFileName(fileToProces, changeDetails);
-            
+
             maxIdxMap.put(fileExt, ++maxIdx);
         }
     }
@@ -68,24 +68,19 @@ public class FileChangerImpl extends AbstractFileChanger{
     private void changeFileName(File file, ChangeDetails changeDetails) {
         String newName = createFileName(changeDetails);
         if (file.renameTo(new File(newName))) {
-            System.out.println("Zmieniono nazwe pliku [" + file.getName() + "] na [" + newName + "].");
+            System.out.printf("Zmieniono nazwe pliku [%s] na [%s].\n", file.getName(), newName);
         }
     }
 
     private String createFileName(ChangeDetails changeFileDetails) {
-        return changeFileDetails.getDestinationDir() + changeFileDetails.getFileNamePrefix() 
-                + changeFileDetails.getFileNameIndexConnector() + changeFileDetails.getFileIndex() 
+        return changeFileDetails.getDestinationDir() + changeFileDetails.getFileNamePrefix()
+                + changeFileDetails.getFileNameIndexConnector() + changeFileDetails.getFileIndex()
                 + "." + changeFileDetails.getFileExtension();
     }
 
     private int findFileExtensionMaxIndex(ChangeDetails changeDetails) {
         File destination = new File(changeDetails.getDestinationDir());
-        if (!destination.exists()) {
-            int newIdx = 0;
-            System.out.println(String.format("Maksymalny indeks dla plików %s=%d", changeDetails.getFileExtension(), newIdx));
-            return newIdx;
-        }
-        int max = 1;
+        int max = 0;
         for (File file : destination.listFiles()) {
             if (file.getName().contains(changeDetails.getFileExtension())) {
                 int num = extractFileIndex(file, changeDetails);
@@ -94,7 +89,7 @@ public class FileChangerImpl extends AbstractFileChanger{
                 }
             }
         }
-        System.out.println(String.format("Maksymalny indeks dla plików %s=%d", changeDetails.getFileExtension(), max));
+        System.out.printf("Maksymalny indeks dla plików %s=%d.\n", changeDetails.getFileExtension(), max);
         return max;
     }
 
@@ -118,7 +113,7 @@ public class FileChangerImpl extends AbstractFileChanger{
     protected void exitOnPropertiesValidationError(Properties properties) {
         for (Params param : Params.values()) {
             if (properties.getProperty(param.name()) == null || "".equals(properties.getProperty(param.name()))) {
-                System.err.println(String.format("Zła wartość wymaganego argumentu %s[%s]=[%s]", param.name(), param.getMsg(), properties.getProperty(param.name())));
+                System.err.printf("Zła wartość wymaganego argumentu %s[%s]=[%s].\n", param.name(), param.getMsg(), properties.getProperty(param.name()));
                 System.exit(1);
             }
         }
@@ -126,9 +121,9 @@ public class FileChangerImpl extends AbstractFileChanger{
 
     @Override
     protected void displaySourceInfo(Properties properties) {
-        System.out.println(String.format("Zdjęcia wzięte z [%s].", properties.getProperty(Params.source.name())));
+        System.out.printf("Zdjęcia wzięte z [%s].\n", properties.getProperty(Params.source.name()));
     }
-    
+
     @Override
     protected void exitOnEmptyProperties(Properties properties) {
         if (properties.isEmpty()) {
@@ -143,7 +138,7 @@ public class FileChangerImpl extends AbstractFileChanger{
         properties.entrySet().stream().forEach((entry) -> {
             sb.append(String.format("%s[%s]=%s %s", entry.getKey(), Params.valueOf(entry.getKey() + "").getMsg(), entry.getValue(), LINE_SEPARATOR));
         });
-        System.out.println(String.format("Program zostanie wykonany z argumentami%s", sb.toString()));
+        System.out.printf("Program zostanie wykonany z argumentami%s\n", sb.toString());
     }
 
     @Override
@@ -154,5 +149,18 @@ public class FileChangerImpl extends AbstractFileChanger{
                 properties.getProperty(Params.filePrefix.name()),
                 properties.getProperty(Params.nameConnector.name()));
         return changeDetails;
+    }
+
+    @Override
+    protected void createDestinationIfNotExists(ChangeDetails changeDetails) {
+        File destFile = new File(changeDetails.getDestinationDir());
+        if (!destFile.exists()) {
+            boolean destCreated = destFile.mkdir();
+            if (destCreated) {
+                System.out.printf("Został utworzony katalog [%s].\n", changeDetails.getDestinationDir());
+            } else {
+                System.out.printf("Katalog [%s] nie został utworzony !!!\n", changeDetails.getDestinationDir());
+            }
+        }
     }
 }

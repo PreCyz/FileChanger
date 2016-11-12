@@ -54,6 +54,7 @@ public abstract class AbstractFileChanger {
         exitOnPropertiesValidationError(properties);
         displaySourceInfo(properties);
         ChangeDetails changeDetails = createChangeDetails(properties);
+        createDestinationIfNotExists(changeDetails);
         Map<String, Integer> maxExtIdxMap = createMaxIndexMap(properties);
         processChange(maxExtIdxMap, changeDetails);
     }
@@ -65,6 +66,7 @@ public abstract class AbstractFileChanger {
     protected abstract void exitOnPropertiesValidationError(Properties properties);
     protected abstract void displaySourceInfo(Properties properties);
     protected abstract ChangeDetails createChangeDetails(Properties properties);
+    protected abstract void createDestinationIfNotExists(ChangeDetails changeDetails);
     protected abstract Map<String, Integer> createMaxIndexMap(Properties properties);
     protected abstract void processChange(Map<String, Integer> maxExtIdxMap, ChangeDetails changeDetails);
 }

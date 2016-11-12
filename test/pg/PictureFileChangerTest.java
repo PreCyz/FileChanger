@@ -41,6 +41,6 @@ public class PictureFileChangerTest {
     @Test
     public void testPictureFileChanger_isArgumentEmpty() throws Exception{
         String arg = null;
-        assertTrue(PictureFileChanger.isArgumentEmpty(arg));
+        assertTrue(PictureFileChanger.empty(arg));
     }   
 }

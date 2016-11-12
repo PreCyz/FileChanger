@@ -15,7 +15,7 @@ public class AbstractFileChangerTest {
     public void givenAbstractFileChangerImplWhenRunThenProperOrder() {
         String expected = "transformArgumentsToProperties,exitOnEmptyProperties"
                 + ",displayPropertiesDetails,exitOnPropertiesValidationError"
-                + ",displaySourceInfo,createChangeDetails,createMaxIndexMap,processChange,";
+                + ",displaySourceInfo,createChangeDetails,createDestinationIfNotExists,createMaxIndexMap,processChange,";
         AbstractFileChangerImpl afc = new AbstractFileChangerImpl();
         afc.run();
         assertEquals(expected, afc.getOrder());
@@ -58,6 +58,11 @@ public class AbstractFileChangerTest {
         protected ChangeDetails createChangeDetails(Properties properties) {
             order += String.format("%s,", "createChangeDetails");
             return null;
+        }
+        
+        @Override
+        protected void createDestinationIfNotExists(ChangeDetails chnageDetails) {
+            order += String.format("%s,", "createDestinationIfNotExists");
         }
         
         @Override

@@ -1,5 +1,6 @@
 package pg.picturefilechanger.impl;
 
+import java.io.File;
 import java.util.Map;
 import java.util.Properties;
 import org.junit.After;
@@ -94,7 +95,11 @@ public class FileChangerImplTest {
     @Test
     public void givenNotExistingDestinationWhenCreateChangeDetailsThenReturnZeros() {
         properties.put("destination", "d:\\testy\\notExists\\");
+        ChangeDetails changeDetails = changer.createChangeDetails(properties);
+        changer.createDestinationIfNotExists(changeDetails);
+        
         Map<String, Integer> indexMap = changer.createMaxIndexMap(properties);
+        
         assertEquals("Map should not be empty.", 4, indexMap.size());
         indexMap.entrySet().stream().forEach((entry) -> {
             assertEquals("Index of "+entry.getKey()+" should be eq 1.", Integer.valueOf(1), entry.getValue());
@@ -126,6 +131,16 @@ public class FileChangerImplTest {
         }
     }
     
+    @Test
+    public void givenNoDestinationWhenCreateDestinationIfNotExistsThenCreateDestinationDirectory() {
+        properties.put("destination", "d:\\notExists\\");
+        ChangeDetails details = changer.createChangeDetails(properties);
+        changer.createDestinationIfNotExists(details);
+        File destination = new File(details.getDestinationDir());
+        assertTrue("Destination should exists.", destination.exists());
+        //destination.deleteOnExit();
+    }
+    
     private class FileChanger extends FileChangerImpl{
 
         public FileChanger(String[] params) {
@@ -134,7 +149,7 @@ public class FileChangerImplTest {
 
         @Override
         public Properties transformArgumentsToProperties(String[] args) {
-            return super.transformArgumentsToProperties(args); //To change body of generated methods, choose Tools | Templates.
+            return super.transformArgumentsToProperties(args);
         }
     
     }
