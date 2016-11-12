@@ -13,8 +13,8 @@ import pg.picturefilechanger.AbstractFileChanger;
  */
 public class FileChangerImpl extends AbstractFileChanger {
 
-    public FileChangerImpl(String[] params) {
-        super(params);
+    public FileChangerImpl(String[] params, Properties bundle) {
+        super(params, bundle);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class FileChangerImpl extends AbstractFileChanger {
     private void changeFileName(File file, ChangeDetails changeDetails) {
         String newName = createFileName(changeDetails);
         if (file.renameTo(new File(newName))) {
-            System.out.printf("Zmieniono nazwe pliku [%s] na [%s].\n", file.getName(), newName);
+            System.out.println(messageHelper.msg("file.name.changed", file.getName(), newName));
         }
     }
 
@@ -89,7 +89,7 @@ public class FileChangerImpl extends AbstractFileChanger {
                 }
             }
         }
-        System.out.printf("Maksymalny indeks dla plików %s=%d.\n", changeDetails.getFileExtension(), max);
+        System.out.println(messageHelper.msg("file.maximum.idx", changeDetails.getFileExtension(), max));
         return max;
     }
 
@@ -113,7 +113,9 @@ public class FileChangerImpl extends AbstractFileChanger {
     protected void exitOnPropertiesValidationError(Properties properties) {
         for (Params param : Params.values()) {
             if (properties.getProperty(param.name()) == null || "".equals(properties.getProperty(param.name()))) {
-                System.err.printf("Zła wartość wymaganego argumentu %s[%s]=[%s].\n", param.name(), param.getMsg(), properties.getProperty(param.name()));
+                System.err.println(messageHelper.msg("argument.wrong.value", 
+                        param.name(), param.getMsg(), properties.getProperty(param.name()))
+                );
                 System.exit(1);
             }
         }
@@ -121,13 +123,13 @@ public class FileChangerImpl extends AbstractFileChanger {
 
     @Override
     protected void displaySourceInfo(Properties properties) {
-        System.out.printf("Zdjęcia wzięte z [%s].\n", properties.getProperty(Params.source.name()));
+        System.out.println(messageHelper.msg("file.source", properties.getProperty(Params.source.name())));
     }
 
     @Override
     protected void exitOnEmptyProperties(Properties properties) {
         if (properties.isEmpty()) {
-            System.err.println("Nie podałeś wymaganych argumentów.");
+            System.err.println("argument.empty");
             System.exit(0);
         }
     }
@@ -136,9 +138,15 @@ public class FileChangerImpl extends AbstractFileChanger {
     protected void displayPropertiesDetails(Properties properties) {
         StringBuilder sb = new StringBuilder(LINE_SEPARATOR);
         properties.entrySet().stream().forEach((entry) -> {
-            sb.append(String.format("%s[%s]=%s %s", entry.getKey(), Params.valueOf(entry.getKey() + "").getMsg(), entry.getValue(), LINE_SEPARATOR));
+            sb.append(
+                    String.format("%s[%s]=%s %s", 
+                            entry.getKey(), 
+                            Params.valueOf(entry.getKey() + "").getMsg(), 
+                            entry.getValue(), 
+                            LINE_SEPARATOR)
+            );
         });
-        System.out.printf("Program zostanie wykonany z argumentami%s\n", sb.toString());
+        System.out.println(messageHelper.msg("argument.details", sb.toString()));
     }
 
     @Override
@@ -157,9 +165,9 @@ public class FileChangerImpl extends AbstractFileChanger {
         if (!destFile.exists()) {
             boolean destCreated = destFile.mkdir();
             if (destCreated) {
-                System.out.printf("Został utworzony katalog [%s].\n", changeDetails.getDestinationDir());
+                System.out.println(messageHelper.msg("file.dir.created", changeDetails.getDestinationDir()));
             } else {
-                System.out.printf("Katalog [%s] nie został utworzony !!!\n", changeDetails.getDestinationDir());
+                System.out.printf(messageHelper.msg("file.dir.notCreated", changeDetails.getDestinationDir()));
             }
         }
     }

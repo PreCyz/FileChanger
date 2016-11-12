@@ -1,6 +1,9 @@
 package pg;
 
+import java.io.IOException;
+import java.util.Properties;
 import pg.picturefilechanger.AbstractFileChanger;
+import pg.picturefilechanger.MessageHelper;
 import pg.picturefilechanger.impl.FileChangerImpl;
 import static pg.picturefilechanger.exceptions.ProgramException.ErrorCode.NO_ARGUMENTS;
 import static pg.picturefilechanger.exceptions.ProgramException.ErrorCode.NULL_ARGUMENT;
@@ -31,7 +34,8 @@ public class PictureFileChanger {
 
     protected static void runProgram(String[] args) throws ProgramException {
         argumentsValidation(args);
-        createFileChanger(args);
+        Properties bundle = readBundles();
+        createFileChanger(args, bundle);
         fileChanger.run();
     }
 
@@ -51,8 +55,21 @@ public class PictureFileChanger {
         return value == null || value.length() == 0;
     }
     
-    protected static void createFileChanger(String[] args) {
-        fileChanger = new FileChangerImpl(args);
+    protected static void createFileChanger(String[] args, Properties bundle) {
+        fileChanger = new FileChangerImpl(args, bundle);
+    }
+
+    public static Properties readBundles() {
+        Properties bundle = new Properties();
+        try {
+            bundle.load(PictureFileChanger.class.getResourceAsStream("./resources/bundle.properties"));
+            MessageHelper helper = new MessageHelper(bundle);
+            System.out.println(helper.msg("bundle.loaded"));
+        } catch (IOException ex) {
+            System.err.printf("Error during bundle loading. Program will exit. Details: %s", ex.getMessage());
+            System.exit(-1);
+        }
+        return bundle;
     }
 
 }

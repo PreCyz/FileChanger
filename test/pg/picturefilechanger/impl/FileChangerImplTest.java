@@ -7,6 +7,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import pg.PictureFileChanger;
 import pg.picturefilechanger.ChangeDetails;
 
 /**
@@ -144,7 +145,7 @@ public class FileChangerImplTest {
     private class FileChanger extends FileChangerImpl{
 
         public FileChanger(String[] params) {
-            super(params);
+            super(params, PictureFileChanger.readBundles());
         }
 
         @Override

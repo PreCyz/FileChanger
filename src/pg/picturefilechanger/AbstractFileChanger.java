@@ -9,6 +9,8 @@ import java.util.Properties;
  */
 public abstract class AbstractFileChanger {
     protected final String[] params;
+    protected final Properties bundle;
+    protected final MessageHelper messageHelper;
     
     public static final String LINE_SEPARATOR = System.getProperty("line.separator");
     public static final String FILE_SEPARATOR = System.getProperty("file.separator");
@@ -43,8 +45,10 @@ public abstract class AbstractFileChanger {
     }
     
     
-    public AbstractFileChanger(String[] params){
+    public AbstractFileChanger(String[] params, Properties bundle){
         this.params = params;
+        this.bundle = bundle;
+        messageHelper = new MessageHelper(bundle);
     }
     
     public void run(){

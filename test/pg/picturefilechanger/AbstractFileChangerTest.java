@@ -20,6 +20,12 @@ public class AbstractFileChangerTest {
         afc.run();
         assertEquals(expected, afc.getOrder());
     }
+    
+    @Test
+    public void WhenCreateAbstractFileChangerThenMessageHelperNotNull() {
+        AbstractFileChangerImpl afc = new AbstractFileChangerImpl();
+        assertNotNull("Property messgeHelper should not be null.", afc.messageHelper);
+    }
 
     public class AbstractFileChangerImpl extends AbstractFileChanger {
         
@@ -29,7 +35,7 @@ public class AbstractFileChangerTest {
         }
 
         public AbstractFileChangerImpl() {
-            super(null);
+            super(null, null);
         }
 
         @Override

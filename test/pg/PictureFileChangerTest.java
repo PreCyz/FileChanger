@@ -1,5 +1,6 @@
 package pg;
 
+import java.util.Properties;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import pg.picturefilechanger.exceptions.ProgramException;
@@ -9,9 +10,6 @@ import pg.picturefilechanger.exceptions.ProgramException;
  * @author premik
  */
 public class PictureFileChangerTest {
-    
-    public PictureFileChangerTest() {
-    }
     
     @Test
     public void testPictureFileChanger() throws Exception{
@@ -42,5 +40,13 @@ public class PictureFileChangerTest {
     public void testPictureFileChanger_isArgumentEmpty() throws Exception{
         String arg = null;
         assertTrue(PictureFileChanger.empty(arg));
-    }   
+    }
+    
+    @Test
+    public void givenBoundleFileWhenReadBoundleThenSuccess() {
+        Properties bundle = PictureFileChanger.readBundles();
+
+        assertNotNull("Bundle should be created.", bundle);
+        assertTrue("Bundle should not be empty.", !bundle.isEmpty());
+    }
 }
