@@ -28,7 +28,7 @@ public class FileChangerImpl extends AbstractFileChanger {
                     properties.getProperty(Params.nameConnector.name())
             );
             changeDetails.setFileExtension(ext.name());
-            maxExtIdxMap.put(ext.name(), findFileExtensionMaxIndex(changeDetails) + 1);
+            maxExtIdxMap.put(ext.name(), findNextAfterMaxIndex(changeDetails));
         }
         return maxExtIdxMap;
     }
@@ -78,7 +78,7 @@ public class FileChangerImpl extends AbstractFileChanger {
                 + "." + changeFileDetails.getFileExtension();
     }
 
-    private int findFileExtensionMaxIndex(ChangeDetails changeDetails) {
+    private int findNextAfterMaxIndex(ChangeDetails changeDetails) {
         File destination = new File(changeDetails.getDestinationDir());
         int max = 0;
         for (File file : destination.listFiles()) {
@@ -90,7 +90,7 @@ public class FileChangerImpl extends AbstractFileChanger {
             }
         }
         System.out.println(messageHelper.msg("file.maximum.idx", changeDetails.getFileExtension(), max));
-        return max;
+        return max + 1;
     }
 
     private int extractFileIndex(File file, ChangeDetails changeDetails) throws NumberFormatException {
