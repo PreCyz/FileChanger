@@ -1,7 +1,10 @@
 package pg;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import pg.picturefilechanger.AbstractFileChanger;
 import pg.picturefilechanger.MessageHelper;
 import pg.picturefilechanger.impl.FileChangerImpl;
@@ -61,13 +64,21 @@ public class PictureFileChanger {
 
     public static Properties readBundles() {
         Properties bundle = new Properties();
+        InputStream resourceAsStream = null;
         try {
-            bundle.load(PictureFileChanger.class.getResourceAsStream("./resources/bundle.properties"));
+            resourceAsStream = PictureFileChanger.class.getResourceAsStream("./resources/bundle.properties");
+            bundle.load(resourceAsStream);
             MessageHelper helper = new MessageHelper(bundle);
             System.out.println(helper.msg("bundle.loaded"));
         } catch (IOException ex) {
-            System.err.printf("Error during bundle loading. Program will exit. Details: %s", ex.getMessage());
+            System.err.printf("Error during bundle loading. Program will exit. Details: %s\n", ex.getMessage());
             System.exit(-1);
+        } finally {
+            if (resourceAsStream != null) {
+                try {
+                    resourceAsStream.close();
+                } catch (IOException ex) {}
+            }
         }
         return bundle;
     }
