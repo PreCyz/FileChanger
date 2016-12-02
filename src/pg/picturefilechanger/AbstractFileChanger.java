@@ -2,6 +2,8 @@ package pg.picturefilechanger;
 
 import java.util.Map;
 import java.util.Properties;
+import java.util.ResourceBundle;
+import pg.helper.MessageHelper;
 
 /**
  *
@@ -9,11 +11,8 @@ import java.util.Properties;
  */
 public abstract class AbstractFileChanger {
     protected final String[] params;
-    protected final Properties bundle;
+    protected final ResourceBundle bundle;
     protected final MessageHelper messageHelper;
-    
-    public static final String LINE_SEPARATOR = System.getProperty("line.separator");
-    public static final String FILE_SEPARATOR = System.getProperty("file.separator");
     
     public static enum Extentions {
         jpg, jpeg, mp4, gif;
@@ -45,10 +44,10 @@ public abstract class AbstractFileChanger {
     }
     
     
-    public AbstractFileChanger(String[] params, Properties bundle){
+    public AbstractFileChanger(String[] params, ResourceBundle bundle){
         this.params = params;
         this.bundle = bundle;
-        messageHelper = new MessageHelper(bundle);
+        messageHelper = MessageHelper.getInstance(bundle);
     }
     
     public void run(){

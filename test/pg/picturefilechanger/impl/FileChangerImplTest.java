@@ -7,7 +7,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import pg.PictureFileChanger;
+import pg.helper.PropertiesHelper;
 import pg.picturefilechanger.ChangeDetails;
 
 /**
@@ -20,7 +20,7 @@ public class FileChangerImplTest {
     private Properties properties;
         
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         args = new String[]{"source=d:\\testy\\src\\","destination=d:\\testy\\dst\\","extentions=jpg,jpeg,gif,mp4","filePrefix=xperiaM2","nameConnector=_"};
         changer = new FileChanger(args);
         properties = new Properties();
@@ -144,8 +144,8 @@ public class FileChangerImplTest {
     
     private class FileChanger extends FileChangerImpl{
 
-        public FileChanger(String[] params) {
-            super(params, PictureFileChanger.readBundles());
+        public FileChanger(String[] params) throws Exception {
+            super(params, PropertiesHelper.readBundles());
         }
 
         @Override

@@ -54,13 +54,12 @@ public class PropertiesHelper {
         return anyPropertyChanged;
     }
     
-    public static ResourceBundle readBundles() {
+    public static ResourceBundle readBundles() throws ProgramException {
         ResourceBundle bundle = ResourceBundle.getBundle(ProgramConstants.BUNDLE_PATH);
         if (bundle == null) {
-            System.err.printf("Error during bundle loading. Program will exit.%n");
-            System.exit(-1);
+            throw new ProgramException(ErrorCode.LOAD_BUNDLE);
         }
-        MessageHelper helper = new MessageHelper(bundle);
+        MessageHelper helper = MessageHelper.getInstance(bundle);
         System.out.println(helper.getFullMessage("bundle.loaded"));
         return bundle;
     }

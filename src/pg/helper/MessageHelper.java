@@ -6,10 +6,20 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 public class MessageHelper {
+    private static MessageHelper instance = null;
     private ResourceBundle bundle;
+    
+    private MessageHelper(){}
 
-    public MessageHelper(ResourceBundle bundle) {
+    private MessageHelper(ResourceBundle bundle) {
         this.bundle = bundle;
+    }
+    
+    public static MessageHelper getInstance(ResourceBundle bundle) {
+        if (instance == null) {
+            instance = new MessageHelper(bundle);
+        }
+        return instance;
     }
 
     public String getFullMessage(String key) {

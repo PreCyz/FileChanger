@@ -1,9 +1,9 @@
 package pg;
 
-import java.util.Properties;
+import java.util.ResourceBundle;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import pg.picturefilechanger.exceptions.ProgramException;
+import pg.exception.ProgramException;
 
 /**
  *

@@ -1,5 +1,6 @@
 package pg.view;
 
+import com.sun.corba.se.impl.protocol.giopmsgheaders.Message;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -8,6 +9,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import static pg.constant.ProgramConstants.IMG_PATH;
+import static pg.constant.ProgramConstants.RESOURCE_BUNDLE;
+import pg.exception.ProgramException;
+import pg.logger.impl.ConsoleLogger;
+import pg.helper.MessageHelper;
+import pg.helper.ResourceHelper;
+import pg.logger.AppLogger;
 import pg.view.fxml.FXML;
 
 /**
@@ -18,21 +26,30 @@ public class ViewHandler {
     
     private Stage primaryStage;
     private ResourceBundle bundle;
+    private ResourceHelper resourceHelper;
+    private AppLogger logger;
+    private MessageHelper messageHelper;
     
     private ViewHandler() {}
 
     public ViewHandler(Stage primaryStage) {
         this.primaryStage = primaryStage;
-        this.bundle = ResourceBundle.getBundle("pg.resource.bundle", Locale.getDefault());
+        bundle = ResourceBundle.getBundle(RESOURCE_BUNDLE, Locale.getDefault());
+        messageHelper = MessageHelper.getInstance(bundle);
+        resourceHelper = new ResourceHelper();
+        logger = new ConsoleLogger(messageHelper);
     }
     
     public void launchView() throws IOException {
-        //Image icon = new Image(getClass().getClassLoader().getResourceAsStream("pg/resource/img/title_icon.png"));
         Parent root = FXMLLoader.load(FXML.START_VIEW.url(), bundle);
         Scene scene = new Scene(root);
-        
-        //primaryStage.getIcons().add(icon);
-        primaryStage.setTitle("???toBeFixedByBundle");
+        try {
+            Image icon = resourceHelper.readImage(IMG_PATH + "title_icon.png");
+            primaryStage.getIcons().add(icon);
+        } catch (ProgramException ex) {
+            logger.log(ex);
+        }
+        primaryStage.setTitle(bundle.getString("window.title"));
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.show();

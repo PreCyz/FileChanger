@@ -1,14 +1,14 @@
 package pg;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
+import java.util.ResourceBundle;
+import pg.exception.ErrorCode;
+import pg.exception.ProgramException;
+import pg.logger.impl.ConsoleLogger;
+import pg.helper.MessageHelper;
+import pg.helper.PropertiesHelper;
+import pg.logger.AppLogger;
 import pg.picturefilechanger.AbstractFileChanger;
-import pg.picturefilechanger.MessageHelper;
 import pg.picturefilechanger.impl.FileChangerImpl;
-import static pg.picturefilechanger.exceptions.ProgramException.ErrorCode.NO_ARGUMENTS;
-import static pg.picturefilechanger.exceptions.ProgramException.ErrorCode.NULL_ARGUMENT;
-import pg.picturefilechanger.exceptions.ProgramException;
 
 /**
  *
@@ -17,6 +17,7 @@ import pg.picturefilechanger.exceptions.ProgramException;
 public class PictureFileChanger {
     
     private static AbstractFileChanger fileChanger;
+    private static ResourceBundle bundle;
 
     /**
      * @param args the command line arguments
@@ -29,56 +30,34 @@ public class PictureFileChanger {
         try {
             runProgram(args);
         } catch (ProgramException ex) {
+            MessageHelper messageHelper = MessageHelper.getInstance(bundle);
+            AppLogger logger = new ConsoleLogger(messageHelper);
+            logger.log(ex);
             System.err.println(ex.getMessage());
         }
     }
 
     protected static void runProgram(String[] args) throws ProgramException {
         argumentsValidation(args);
-        Properties bundle = readBundles();
+        bundle = PropertiesHelper.readBundles();
         createFileChanger(args, bundle);
         fileChanger.run();
     }
 
     protected static void argumentsValidation(String[] args) throws ProgramException {
         if(args == null || args.length == 0){
-            throw new ProgramException(NO_ARGUMENTS, null);
+            throw new ProgramException(ErrorCode.NO_ARGUMENTS);
         }
         
         for(String arg : args){
-            if(empty(arg)){
-                throw new ProgramException(NULL_ARGUMENT, arg);
+            if(MessageHelper.empty(arg)){
+                throw new ProgramException(ErrorCode.NULL_ARGUMENT, arg);
             }
         }
-    }
-
-    protected static boolean empty(String value) {
-        return value == null || value.length() == 0;
     }
     
-    protected static void createFileChanger(String[] args, Properties bundle) {
+    protected static void createFileChanger(String[] args, ResourceBundle bundle) {
         fileChanger = new FileChangerImpl(args, bundle);
-    }
-
-    public static Properties readBundles() {
-        Properties bundle = new Properties();
-        InputStream resourceAsStream = null;
-        try {
-            resourceAsStream = PictureFileChanger.class.getResourceAsStream("./resources/bundle.properties");
-            bundle.load(resourceAsStream);
-            MessageHelper helper = new MessageHelper(bundle);
-            System.out.println(helper.msg("bundle.loaded"));
-        } catch (IOException ex) {
-            System.err.printf("Error during bundle loading. Program will exit. Details: %s\n", ex.getMessage());
-            System.exit(-1);
-        } finally {
-            if (resourceAsStream != null) {
-                try {
-                    resourceAsStream.close();
-                } catch (IOException ex) {}
-            }
-        }
-        return bundle;
     }
 
 }

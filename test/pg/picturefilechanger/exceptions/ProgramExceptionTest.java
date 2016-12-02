@@ -2,41 +2,68 @@ package pg.picturefilechanger.exceptions;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Before;
+import pg.exception.ErrorCode;
+import pg.exception.ProgramException;
+import pg.helper.MessageHelper;
+import pg.helper.PropertiesHelper;
 
 /**
- *
  * @author Paweł Gawędzki
  */
 public class ProgramExceptionTest {
 
-    @Test
-    public void testProgramException_NO_ARGUMENTS() {
-        ProgramException pe = new ProgramException(ProgramException.ErrorCode.NO_ARGUMENTS, null);
-        
-        assertNotNull(pe);
-        assertEquals("Program uruchomiony bez wymaganych parametrów.", pe.getMessage());
+    private MessageHelper msgHelper;
+
+    @Before
+    public void setUp() throws Exception {
+        msgHelper = MessageHelper.getInstance(PropertiesHelper.readBundles());
     }
-    
+
     @Test
-    public void testProgramException_NULL_ARGUMENT() {
+    public void testProgramException_NO_ARGUMENTS() throws Exception {
+        ProgramException pe = new ProgramException(ErrorCode.NO_ARGUMENTS);
+
+        assertNotNull(pe);
+        assertEquals("Program został uruchomiony bez wymaganych parametrów.", msgHelper.getErrorMsg(pe.getErrorCode()));
+    }
+
+    @Test
+    public void testProgramException_NULL_ARGUMENT() throws Exception {
         String argument = "";
-        ProgramException pe = new ProgramException(ProgramException.ErrorCode.NULL_ARGUMENT, argument);
-        
+        ProgramException pe = new ProgramException(ErrorCode.NULL_ARGUMENT, argument);
+
         assertNotNull(pe);
-        assertEquals(String.format("Parametr [%s] ma wartość null.", argument), pe.getMessage());
+        assertEquals(String.format("Parametr [%s] ma wartość null.", argument),
+                msgHelper.getErrorMsg(pe.getErrorCode(), argument));
     }
-    
+
     @Test
-    public void testProgramException_PREPARATION() {
+    public void testProgramException_PREPARATION() throws Exception {
         String argument = "";
-        ProgramException pe = new ProgramException(ProgramException.ErrorCode.PREPARATION, null);
-        
+        ProgramException pe = new ProgramException(ErrorCode.PREPARATION, argument);
+
         assertNotNull(pe);
-        assertEquals(String.format("Błąd podczas przygotowania obiektów."), pe.getMessage());
+        assertEquals(String.format("Błąd podczas przygotowania obiektów."), msgHelper.getErrorMsg(pe.getErrorCode()));
     }
-    
-    @Test(expected = NullPointerException.class)
-    public void testProgramException_nullParam() {
-        assertNotNull(new ProgramException(null, null));
+
+    @Test
+    public void testProgramException_NULL_ERROR_CODE() {
+        ProgramException programException = new ProgramException(null);
+        assertNotNull(programException);
+        try {
+            programException.getErrorCode();
+            fail("Should be thrown NullPointerException.");
+        } catch (ProgramException ex) {
+            try {
+                ErrorCode errorCode = ex.getErrorCode();
+                assertEquals("Error code should be NULL_ERROR_CODE.", errorCode, ErrorCode.NULL_ERROR_CODE);
+                assertEquals("Message should be taken for error code [NULL_ERROR_CODE]",
+                        "Kod błędu nie może być równy null.", msgHelper.getErrorMsg(errorCode));
+                assertTrue("Flag nullErrorCode should be true.", ex.isNullErrorCode());
+            } catch (ProgramException pe) {
+                fail("Should not be any error at this point.");
+            }
+        }
     }
 }

@@ -40,7 +40,7 @@ public class PropertiesHelperTest {
     }
     
     @Test
-    public void givenBoundleFileWhenReadBoundleThenSuccess() {
+    public void givenBoundleFileWhenReadBoundleThenSuccess() throws Exception {
         ResourceBundle bundle = PropertiesHelper.readBundles();
         assertNotNull("Bundle should be created.", bundle);
     }
