@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import pg.view.fxml.FXML;
 
@@ -26,9 +27,12 @@ public class ViewHandler {
     }
     
     public void launchView() throws IOException {
+        //Image icon = new Image(getClass().getClassLoader().getResourceAsStream("pg/resource/img/title_icon.png"));
         Parent root = FXMLLoader.load(FXML.START_VIEW.url(), bundle);
         Scene scene = new Scene(root);
         
+        //primaryStage.getIcons().add(icon);
+        primaryStage.setTitle("???toBeFixedByBundle");
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.show();

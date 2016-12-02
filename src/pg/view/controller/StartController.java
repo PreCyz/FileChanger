@@ -7,8 +7,12 @@ import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
 
 /**
  * @author Gawa [Paweł Gawędzki]
@@ -18,13 +22,22 @@ public class StartController implements Initializable {
     
     @FXML private TextField coreNameTextField;
     @FXML private ComboBox<String> fileConnectorComboBox;
+    @FXML private TitledPane mandatoryTitledPane;
+    @FXML private TitledPane optionalTitledPane;
+    @FXML private Button runButton;
+    @FXML private Button sourceButton;
+    @FXML private Button destinationButton;
+    @FXML private Button exitButton;
+    @FXML private Label maxIndexesLabel;
+    @FXML private Label sourceLabel;
+    @FXML private Label destinationLabel;
+    @FXML private ListView logListView;
     
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         List<String> list = Arrays.asList(new String[]{"", "-", "_", "+"});
         coreNameTextField.setText("Test");
-        FXCollections.observableList(list);
         fileConnectorComboBox.setItems(FXCollections.observableList(list));
     }
 
