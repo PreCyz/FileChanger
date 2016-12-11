@@ -43,7 +43,7 @@ public class PictureFileChangerTest {
     }
     
     @Test
-    public void givenBoundleFileWhenReadBoundleThenSuccess() {
+    public void givenBundleFileWhenReadBundleThenSuccess() {
         Properties bundle = PictureFileChanger.readBundles();
 
         assertNotNull("Bundle should be created.", bundle);
