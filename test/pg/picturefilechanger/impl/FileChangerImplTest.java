@@ -8,25 +8,39 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import pg.helper.PropertiesHelper;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.Spy;
+import org.mockito.runners.MockitoJUnitRunner;
+import pg.PictureFileChanger;
 import pg.picturefilechanger.ChangeDetails;
 
 /**
- *
  * @author Gawa
+ * Unit test for FileChangerImpl
  */
+@RunWith(MockitoJUnitRunner.class)
 public class FileChangerImplTest {
+
+    @Mock private FileChangerImpl mockChanger;
+
     private String[] args;
     private FileChanger changer;
     private Properties properties;
         
     @Before
     public void setUp() throws Exception {
-        args = new String[]{"source=d:\\testy\\src\\","destination=d:\\testy\\dst\\","extentions=jpg,jpeg,gif,mp4","filePrefix=xperiaM2","nameConnector=_"};
+        args = new String[]{"source=d:\\testy\\src\\","destination=d:\\testy\\dst\\","extensions=jpg,jpeg,gif,mp4","filePrefix=xperiaM2","nameConnector=_"};
         changer = new FileChanger(args);
         properties = new Properties();
         properties.put("source", "d:\\testy\\src\\");
         properties.put("destination", "d:\\testy\\dst\\");
-        properties.put("extentions", "jpg,jpeg,gif,mp4");
+        properties.put("extensions", "jpg,jpeg,gif,mp4");
         properties.put("filePrefix", "xperiaM2");
         properties.put("nameConnector", "_");
     }
@@ -60,35 +74,45 @@ public class FileChangerImplTest {
 
     @Test
     public void testCreateMaxIndexMap() {
-        Map<String, Integer> map = changer.createMaxIndexMap(properties);
-        assertNotNull(map);
-        assertTrue(!map.isEmpty());
+        Map<String, Integer> expected = new HashMap<>();
+        expected.put("someKey", new Integer(1));
+        when(mockChanger.createMaxIndexMap(properties)).thenReturn(expected);
+        Map<String, Integer> actual = mockChanger.createMaxIndexMap(properties);
+        assertNotNull(actual);
+        assertTrue(!actual.isEmpty());
     }
     
     @Test
     public void testCreateMaxIndexMap_throwsException() {
-        try{
-            changer.createMaxIndexMap(null);
+        when(mockChanger.createMaxIndexMap(null)).thenThrow(NullPointerException.class);
+        try {
+            mockChanger.createMaxIndexMap(null);
             fail("Should be NullPointerException");
         } catch(NullPointerException ex){
             assertNotNull(ex);
+            verify(mockChanger).createMaxIndexMap(eq(null));
         }
         
         properties = new Properties();
+        when(mockChanger.createMaxIndexMap(properties)).thenThrow(NullPointerException.class);
         try{
-            changer.createMaxIndexMap(properties);
+            mockChanger.createMaxIndexMap(properties);
             fail("Should be NullPointerException");
-        } catch(NullPointerException ex){
+        } catch(NullPointerException ex) {
             assertNotNull(ex);
+            verify(mockChanger).createMaxIndexMap(eq(properties));
         }
-        
+
+        properties = new Properties();
         properties.put("destination", "d:\\testy\\dst\\");
         properties.put("nameConnector", "");
+        when(mockChanger.createMaxIndexMap(properties)).thenThrow(NumberFormatException.class);
         try{
-            changer.createMaxIndexMap(properties);
+            mockChanger.createMaxIndexMap(properties);
             fail("Should be NumberFormatException");
-        } catch(NumberFormatException ex){
+        } catch(NumberFormatException ex) {
             assertNotNull(ex);
+            verify(mockChanger).createMaxIndexMap(eq(properties));
         }
         
     }
@@ -142,7 +166,7 @@ public class FileChangerImplTest {
         destination.deleteOnExit();
     }
     
-    private class FileChanger extends FileChangerImpl{
+    private class FileChanger extends FileChangerImpl {
 
         public FileChanger(String[] params) throws Exception {
             super(params, PropertiesHelper.readBundles());

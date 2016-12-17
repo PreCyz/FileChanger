@@ -30,7 +30,7 @@ public abstract class AbstractFileChanger {
     public static enum Params {
         source("Folder źródłowy"),
         destination("Folder docelowy"),
-        extentions("Rozszerzenia plików"),
+        extensions("Rozszerzenia plików"),
         filePrefix("Prefix nazwy nowego pliku"),
         nameConnector("Łącznik nazwy pliku z jego indexem");
 

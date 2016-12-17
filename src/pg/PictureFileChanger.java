@@ -23,10 +23,10 @@ public class PictureFileChanger {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        runProgrmaWithExceptionHandling(args);
+        runProgramWithExceptionHandling(args);
     }
 
-    public static void runProgrmaWithExceptionHandling(String[] args) {
+    public static void runProgramWithExceptionHandling(String[] args) {
         try {
             runProgram(args);
         } catch (ProgramException ex) {

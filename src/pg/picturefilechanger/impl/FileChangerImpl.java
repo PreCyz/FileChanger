@@ -100,7 +100,7 @@ public class FileChangerImpl extends AbstractFileChanger {
         return Integer.parseInt(file.getName().substring(beginIdx, endIdx));
     }
 
-    //example source=sciezka destination=sciezka extentions=ext1,ext2,ext3,ext4...
+    //example source=sciezka destination=sciezka extensions=ext1,ext2,ext3,ext4...
     @Override
     protected Properties transformArgumentsToProperties(String[] args) {
         Properties properties = new Properties();
