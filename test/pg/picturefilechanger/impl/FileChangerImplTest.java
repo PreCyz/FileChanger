@@ -1,6 +1,7 @@
 package pg.picturefilechanger.impl;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import org.junit.After;
@@ -14,10 +15,7 @@ import static org.mockito.Mockito.when;
 
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
-import pg.PictureFileChanger;
 import pg.picturefilechanger.ChangeDetails;
 
 /**
@@ -75,7 +73,7 @@ public class FileChangerImplTest {
     @Test
     public void testCreateMaxIndexMap() {
         Map<String, Integer> expected = new HashMap<>();
-        expected.put("someKey", new Integer(1));
+        expected.put("someKey", 1);
         when(mockChanger.createMaxIndexMap(properties)).thenReturn(expected);
         Map<String, Integer> actual = mockChanger.createMaxIndexMap(properties);
         assertNotNull(actual);
