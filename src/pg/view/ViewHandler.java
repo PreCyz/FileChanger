@@ -1,6 +1,5 @@
 package pg.view;
 
-import com.sun.corba.se.impl.protocol.giopmsgheaders.Message;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;

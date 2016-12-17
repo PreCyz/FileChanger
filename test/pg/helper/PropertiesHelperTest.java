@@ -43,6 +43,7 @@ public class PropertiesHelperTest {
     public void givenBoundleFileWhenReadBoundleThenSuccess() throws Exception {
         ResourceBundle bundle = PropertiesHelper.readBundles();
         assertNotNull("Bundle should be created.", bundle);
+        assertTrue("Bundle should not be empty.", !bundle.keySet().isEmpty());
     }
 
     @Test

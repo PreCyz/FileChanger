@@ -1,9 +1,11 @@
 package pg;
 
+import java.util.Properties;
 import java.util.ResourceBundle;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import pg.exception.ProgramException;
+import pg.helper.PropertiesHelper;
 
 /**
  *
@@ -34,19 +36,5 @@ public class PictureFileChangerTest {
         String[] args = new String[]{"","1"};
         PictureFileChanger.argumentsValidation(args);
         assertTrue(false);
-    }
-    
-    @Test
-    public void testPictureFileChanger_isArgumentEmpty() throws Exception{
-        String arg = null;
-        assertTrue(PictureFileChanger.empty(arg));
-    }
-    
-    @Test
-    public void givenBundleFileWhenReadBundleThenSuccess() {
-        Properties bundle = PictureFileChanger.readBundles();
-
-        assertNotNull("Bundle should be created.", bundle);
-        assertTrue("Bundle should not be empty.", !bundle.isEmpty());
     }
 }
