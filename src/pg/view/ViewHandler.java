@@ -8,8 +8,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import static pg.constant.ProgramConstants.IMG_PATH;
+import static pg.constant.ProgramConstants.IMG_RESOURCE_PATH;
 import static pg.constant.ProgramConstants.RESOURCE_BUNDLE;
+
+import javafx.stage.Window;
 import pg.exception.ProgramException;
 import pg.logger.impl.ConsoleLogger;
 import pg.helper.MessageHelper;
@@ -23,6 +25,8 @@ import pg.view.fxml.FXML;
  */
 public class ViewHandler {
     
+    private static Window window;
+
     private Stage primaryStage;
     private ResourceBundle bundle;
     private ResourceHelper resourceHelper;
@@ -37,20 +41,27 @@ public class ViewHandler {
         messageHelper = MessageHelper.getInstance(bundle);
         resourceHelper = new ResourceHelper();
         logger = new ConsoleLogger(messageHelper);
+        ViewHandler.window = primaryStage;
     }
     
     public void launchView() throws IOException {
-        Parent root = FXMLLoader.load(FXML.START_VIEW.url(), bundle);
-        Scene scene = new Scene(root);
         try {
-            Image icon = resourceHelper.readImage(IMG_PATH + "title_icon.png");
+            Image icon = resourceHelper.readImage(IMG_RESOURCE_PATH + "title_icon.png");
             primaryStage.getIcons().add(icon);
         } catch (ProgramException ex) {
             logger.log(ex);
         }
         primaryStage.setTitle(bundle.getString("window.title"));
         primaryStage.setResizable(false);
+
+        Parent root = FXMLLoader.load(FXML.START_VIEW.url(), bundle);
+        Scene scene = new Scene(root);
         primaryStage.setScene(scene);
+
         primaryStage.show();
+    }
+
+    public static Window window() {
+        return window;
     }
 }

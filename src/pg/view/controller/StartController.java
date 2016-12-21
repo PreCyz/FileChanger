@@ -1,5 +1,6 @@
 package pg.view.controller;
 
+import java.io.File;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
@@ -14,8 +15,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import static pg.constant.ProgramConstants.IMG_PATH;
+import javafx.stage.DirectoryChooser;
+
+import static pg.constant.ProgramConstants.IMG_RESOURCE_PATH;
+
 import pg.exception.ProgramException;
+import pg.view.ViewHandler;
 
 /**
  * @author Gawa [Paweł Gawędzki]
@@ -47,19 +52,51 @@ public class StartController extends AbstractController {
     }
 
     private void setUpButtons() {
-        Image buttonImage;
+        setImgForButton(sourceButton);
+        setImgForButton(destinationButton);
+        setImgForButton(runButton);
+        setImgForButton(exitButton);
+    }
+
+    private void setImgForButton(Button button) {
+        final String imgExtension = ".png";
         try {
-            buttonImage = controllerHelper.readImage(IMG_PATH + "source.png");
-            sourceButton.setGraphic(new ImageView(buttonImage));
+            Image buttonImage = resourceHelper.readImage(IMG_RESOURCE_PATH + button.getId() + imgExtension);
+            button.setGraphic(new ImageView(buttonImage));
         } catch (ProgramException ex) {
             logger.log(ex);
         }
-        try {
-            buttonImage = controllerHelper.readImage(IMG_PATH + "destination.png");
-            destinationButton.setGraphic(new ImageView(buttonImage));
-        } catch (ProgramException ex) {
-            logger.log(ex);
-        }
+    }
+
+    public void exit() {
+        logger.log("!!!Naciśnięto przycisk 'Exit'. Program zakończy działanie.");
+        System.exit(0);
+    }
+
+    public void run() {
+        logger.log("!!!Naciśnięto przycisk 'Run'.");
+        maxIndexesLabel.setText("YOU PRESSED RUN MAN !!");
+    }
+
+    public void source() {
+        logger.log("!!!Naciśnięto przycisk 'Src'.");
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        configureDirectoryChooser(directoryChooser);
+        File sourceDir = directoryChooser.showDialog(ViewHandler.window());
+        sourceLabel.setText(sourceDir.getAbsolutePath());
+    }
+
+    private void configureDirectoryChooser(DirectoryChooser directoryChooser) {
+        directoryChooser.setTitle("!!!Wybierz katalog");
+        directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+    }
+
+    public void destination() {
+        logger.log("!!!Naciśnięto przycisk 'Dst'.");
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        configureDirectoryChooser(directoryChooser);
+        File destinationDir = directoryChooser.showDialog(ViewHandler.window());
+        destinationLabel.setText(destinationDir.getAbsolutePath());
     }
 
 }

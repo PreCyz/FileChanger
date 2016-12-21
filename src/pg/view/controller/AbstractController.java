@@ -15,7 +15,7 @@ import pg.logger.AppLogger;
 public abstract class AbstractController implements Initializable {
     protected ResourceBundle bundle;
     protected URL location;
-    protected ResourceHelper controllerHelper;
+    protected ResourceHelper resourceHelper;
     protected MessageHelper messageHelper;
     protected AppLogger logger;
     
@@ -23,7 +23,7 @@ public abstract class AbstractController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         this.location = location;
         bundle = resources;
-        controllerHelper = new ResourceHelper();
+        resourceHelper = new ResourceHelper();
         messageHelper = MessageHelper.getInstance(bundle);
         logger = new ConsoleLogger(messageHelper);
     }
