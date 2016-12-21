@@ -9,5 +9,6 @@ public enum ErrorCode {
     NO_ARGUMENTS, 
     PREPARATION,
     NULL_ERROR_CODE,
-    BUTTON_IMG;
+    BUTTON_IMG,
+    DESTINATION_NOT_CREATED;
 }

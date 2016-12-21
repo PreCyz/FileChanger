@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 public class AbstractFileChangerTest {
 
     @Test
-    public void givenAbstractFileChangerImplWhenRunThenProperOrder() {
+    public void givenAbstractFileChangerImplWhenRunThenProperOrder() throws Exception {
         String expected = "transformArgumentsToProperties,exitOnEmptyProperties"
                 + ",displayPropertiesDetails,exitOnPropertiesValidationError"
                 + ",displaySourceInfo,createChangeDetails,createDestinationIfNotExists,createMaxIndexMap,processChange,";

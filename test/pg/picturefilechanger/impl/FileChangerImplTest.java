@@ -8,6 +8,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
+
+import pg.exception.ProgramException;
 import pg.helper.PropertiesHelper;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
@@ -30,14 +32,21 @@ public class FileChangerImplTest {
     private String[] args;
     private FileChanger changer;
     private Properties properties;
+    private static final String FILE_SEPARATOR = System.getProperty("file.separator");
         
     @Before
     public void setUp() throws Exception {
-        args = new String[]{"source=d:\\testy\\src\\","destination=d:\\testy\\dst\\","extensions=jpg,jpeg,gif,mp4","filePrefix=xperiaM2","nameConnector=_"};
+        System.out.println(FILE_SEPARATOR);
+        args = new String[] {
+                String.format("source=d:%stesty%ssrc%s", FILE_SEPARATOR, FILE_SEPARATOR, FILE_SEPARATOR),
+                String.format("destination=d:%stesty%sdst%s", FILE_SEPARATOR, FILE_SEPARATOR, FILE_SEPARATOR),
+                "extensions=jpg,jpeg,gif,mp4", "filePrefix=xperiaM2", "nameConnector=_"};
         changer = new FileChanger(args);
         properties = new Properties();
-        properties.put("source", "d:\\testy\\src\\");
-        properties.put("destination", "d:\\testy\\dst\\");
+        properties.put("source",
+                String.format("d:%stesty%ssrc%s", FILE_SEPARATOR, FILE_SEPARATOR, FILE_SEPARATOR));
+        properties.put("destination",
+                String.format("d:%stesty%sdst%s", FILE_SEPARATOR, FILE_SEPARATOR, FILE_SEPARATOR));
         properties.put("extensions", "jpg,jpeg,gif,mp4");
         properties.put("filePrefix", "xperiaM2");
         properties.put("nameConnector", "_");
@@ -102,7 +111,7 @@ public class FileChangerImplTest {
         }
 
         properties = new Properties();
-        properties.put("destination", "d:\\testy\\dst\\");
+        properties.put("destination", String.format("d:%stesty%sdst%s", FILE_SEPARATOR, FILE_SEPARATOR, FILE_SEPARATOR));
         properties.put("nameConnector", "");
         when(mockChanger.createMaxIndexMap(properties)).thenThrow(NumberFormatException.class);
         try{
@@ -115,24 +124,24 @@ public class FileChangerImplTest {
         
     }
     
-    @Test
-    public void givenNotExistingDestinationWhenCreateChangeDetailsThenReturnZeros() {
-        properties.put("destination", "d:\\testy\\notExists\\");
+    @Test(expected = ProgramException.class)
+    public void givenNotExistingDestinationWhenCreateChangeDetailsThenReturnZeros() throws ProgramException {
+        String notExists = String.format("d:%stesty%snotExists%s", FILE_SEPARATOR, FILE_SEPARATOR, FILE_SEPARATOR);
+        properties.put("destination", notExists);
         ChangeDetails changeDetails = changer.createChangeDetails(properties);
         changer.createDestinationIfNotExists(changeDetails);
-        
+
         Map<String, Integer> indexMap = changer.createMaxIndexMap(properties);
-        
+
         assertEquals("Map should not be empty.", 4, indexMap.size());
-        indexMap.entrySet().stream().forEach((entry) -> {
-            assertEquals("Index of "+entry.getKey()+" should be eq 1.", Integer.valueOf(1), entry.getValue());
-        });
+        indexMap.entrySet().stream().forEach((entry) ->
+            assertEquals("Index of "+entry.getKey()+" should be eq 1.", Integer.valueOf(1), entry.getValue()));
     }
 
     @Test
     public void testCreateChangeDetails() {
-        String actualSrc = "d:\\testy\\src\\";
-        String actualDestination = "d:\\testy\\dst\\";
+        String actualSrc = String.format("d:%stesty%ssrc%s", FILE_SEPARATOR, FILE_SEPARATOR, FILE_SEPARATOR);
+        String actualDestination = String.format("d:%stesty%sdst%s", FILE_SEPARATOR, FILE_SEPARATOR, FILE_SEPARATOR);
         String actualFilePrefix = "xperiaM2";
         String actualNameConnector = "_";
         ChangeDetails details = changer.createChangeDetails(properties);
@@ -154,9 +163,10 @@ public class FileChangerImplTest {
         }
     }
     
-    @Test
-    public void givenNoDestinationWhenCreateDestinationIfNotExistsThenCreateDestinationDirectory() {
-        properties.put("destination", "d:\\notExists\\");
+    @Test(expected = ProgramException.class)
+    public void givenNoDestinationWhenCreateDestinationIfNotExistsThenCreateDestinationDirectory() throws  Exception {
+        String notExists = String.format("d:%snotExists%s", FILE_SEPARATOR, FILE_SEPARATOR);
+        properties.put("destination", notExists);
         ChangeDetails details = changer.createChangeDetails(properties);
         changer.createDestinationIfNotExists(details);
         File destination = new File(details.getDestinationDir());

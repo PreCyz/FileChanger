@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import pg.constant.ProgramConstants;
+import pg.exception.ErrorCode;
+import pg.exception.ProgramException;
 import pg.picturefilechanger.ChangeDetails;
 import pg.picturefilechanger.AbstractFileChanger;
 
@@ -161,14 +163,14 @@ public class FileChangerImpl extends AbstractFileChanger {
     }
 
     @Override
-    protected void createDestinationIfNotExists(ChangeDetails changeDetails) {
+    protected void createDestinationIfNotExists(ChangeDetails changeDetails) throws ProgramException {
         File destFile = new File(changeDetails.getDestinationDir());
         if (!destFile.exists()) {
             boolean destCreated = destFile.mkdir();
             if (destCreated) {
                 System.out.println(messageHelper.getFullMessage("file.dir.created", changeDetails.getDestinationDir()));
             } else {
-                System.out.printf(messageHelper.getFullMessage("file.dir.notCreated", changeDetails.getDestinationDir()));
+                throw new ProgramException(ErrorCode.DESTINATION_NOT_CREATED, changeDetails.getDestinationDir());
             }
         }
     }

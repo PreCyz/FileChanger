@@ -1,11 +1,8 @@
 package pg;
 
-import java.util.Properties;
-import java.util.ResourceBundle;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import pg.exception.ProgramException;
-import pg.helper.PropertiesHelper;
 
 /**
  *

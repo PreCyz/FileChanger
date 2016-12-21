@@ -3,6 +3,8 @@ package pg.picturefilechanger;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
+
+import pg.exception.ProgramException;
 import pg.helper.MessageHelper;
 
 /**
@@ -50,7 +52,7 @@ public abstract class AbstractFileChanger {
         messageHelper = MessageHelper.getInstance(bundle);
     }
     
-    public void run(){
+    public void run() throws ProgramException {
         Properties properties = transformArgumentsToProperties(params);
         exitOnEmptyProperties(properties);
         displayPropertiesDetails(properties);
@@ -69,7 +71,7 @@ public abstract class AbstractFileChanger {
     protected abstract void exitOnPropertiesValidationError(Properties properties);
     protected abstract void displaySourceInfo(Properties properties);
     protected abstract ChangeDetails createChangeDetails(Properties properties);
-    protected abstract void createDestinationIfNotExists(ChangeDetails changeDetails);
+    protected abstract void createDestinationIfNotExists(ChangeDetails changeDetails) throws ProgramException;
     protected abstract Map<String, Integer> createMaxIndexMap(Properties properties);
     protected abstract void processChange(Map<String, Integer> maxExtIdxMap, ChangeDetails changeDetails);
 }
