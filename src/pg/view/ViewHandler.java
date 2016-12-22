@@ -31,16 +31,12 @@ public class ViewHandler {
     private ResourceBundle bundle;
     private ResourceHelper resourceHelper;
     private AppLogger logger;
-    private MessageHelper messageHelper;
-    
-    private ViewHandler() {}
 
     public ViewHandler(Stage primaryStage) {
         this.primaryStage = primaryStage;
         bundle = ResourceBundle.getBundle(RESOURCE_BUNDLE, Locale.getDefault());
-        messageHelper = MessageHelper.getInstance(bundle);
         resourceHelper = new ResourceHelper();
-        logger = new ConsoleLogger(messageHelper);
+        logger = new ConsoleLogger(MessageHelper.getInstance(bundle));
         ViewHandler.window = primaryStage;
     }
     

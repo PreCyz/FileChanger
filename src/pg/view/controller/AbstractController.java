@@ -16,7 +16,6 @@ public abstract class AbstractController implements Initializable {
     protected ResourceBundle bundle;
     protected URL location;
     protected ResourceHelper resourceHelper;
-    protected MessageHelper messageHelper;
     protected AppLogger logger;
     
     @Override
@@ -24,8 +23,7 @@ public abstract class AbstractController implements Initializable {
         this.location = location;
         bundle = resources;
         resourceHelper = new ResourceHelper();
-        messageHelper = MessageHelper.getInstance(bundle);
-        logger = new ConsoleLogger(messageHelper);
+        logger = new ConsoleLogger(MessageHelper.getInstance(bundle));
     }
 
 }

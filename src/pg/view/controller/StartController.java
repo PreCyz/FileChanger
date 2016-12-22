@@ -20,6 +20,10 @@ import javafx.stage.DirectoryChooser;
 import static pg.constant.ProgramConstants.IMG_RESOURCE_PATH;
 
 import pg.exception.ProgramException;
+import pg.helper.MessageHelper;
+import pg.logger.impl.ConsoleLogger;
+import pg.logger.impl.FileLogger;
+import pg.picturefilechanger.ChangeDetails;
 import pg.view.ViewHandler;
 
 /**
@@ -40,15 +44,18 @@ public class StartController extends AbstractController {
     @FXML private Label sourceLabel;
     @FXML private Label destinationLabel;
     @FXML private ListView logListView;
-    
+
+    private ChangeDetails changeDetails;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         super.initialize(location, resources);
-        List<String> list = Arrays.asList(new String[]{"", "-", "_", "+"});
-        coreNameTextField.setText("Test");
+        logger = new FileLogger(MessageHelper.getInstance(bundle), this.getClass(), logListView);
+        List<String> list = Arrays.asList("", "-", "_", "+");
+        coreNameTextField.setText("!!!Test");
         fileConnectorComboBox.setItems(FXCollections.observableList(list));
         setUpButtons();
+        changeDetails = new ChangeDetails();
     }
 
     private void setUpButtons() {
@@ -76,6 +83,7 @@ public class StartController extends AbstractController {
     public void run() {
         logger.log("!!!Naciśnięto przycisk 'Run'.");
         maxIndexesLabel.setText("YOU PRESSED RUN MAN !!");
+
     }
 
     public void source() {
@@ -83,6 +91,7 @@ public class StartController extends AbstractController {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         configureDirectoryChooser(directoryChooser);
         File sourceDir = directoryChooser.showDialog(ViewHandler.window());
+        changeDetails.setSourceDir(sourceDir.getAbsolutePath());
         sourceLabel.setText(sourceDir.getAbsolutePath());
     }
 
@@ -96,6 +105,7 @@ public class StartController extends AbstractController {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         configureDirectoryChooser(directoryChooser);
         File destinationDir = directoryChooser.showDialog(ViewHandler.window());
+        changeDetails.setDestinationDir(destinationDir.getAbsolutePath());
         destinationLabel.setText(destinationDir.getAbsolutePath());
     }
 

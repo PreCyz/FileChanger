@@ -13,6 +13,8 @@ public class ChangeDetails {
     private String fileExtension;
     private int fileIndex;
 
+    public ChangeDetails() {}
+
     public ChangeDetails(String sourceDir, String destinationDir, String fileNamePrefix, String fileNameIndexConnector) {
         this.sourceDir = sourceDir;
         this.destinationDir = destinationDir;

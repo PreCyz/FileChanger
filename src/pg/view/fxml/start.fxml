@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
@@ -43,7 +44,10 @@
                         <Pane layoutX="319.0" layoutY="10.0" prefHeight="300.0" prefWidth="290.0">
                            <children>
                               <Button fx:id="runButton" layoutX="206.0" mnemonicParsing="false" onAction="#run" prefHeight="25.0" prefWidth="65.0" text="%changerTab.run" />
-                              <ListView fx:id="logListView" editable="true" layoutX="2.0" layoutY="119.0" prefHeight="177.0" prefWidth="269.0" style="-fx-border-color: black;" />
+                              <ListView fx:id="logListView" layoutX="2.0" layoutY="119.0" prefHeight="177.0" prefWidth="269.0" style="-fx-border-color: black;">
+                                 <effect>
+                                    <Blend />
+                                 </effect></ListView>
                               <Label fx:id="maxIndexesLabel" layoutX="2.0" prefHeight="100.0" prefWidth="190.0" style="-fx-border-color: black;" text="max file indexes" />
                               <Button fx:id="exitButton" layoutX="206.0" layoutY="75.0" mnemonicParsing="false" onAction="#exit" prefHeight="25.0" prefWidth="65.0" text="%changerTab.exit" />
                               <Separator layoutX="2.0" layoutY="109.0" prefWidth="270.0" />

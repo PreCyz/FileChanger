@@ -16,7 +16,7 @@ public abstract class AbstractFileChanger {
     protected final ResourceBundle bundle;
     protected final MessageHelper messageHelper;
     
-    public static enum Extentions {
+    public enum Extentions {
         jpg, jpeg, mp4, gif;
 
         public static boolean isFileExtensionProcessable(String fileExt) {
