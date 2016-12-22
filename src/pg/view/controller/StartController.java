@@ -7,12 +7,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.DirectoryChooser;
@@ -21,7 +16,6 @@ import static pg.constant.ProgramConstants.IMG_RESOURCE_PATH;
 
 import pg.exception.ProgramException;
 import pg.helper.MessageHelper;
-import pg.logger.impl.ConsoleLogger;
 import pg.logger.impl.FileLogger;
 import pg.picturefilechanger.ChangeDetails;
 import pg.view.ViewHandler;
@@ -83,7 +77,16 @@ public class StartController extends AbstractController {
     public void run() {
         logger.log("!!!Naciśnięto przycisk 'Run'.");
         maxIndexesLabel.setText("YOU PRESSED RUN MAN !!");
+        if (!changeDetails.isReady()) {
+            String errMsg = String.format("Not all required parameters are set.%nRequired parameters are:%n- source%n" +
+                    "- destination%n- core name.!");
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("!!!Can't perform change.");
+            alert.setContentText(errMsg);
 
+            alert.showAndWait();
+        }
     }
 
     public void source() {

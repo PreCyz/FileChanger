@@ -1,5 +1,7 @@
 package pg.picturefilechanger;
 
+import pg.helper.MessageHelper;
+
 /**
  *
  * @author premik
@@ -8,17 +10,17 @@ public class ChangeDetails {
 
     private String sourceDir;
     private String destinationDir;
-    private String fileNamePrefix;
+    private String coreName;
     private String fileNameIndexConnector;
     private String fileExtension;
     private int fileIndex;
 
     public ChangeDetails() {}
 
-    public ChangeDetails(String sourceDir, String destinationDir, String fileNamePrefix, String fileNameIndexConnector) {
+    public ChangeDetails(String sourceDir, String destinationDir, String coreName, String fileNameIndexConnector) {
         this.sourceDir = sourceDir;
         this.destinationDir = destinationDir;
-        this.fileNamePrefix = fileNamePrefix;
+        this.coreName = coreName;
         this.fileNameIndexConnector = fileNameIndexConnector;
     }
 
@@ -38,12 +40,12 @@ public class ChangeDetails {
         this.destinationDir = destinationDir;
     }
 
-    public String getFileNamePrefix() {
-        return fileNamePrefix;
+    public String getCoreName() {
+        return coreName;
     }
 
-    public void setFileNamePrefix(String fileNamePrefix) {
-        this.fileNamePrefix = fileNamePrefix;
+    public void setCoreName(String coreName) {
+        this.coreName = coreName;
     }
 
     public String getFileNameIndexConnector() {
@@ -68,5 +70,12 @@ public class ChangeDetails {
 
     public void setFileIndex(int fileIndex) {
         this.fileIndex = fileIndex;
+    }
+
+    public boolean isReady() {
+        boolean ready = !MessageHelper.empty(destinationDir);
+        ready &= !MessageHelper.empty(sourceDir);
+        ready &= !MessageHelper.empty(coreName);
+        return ready;
     }
 }

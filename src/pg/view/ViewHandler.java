@@ -13,6 +13,7 @@ import static pg.constant.ProgramConstants.RESOURCE_BUNDLE;
 
 import javafx.stage.Window;
 import pg.exception.ProgramException;
+import pg.logger.AbstractLogger;
 import pg.logger.impl.ConsoleLogger;
 import pg.helper.MessageHelper;
 import pg.helper.ResourceHelper;
@@ -46,6 +47,12 @@ public class ViewHandler {
             primaryStage.getIcons().add(icon);
         } catch (ProgramException ex) {
             logger.log(ex);
+            try {
+                String errorMsg = MessageHelper.getInstance(bundle).getErrorMsg(ex.getErrorCode(), ex.getArgument());
+                AbstractLogger.addMessage(errorMsg);
+            } catch (ProgramException ex1) {
+                AbstractLogger.addMessage(ex1.getMessage());
+            }
         }
         primaryStage.setTitle(bundle.getString("window.title"));
         primaryStage.setResizable(false);

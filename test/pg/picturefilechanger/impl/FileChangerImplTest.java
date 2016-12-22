@@ -149,7 +149,7 @@ public class FileChangerImplTest {
         assertEquals(actualSrc, details.getSourceDir());
         assertEquals(actualDestination, details.getDestinationDir());
         assertNull(details.getFileExtension());
-        assertEquals(actualFilePrefix, details.getFileNamePrefix());
+        assertEquals(actualFilePrefix, details.getCoreName());
         assertEquals(actualNameConnector, details.getFileNameIndexConnector());
     }
     

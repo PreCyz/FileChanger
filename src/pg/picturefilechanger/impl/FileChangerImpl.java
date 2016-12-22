@@ -47,7 +47,7 @@ public class FileChangerImpl extends AbstractFileChanger {
                 ChangeDetails dirChangeDetails = new ChangeDetails(
                         dirPath,
                         changeDetails.getDestinationDir(),
-                        changeDetails.getFileNamePrefix(),
+                        changeDetails.getCoreName(),
                         changeDetails.getFileNameIndexConnector()
                 );
                 processChange(idxMap, dirChangeDetails);
@@ -76,7 +76,7 @@ public class FileChangerImpl extends AbstractFileChanger {
     }
 
     private String createFileName(ChangeDetails changeFileDetails) {
-        return changeFileDetails.getDestinationDir() + changeFileDetails.getFileNamePrefix()
+        return changeFileDetails.getDestinationDir() + changeFileDetails.getCoreName()
                 + changeFileDetails.getFileNameIndexConnector() + changeFileDetails.getFileIndex()
                 + "." + changeFileDetails.getFileExtension();
     }
