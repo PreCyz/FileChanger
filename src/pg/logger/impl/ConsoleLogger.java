@@ -1,6 +1,5 @@
 package pg.logger.impl;
 
-import pg.exception.ErrorCode;
 import pg.exception.ProgramException;
 import pg.helper.MessageHelper;
 import pg.logger.AppLogger;
@@ -18,15 +17,7 @@ public class ConsoleLogger implements AppLogger {
     
     @Override
     public void log(ProgramException ex) {
-        try {
-            System.out.println(messageHelper.getErrorMsg(ex.getErrorCode(), ex.getArgument()));
-        } catch (ProgramException ex1) {
-            if (ex1.isNullErrorCode()) {
-                System.err.println(messageHelper.getErrorMsg(ErrorCode.NULL_ERROR_CODE));
-            } else {
-                log(ex1);
-            }
-        }
+        System.out.println(messageHelper.getErrorMsg(ex.getErrorCode(), ex.getArgument()));
     }
 
     @Override

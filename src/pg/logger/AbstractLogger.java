@@ -1,6 +1,5 @@
 package pg.logger;
 
-import pg.exception.ProgramException;
 import pg.helper.MessageHelper;
 
 import java.util.LinkedList;

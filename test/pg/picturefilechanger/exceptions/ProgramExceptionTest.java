@@ -51,19 +51,9 @@ public class ProgramExceptionTest {
     public void testProgramException_NULL_ERROR_CODE() {
         ProgramException programException = new ProgramException(null);
         assertNotNull(programException);
-        try {
-            programException.getErrorCode();
-            fail("Should be thrown NullPointerException.");
-        } catch (ProgramException ex) {
-            try {
-                ErrorCode errorCode = ex.getErrorCode();
-                assertEquals("Error code should be NULL_ERROR_CODE.", errorCode, ErrorCode.NULL_ERROR_CODE);
-                assertEquals("Message should be taken for error code [NULL_ERROR_CODE]",
-                        "Kod błędu nie może być równy null.", msgHelper.getErrorMsg(errorCode));
-                assertTrue("Flag nullErrorCode should be true.", ex.isNullErrorCode());
-            } catch (ProgramException pe) {
-                fail("Should not be any error at this point.");
-            }
-        }
+        assertEquals("Error code should be NULL_ERROR_CODE.",
+                programException.getErrorCode(), ErrorCode.NULL_ERROR_CODE);
+        assertEquals("Message should be taken for error code [NULL_ERROR_CODE]",
+                "Kod błędu nie może być równy null.", msgHelper.getErrorMsg(programException.getErrorCode()));
     }
 }

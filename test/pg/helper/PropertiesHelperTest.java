@@ -34,13 +34,13 @@ public class PropertiesHelperTest {
     public void givenPropertyFileWhenLoadProgramPropertiesThenFileLoaded() throws Exception {
         URL url = classLoader.getResource(ProgramConstants.APP_CONFIG_PATH);
         Properties properties = helper.loadProgramProperties(url.getPath());
-        assertEquals("Props should contains value.", properties.getProperty("core.name.used"), "wakacje");
+        assertEquals("Props should contains value.", properties.getProperty("core.name.lastUsed"), "wakacje");
         String fileConnectors = properties.getProperty("file.connectors");
-        assertEquals("Props should contains value.", fileConnectors, "- +,_.");
+        assertEquals("Props should contains value.", fileConnectors, "-,+,_");
     }
     
     @Test
-    public void givenBoundleFileWhenReadBoundleThenSuccess() throws Exception {
+    public void givenBundleFileWhenReadBundleThenSuccess() throws Exception {
         ResourceBundle bundle = PropertiesHelper.readBundles();
         assertNotNull("Bundle should be created.", bundle);
         assertTrue("Bundle should not be empty.", !bundle.keySet().isEmpty());

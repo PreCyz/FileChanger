@@ -78,4 +78,10 @@ public class ChangeDetails {
         ready &= !MessageHelper.empty(coreName);
         return ready;
     }
+
+    public String[] toStringArray() {
+        return new String[] {"source="+sourceDir, "destination="+destinationDir, "extensions="+fileExtension,
+                "filePrefix="+coreName, "nameConnector="+fileNameIndexConnector
+        };
+    }
 }

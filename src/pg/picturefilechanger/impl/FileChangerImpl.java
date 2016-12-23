@@ -23,7 +23,7 @@ public class FileChangerImpl extends AbstractFileChanger {
     @Override
     protected Map<String, Integer> createMaxIndexMap(Properties properties) {
         Map<String, Integer> maxExtIdxMap = new HashMap<>();
-        for (Extentions ext : Extentions.values()) {
+        for (Extensions ext : Extensions.values()) {
             ChangeDetails changeDetails = new ChangeDetails(
                     null,
                     properties.getProperty(Params.destination.name()),
@@ -57,7 +57,7 @@ public class FileChangerImpl extends AbstractFileChanger {
 
     private void processChangeFile(File fileToProces, Map<String, Integer> maxIdxMap, ChangeDetails changeDetails) {
         String fileExt = fileToProces.getName().substring(fileToProces.getName().indexOf(".") + 1).toLowerCase();
-        if (Extentions.isFileExtensionProcessable(fileExt)) {
+        if (Extensions.isFileExtensionProcessable(fileExt)) {
             int maxIdx = maxIdxMap.get(fileExt);
             changeDetails.setFileIndex(maxIdx);
             changeDetails.setFileExtension(fileExt);

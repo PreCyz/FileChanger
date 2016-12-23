@@ -21,8 +21,7 @@ public class MessageHelperTest {
     
     @Test
     public void testPictureFileChanger_isArgumentEmpty() throws Exception {
-        String arg = null;
-        assertTrue(MessageHelper.empty(arg));
+        assertTrue(MessageHelper.empty(null));
     }
 
     @Test

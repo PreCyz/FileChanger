@@ -5,46 +5,49 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="345.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pg.view.controller.StartController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="433.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pg.view.controller.StartController">
    <children>
-      <TabPane prefHeight="345.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane prefHeight="433.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
           <Tab text="%changerTab.title">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="600.0">
                      <children>
-                        <Pane layoutX="6.0" layoutY="10.0" prefHeight="300.0" prefWidth="300.0">
+                        <Pane layoutX="6.0" layoutY="10.0" prefHeight="382.0" prefWidth="311.0">
                            <children>
-                              <TitledPane fx:id="optionalTitledPane" expanded="false" layoutX="5.0" layoutY="150.0" prefHeight="145.0" prefWidth="300.0" text="%changerTab.optional">
+                              <TitledPane fx:id="optionalTitledPane" expanded="false" layoutX="5.0" layoutY="228.0" prefHeight="145.0" prefWidth="300.0" text="%changerTab.optional">
                                 <content>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="161.0" prefWidth="293.0">
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="76.0" prefWidth="298.0">
                                        <children>
-                                          <ComboBox fx:id="fileConnectorComboBox" layoutX="10.0" layoutY="17.0" prefHeight="25.0" prefWidth="52.0" />
-                                          <Label layoutX="76.0" layoutY="21.0" prefHeight="17.0" prefWidth="205.0" text="%changerTab.fileConnector" />
+                                          <ComboBox fx:id="fileConnectorComboBox" layoutX="10.0" layoutY="17.0" prefHeight="25.0" prefWidth="53.0" />
+                                          <Label layoutX="74.0" layoutY="21.0" prefHeight="17.0" prefWidth="207.0" text="%changerTab.fileConnector" />
                                        </children>
                                     </AnchorPane>
                                 </content>
                               </TitledPane>
-                              <TitledPane fx:id="mandatoryTitledPane" animated="false" collapsible="false" layoutX="4.0" prefHeight="144.0" prefWidth="300.0" text="%changerTab.mandatory">
+                              <TitledPane fx:id="mandatoryTitledPane" animated="false" collapsible="false" layoutX="5.0" layoutY="79.0" prefHeight="144.0" prefWidth="300.0" text="%changerTab.mandatory">
                                 <content>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="118.0" prefWidth="294.0">
                                        <children>
                                           <Button fx:id="sourceButton" layoutX="14.0" layoutY="15.0" mnemonicParsing="false" onAction="#source" prefHeight="25.0" prefWidth="50.0" text="%changerTab.src" />
                                           <Label fx:id="sourceLabel" layoutX="76.0" layoutY="19.0" prefHeight="17.0" prefWidth="210.0" text="%changerTab.source" />
                                           <Button fx:id="destinationButton" layoutX="14.0" layoutY="47.0" mnemonicParsing="false" onAction="#destination" prefHeight="25.0" prefWidth="50.0" text="%changerTab.dst" />
-                                          <Label fx:id="destinationLabel" layoutX="75.0" layoutY="49.0" prefHeight="17.0" prefWidth="210.0" text="%changerTab.destination" />
-                                          <TextField fx:id="coreNameTextField" layoutX="13.0" layoutY="82.0" prefHeight="25.0" prefWidth="52.0" />
-                                          <Label layoutX="76.0" layoutY="86.0" prefHeight="17.0" prefWidth="210.0" text="%changerTab.coreName" />
+                                          <Label fx:id="destinationLabel" layoutX="76.0" layoutY="51.0" prefHeight="17.0" prefWidth="210.0" text="%changerTab.destination" />
+                                          <TextField fx:id="coreNameTextField" layoutX="13.0" layoutY="82.0" prefHeight="25.0" prefWidth="122.0" />
+                                          <Label layoutX="142.0" layoutY="86.0" prefHeight="17.0" prefWidth="144.0" text="%changerTab.coreName" />
                                        </children>
                                     </AnchorPane>
                                 </content>
                               </TitledPane>
+                              <Label layoutX="5.0" layoutY="7.0" prefHeight="15.0" prefWidth="298.0" text="!!!Obsługiwane typy plików" />
+                              <CheckBox fx:id="editExtensionsCheckBox" layoutX="5.0" layoutY="55.0" mnemonicParsing="false" onAction="#extensions" prefHeight="18.0" prefWidth="299.0" text="!!!Edytuj typy plików" />
+                              <TextField fx:id="fileExtensionsTextField" editable="false" layoutX="5.0" layoutY="27.0" prefHeight="25.0" prefWidth="300.0" />
                            </children>
                         </Pane>
-                        <Pane layoutX="319.0" layoutY="10.0" prefHeight="300.0" prefWidth="290.0">
+                        <Pane layoutX="319.0" layoutY="10.0" prefHeight="384.0" prefWidth="280.0">
                            <children>
                               <Button fx:id="runButton" layoutX="206.0" mnemonicParsing="false" onAction="#run" prefHeight="25.0" prefWidth="65.0" text="%changerTab.run" />
-                              <ListView fx:id="logListView" layoutX="2.0" layoutY="119.0" prefHeight="177.0" prefWidth="269.0" style="-fx-border-color: black;">
+                              <ListView fx:id="logListView" layoutX="2.0" layoutY="119.0" prefHeight="255.0" prefWidth="269.0" style="-fx-border-color: black;">
                                  <effect>
                                     <Blend />
                                  </effect></ListView>

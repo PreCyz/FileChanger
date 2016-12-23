@@ -2,11 +2,9 @@ package pg.logger.impl;
 
 import javafx.collections.FXCollections;
 import javafx.scene.control.ListView;
-import pg.exception.ErrorCode;
 import pg.exception.ProgramException;
 import pg.helper.MessageHelper;
 import pg.logger.AbstractLogger;
-import pg.logger.AppLogger;
 
 /**
  * @author Gawa [Paweł Gawędzki]
@@ -25,25 +23,19 @@ public class FileLogger extends AbstractLogger {
 
     @Override
     public void log(ProgramException ex) {
-        try {
-            logMessages.add(messageHelper.getErrorMsg(ex.getErrorCode(), ex.getArgument()));
-        } catch (ProgramException ex1) {
-            if (ex1.isNullErrorCode()) {
-                logMessages.add(messageHelper.getErrorMsg(ErrorCode.NULL_ERROR_CODE));
-            } else {
-                log(ex1);
-            }
-        } finally {
-            listView.setItems(FXCollections.observableArrayList(logMessages));
-            listView.scrollTo(listView.getItems().size() - 1);
-        }
+        logMessages.add(messageHelper.getErrorMsg(ex.getErrorCode(), ex.getArgument()));
+        showOnListView();
+    }
+
+    private void showOnListView() {
+        listView.setItems(FXCollections.observableArrayList(logMessages));
+        listView.scrollTo(listView.getItems().size() - 1);
     }
 
     @Override
     public void log(String message) {
         logMessages.add(message);
-        listView.setItems(FXCollections.observableArrayList(logMessages));
-        listView.scrollTo(listView.getItems().size() - 1);
+        showOnListView();
     }
 
 }

@@ -4,7 +4,6 @@ public class ProgramException extends Exception {
 
     private ErrorCode errorCode;
     private String argument;
-    private boolean nullErrorCode;
 
     public ProgramException(ErrorCode errorCode) {
         super();
@@ -28,23 +27,13 @@ public class ProgramException extends Exception {
         this.errorCode = errorCode;
     }
     
-    private ProgramException(ErrorCode errorCode, boolean nullErrorCode) {
-        this(errorCode);
-        this.nullErrorCode = nullErrorCode;
-    }
-
-    public ErrorCode getErrorCode() throws ProgramException {
+    public ErrorCode getErrorCode() {
         if (errorCode == null) {
-            nullErrorCode = true;
-            throw new ProgramException(ErrorCode.NULL_ERROR_CODE, true);
+            return ErrorCode.NULL_ERROR_CODE;
         }
         return errorCode;
     }
 
-    public boolean isNullErrorCode() {
-        return nullErrorCode;
-    }
-    
     public String getArgument() {
         return argument;
     }

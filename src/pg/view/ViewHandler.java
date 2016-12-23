@@ -47,12 +47,8 @@ public class ViewHandler {
             primaryStage.getIcons().add(icon);
         } catch (ProgramException ex) {
             logger.log(ex);
-            try {
-                String errorMsg = MessageHelper.getInstance(bundle).getErrorMsg(ex.getErrorCode(), ex.getArgument());
-                AbstractLogger.addMessage(errorMsg);
-            } catch (ProgramException ex1) {
-                AbstractLogger.addMessage(ex1.getMessage());
-            }
+            String errorMsg = MessageHelper.getInstance(bundle).getErrorMsg(ex.getErrorCode(), ex.getArgument());
+            AbstractLogger.addMessage(errorMsg);
         }
         primaryStage.setTitle(bundle.getString("window.title"));
         primaryStage.setResizable(false);

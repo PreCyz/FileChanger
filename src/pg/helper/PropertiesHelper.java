@@ -39,7 +39,7 @@ public class PropertiesHelper {
         }
     }
 
-    public void changeProperty(Properties properties, String key, String valueToBeAdded) {
+    public void addProperty(Properties properties, String key, String valueToBeAdded) {
         String newValue = String.format("%s%s", properties.getProperty(key), valueToBeAdded);
         properties.setProperty(key, newValue);
         anyPropertyChanged = true;

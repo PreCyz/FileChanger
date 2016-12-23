@@ -16,11 +16,11 @@ public abstract class AbstractFileChanger {
     protected final ResourceBundle bundle;
     protected final MessageHelper messageHelper;
     
-    public enum Extentions {
+    public enum Extensions {
         jpg, jpeg, mp4, gif;
 
         public static boolean isFileExtensionProcessable(String fileExt) {
-            for (Extentions ext : Extentions.values()) {
+            for (Extensions ext : Extensions.values()) {
                 if (fileExt.equalsIgnoreCase(ext.name())) {
                     return true;
                 }

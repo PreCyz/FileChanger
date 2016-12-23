@@ -6,11 +6,10 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 public class MessageHelper {
+
     private static MessageHelper instance = null;
     private ResourceBundle bundle;
     
-    private MessageHelper(){}
-
     private MessageHelper(ResourceBundle bundle) {
         this.bundle = bundle;
     }
@@ -40,7 +39,7 @@ public class MessageHelper {
     }
     
     public static boolean empty(String value) {
-        return value == null || value.length() == 0;
+        return value == null || value.trim().length() == 0;
     }
     
 }
