@@ -1,28 +1,24 @@
 package pg.view.controller;
 
-import java.io.File;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
-import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.DirectoryChooser;
-
-import static pg.constant.ProgramConstants.IMG_RESOURCE_PATH;
-
-import pg.constant.ProgramConstants;
 import pg.exception.ProgramException;
+import pg.helper.AppConfigHelper;
 import pg.helper.MessageHelper;
-import pg.helper.PropertiesHelper;
 import pg.logger.impl.FileLogger;
 import pg.picturefilechanger.ChangeDetails;
 import pg.picturefilechanger.impl.FileChangerImpl;
 import pg.view.ViewHandler;
+
+import java.io.File;
+import java.net.URL;
+import java.util.ResourceBundle;
+
+import static pg.constant.ProgramConstants.IMG_RESOURCE_PATH;
 
 /**
  * @author Gawa [Paweł Gawędzki]
@@ -60,22 +56,11 @@ public class StartController extends AbstractController {
 
     private void setUpFromAppProperties() {
         try {
-            URL url = this.getClass().getClassLoader().getResource(ProgramConstants.APP_CONFIG_PATH);
-            PropertiesHelper propertiesHelper = new PropertiesHelper();
-            Properties properties = propertiesHelper.loadProgramProperties(url.getPath());
-
-            coreNameTextField.setText(properties.getProperty("core.name.lastUsed"));
-
-            String fileConnectors = properties.getProperty("file.connectors");
-            List<String> list = Arrays.asList(fileConnectors.split(","));
-            fileConnectorComboBox.setItems(FXCollections.observableList(list));
-            fileConnectorComboBox.setValue(list.get(0));
-            int idx = list.indexOf(properties.getProperty("file.connector.lastUsed"));
-            if (idx > -1) {
-                fileConnectorComboBox.setValue(list.get(idx));
-            }
-
-            fileExtensionsTextField.setText(properties.getProperty("file.extensions"));
+            AppConfigHelper appConfigHelper = AppConfigHelper.getInstance();
+            coreNameTextField.setText(appConfigHelper.getCoreNameLastUsed());
+            fileConnectorComboBox.setItems(FXCollections.observableList(appConfigHelper.getFileConnectors()));
+            fileConnectorComboBox.setValue(appConfigHelper.getFileConnectorLastUsed());
+            fileExtensionsTextField.setText(appConfigHelper.getExtensions());
         } catch (ProgramException ex) {
             logger.log(ex);
         } finally {
@@ -111,8 +96,8 @@ public class StartController extends AbstractController {
         changeDetails.setCoreName(coreNameTextField.getText());
         changeDetails.setFileNameIndexConnector(fileConnectorComboBox.getValue());
         if (!changeDetails.isReady()) {
-            String errMsg = String.format("!!!Not all required parameters are set.%nRequired parameters are:%n- source%n" +
-                    "- destination%n- core name.!");
+            String errMsg = String.format("!!!Not all required parameters are set.%nRequired parameters are:%n" +
+                    "- source%n- destination%n- core name.!");
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error Dialog");
             alert.setHeaderText("!!!Can't perform change.");
@@ -122,29 +107,12 @@ public class StartController extends AbstractController {
         } else {
             try {
                 new FileChangerImpl(changeDetails.toStringArray(), bundle).run();
-                updateAppConfiguration();
+                AppConfigHelper.getInstance().updateAppConfiguration(changeDetails);
             } catch (ProgramException ex) {
                 buildErrorAlertWithSolution(ex);
+            } finally {
+                logger.log("!!!Zakończono zmianę.");
             }
-        }
-    }
-
-    private void updateAppConfiguration() {
-        try {
-            URL url = this.getClass().getClassLoader().getResource(ProgramConstants.APP_CONFIG_PATH);
-            PropertiesHelper propertiesHelper = new PropertiesHelper();
-            Properties appProperties = propertiesHelper.loadProgramProperties(url.getPath());
-
-            propertiesHelper.overwriteProperty(appProperties, "core.name.lastUsed", changeDetails.getCoreName());
-            propertiesHelper.overwriteProperty(appProperties, "file.connector.lastUsed",
-                    changeDetails.getFileNameIndexConnector());
-            propertiesHelper.overwriteProperty(appProperties, "file.extensions", changeDetails.getFileExtension());
-
-            propertiesHelper.saveProgramProperties(appProperties, ProgramConstants.APP_CONFIG_PATH);
-        } catch (ProgramException ex) {
-            logger.log(ex);
-        } finally {
-            logger.log("!!!Zaktualizowano konfigurację programu.");
         }
     }
 

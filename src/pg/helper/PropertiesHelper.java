@@ -1,21 +1,20 @@
 package pg.helper;
 
+import pg.constant.ProgramConstants;
+import pg.exception.ErrorCode;
+import pg.exception.ProgramException;
+
 import java.io.FileReader;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Properties;
 import java.util.ResourceBundle;
-import pg.constant.ProgramConstants;
-import pg.exception.ErrorCode;
-import pg.exception.ProgramException;
 
 /**
  * @author Gawa [Paweł Gawędzki]
  */
 public class PropertiesHelper {
-
-    private boolean anyPropertyChanged;
 
     public Properties loadProgramProperties(String filePath) throws ProgramException {
         if (filePath == null || filePath.length() == 0) {
@@ -42,18 +41,8 @@ public class PropertiesHelper {
     public void addProperty(Properties properties, String key, String valueToBeAdded) {
         String newValue = String.format("%s%s", properties.getProperty(key), valueToBeAdded);
         properties.setProperty(key, newValue);
-        anyPropertyChanged = true;
     }
 
-    public void overwriteProperty(Properties properties, String key, String newValue) {
-        properties.setProperty(key, newValue);
-        anyPropertyChanged = true;
-    }
-
-    public boolean isAnyPropertyChanged() {
-        return anyPropertyChanged;
-    }
-    
     public static ResourceBundle readBundles() throws ProgramException {
         ResourceBundle bundle = ResourceBundle.getBundle(ProgramConstants.BUNDLE_PATH);
         if (bundle == null) {
