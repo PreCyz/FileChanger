@@ -20,13 +20,15 @@ public abstract class AbstractController implements Initializable {
     protected ResourceHelper resourceHelper;
     protected AppLogger logger;
     protected ViewHandler viewHandler;
+    protected MessageHelper messageHelper;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.location = location;
         bundle = resources;
         resourceHelper = new ResourceHelper();
-        logger = new ConsoleLogger(MessageHelper.getInstance(bundle));
+        messageHelper = MessageHelper.getInstance(bundle);
+        logger = new ConsoleLogger(messageHelper);
     }
 
     public void setViewHandler(ViewHandler viewHandler) {

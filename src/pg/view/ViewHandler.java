@@ -8,8 +8,6 @@ import javafx.scene.layout.Priority;
 import pg.exception.ProgramException;
 import pg.helper.MessageHelper;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -29,10 +27,6 @@ public interface ViewHandler {
         alert.setHeaderText("!!!Look, an Exception Dialog");
         alert.setContentText(MessageHelper.getInstance(
                 ResourceBundle.getBundle(RESOURCE_BUNDLE, Locale.getDefault())).getErrorMsg(exception.getErrorCode()));
-
-        // Create expandable Exception.
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
 
         Label label = new Label("!!!The exception message was:");
 

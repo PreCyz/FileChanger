@@ -1,6 +1,9 @@
 package pg.view.controller;
 
-import pg.helper.MessageHelper;
+import javafx.collections.FXCollections;
+import javafx.fxml.FXML;
+import javafx.scene.control.ListView;
+import pg.logger.AbstractLogger;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -11,12 +14,12 @@ import java.util.ResourceBundle;
  */
 public class LoggerController extends AbstractController {
 
-    private MessageHelper messageHelper;
+    @FXML private ListView<String> loggerListView;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         super.initialize(location, resources);
-        messageHelper = MessageHelper.getInstance(bundle);
+        loggerListView.setItems(FXCollections.observableList(AbstractLogger.getLogs()));
     }
 
 }

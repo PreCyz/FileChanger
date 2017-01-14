@@ -2,6 +2,7 @@ package pg.logger;
 
 import pg.helper.MessageHelper;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,6 +23,9 @@ public abstract class AbstractLogger implements AppLogger {
 
     public static void addMessage(String message) {
         logMessages.add(message);
+    }
+    public static List<String> getLogs() {
+        return new ArrayList<>(logMessages);
     }
 
 }

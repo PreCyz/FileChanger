@@ -10,7 +10,6 @@ import javafx.scene.image.ImageView;
 import javafx.stage.DirectoryChooser;
 import pg.exception.ProgramException;
 import pg.helper.AppConfigHelper;
-import pg.helper.MessageHelper;
 import pg.logger.impl.FileLogger;
 import pg.picturefilechanger.ChangeDetails;
 import pg.picturefilechanger.impl.FileChangerImpl;
@@ -45,13 +44,11 @@ public class MainController extends AbstractController {
     @FXML private CheckBox editExtensionsCheckBox;
 
     private ChangeDetails changeDetails;
-    private MessageHelper messageHelper;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         super.initialize(location, resources);
         changeDetails = new ChangeDetails();
-        messageHelper = MessageHelper.getInstance(bundle);
         logger = new FileLogger(messageHelper, this.getClass(), logListView);
         editExtensionsCheckBox.setOnAction(extensionsAction());
         setUpFromAppProperties();
