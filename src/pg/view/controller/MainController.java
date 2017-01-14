@@ -1,6 +1,8 @@
 package pg.view.controller;
 
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -12,7 +14,7 @@ import pg.helper.MessageHelper;
 import pg.logger.impl.FileLogger;
 import pg.picturefilechanger.ChangeDetails;
 import pg.picturefilechanger.impl.FileChangerImpl;
-import pg.view.ViewHandler;
+import pg.view.AppViewHandler;
 
 import java.io.File;
 import java.net.URL;
@@ -24,7 +26,7 @@ import static pg.constant.ProgramConstants.IMG_RESOURCE_PATH;
  * @author Gawa [Paweł Gawędzki]
  * 2016-11-21 20:34:16
  */
-public class StartController extends AbstractController {
+public class MainController extends AbstractController {
     
     @FXML private TextField coreNameTextField;
     @FXML private ComboBox<String> fileConnectorComboBox;
@@ -34,6 +36,7 @@ public class StartController extends AbstractController {
     @FXML private Button sourceButton;
     @FXML private Button destinationButton;
     @FXML private Button exitButton;
+    @FXML private Button showLogButton;
     @FXML private Label maxIndexesLabel;
     @FXML private Label sourceLabel;
     @FXML private Label destinationLabel;
@@ -50,6 +53,7 @@ public class StartController extends AbstractController {
         changeDetails = new ChangeDetails();
         messageHelper = MessageHelper.getInstance(bundle);
         logger = new FileLogger(messageHelper, this.getClass(), logListView);
+        editExtensionsCheckBox.setOnAction(extensionsAction());
         setUpFromAppProperties();
         setUpButtons();
     }
@@ -70,9 +74,15 @@ public class StartController extends AbstractController {
 
     private void setUpButtons() {
         setImgForButton(sourceButton);
+        sourceButton.setOnAction(sourceAction());
         setImgForButton(destinationButton);
+        destinationButton.setOnAction(destinationAction());
         setImgForButton(runButton);
+        runButton.setOnAction(runAction());
         setImgForButton(exitButton);
+        exitButton.setOnAction(exitAction());
+        setImgForButton(showLogButton);
+        showLogButton.setOnAction(showLoggerAction());
     }
 
     private void setImgForButton(Button button) {
@@ -85,35 +95,39 @@ public class StartController extends AbstractController {
         }
     }
 
-    public void exit() {
-        logger.log("!!!Naciśnięto przycisk 'Exit'. Program zakończy działanie.");
-        System.exit(0);
+    private EventHandler<ActionEvent> exitAction() {
+        return e -> {
+            logger.log("!!!Naciśnięto przycisk 'Exit'. Program zakończy działanie.");
+            System.exit(0);
+        };
     }
 
-    public void run() {
-        logger.log("!!!Naciśnięto przycisk 'Run'.");
-        maxIndexesLabel.setText("YOU PRESSED RUN MAN !!");
-        changeDetails.setCoreName(coreNameTextField.getText());
-        changeDetails.setFileNameIndexConnector(fileConnectorComboBox.getValue());
-        if (!changeDetails.isReady()) {
-            String errMsg = String.format("!!!Not all required parameters are set.%nRequired parameters are:%n" +
-                    "- source%n- destination%n- core name.!");
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error Dialog");
-            alert.setHeaderText("!!!Can't perform change.");
-            alert.setContentText(errMsg);
+    private EventHandler<ActionEvent> runAction() {
+        return e -> {
+            logger.log("!!!Naciśnięto przycisk 'Run'.");
+            maxIndexesLabel.setText("YOU PRESSED RUN MAN !!");
+            changeDetails.setCoreName(coreNameTextField.getText());
+            changeDetails.setFileNameIndexConnector(fileConnectorComboBox.getValue());
+            if (!changeDetails.isReady()) {
+                String errMsg = String.format("!!!Not all required parameters are set.%nRequired parameters are:%n" +
+                        "- source%n- destination%n- core name.!");
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Dialog");
+                alert.setHeaderText("!!!Can't perform change.");
+                alert.setContentText(errMsg);
 
-            alert.showAndWait();
-        } else {
-            try {
-                new FileChangerImpl(changeDetails.toStringArray(), bundle).run();
-                AppConfigHelper.getInstance().updateAppConfiguration(changeDetails);
-            } catch (ProgramException ex) {
-                buildErrorAlertWithSolution(ex);
-            } finally {
-                logger.log("!!!Zakończono zmianę.");
+                alert.showAndWait();
+            } else {
+                try {
+                    new FileChangerImpl(changeDetails.toStringArray(), bundle).run();
+                    AppConfigHelper.getInstance().updateAppConfiguration(changeDetails);
+                } catch (ProgramException ex) {
+                    buildErrorAlertWithSolution(ex);
+                } finally {
+                    logger.log("!!!Zakończono zmianę.");
+                }
             }
-        }
+        };
     }
 
     private void buildErrorAlertWithSolution(ProgramException ex) {
@@ -124,13 +138,15 @@ public class StartController extends AbstractController {
         alert.showAndWait();
     }
 
-    public void source() {
-        logger.log("!!!Naciśnięto przycisk 'Src'.");
-        DirectoryChooser directoryChooser = new DirectoryChooser();
-        configureDirectoryChooser(directoryChooser);
-        File sourceDir = directoryChooser.showDialog(ViewHandler.window());
-        changeDetails.setSourceDir(sourceDir.getAbsolutePath());
-        sourceLabel.setText(sourceDir.getAbsolutePath());
+    private EventHandler<ActionEvent> sourceAction() {
+        return e -> {
+            logger.log("!!!Naciśnięto przycisk 'Src'.");
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            configureDirectoryChooser(directoryChooser);
+            File sourceDir = directoryChooser.showDialog(AppViewHandler.window());
+            changeDetails.setSourceDir(sourceDir.getAbsolutePath());
+            sourceLabel.setText(sourceDir.getAbsolutePath());
+        };
     }
 
     private void configureDirectoryChooser(DirectoryChooser directoryChooser) {
@@ -138,17 +154,26 @@ public class StartController extends AbstractController {
         directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
     }
 
-    public void destination() {
-        logger.log("!!!Naciśnięto przycisk 'Dst'.");
-        DirectoryChooser directoryChooser = new DirectoryChooser();
-        configureDirectoryChooser(directoryChooser);
-        File destinationDir = directoryChooser.showDialog(ViewHandler.window());
-        changeDetails.setDestinationDir(destinationDir.getAbsolutePath());
-        destinationLabel.setText(destinationDir.getAbsolutePath());
+    private EventHandler<ActionEvent> destinationAction() {
+        return e -> {
+            logger.log("!!!Naciśnięto przycisk 'Dst'.");
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            configureDirectoryChooser(directoryChooser);
+            File destinationDir = directoryChooser.showDialog(AppViewHandler.window());
+            changeDetails.setDestinationDir(destinationDir.getAbsolutePath());
+            destinationLabel.setText(destinationDir.getAbsolutePath());
+        };
     }
 
-    public void extensions() {
-        fileExtensionsTextField.setEditable(editExtensionsCheckBox.isSelected());
+    private EventHandler<ActionEvent> showLoggerAction() {
+        return e -> {
+            logger.log("!!!Naciśnięto przycisk 'Show Logger'.");
+            viewHandler.launchLoggerView();
+        };
+    }
+
+    private EventHandler<ActionEvent> extensionsAction() {
+        return e -> fileExtensionsTextField.setEditable(editExtensionsCheckBox.isSelected());
     }
 
 }

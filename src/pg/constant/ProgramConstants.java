@@ -15,6 +15,7 @@ public final class ProgramConstants {
     public static final String BUNDLE_PATH = String.format("%s%s", RESOURCE_PATH.replace("/", "."), DEFAULT_BUNDLE_NAME);
     public static final String APP_CONFIG_PATH = String.format("%s%s", RESOURCE_PATH, APP_CONFIG);
     public static final String IMG_RESOURCE_PATH = RESOURCE_PATH + "img/";
+    public static final String FXML_RESOURCE_PATH = RESOURCE_PATH + "fxml/";
 
     private ProgramConstants() {}
 
