@@ -5,9 +5,9 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="433.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="433.0" prefWidth="946.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <TabPane prefHeight="433.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane prefHeight="433.0" prefWidth="483.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
           <Tab text="%changerTab.title">
             <content>
@@ -29,9 +29,9 @@
                                 <content>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="118.0" prefWidth="294.0">
                                        <children>
-                                          <Button fx:id="sourceButton" layoutX="14.0" layoutY="15.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="50.0" text="%changerTab.src" />
+                                          <Button fx:id="sourceButton" layoutX="14.0" layoutY="15.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="50.0" text="%changerTab.button.source" />
                                           <Label fx:id="sourceLabel" layoutX="76.0" layoutY="19.0" prefHeight="17.0" prefWidth="210.0" text="%changerTab.source" />
-                                          <Button fx:id="destinationButton" layoutX="14.0" layoutY="47.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="50.0" text="%changerTab.dst" />
+                                          <Button fx:id="destinationButton" layoutX="14.0" layoutY="47.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="50.0" text="%changerTab.button.destination" />
                                           <Label fx:id="destinationLabel" layoutX="76.0" layoutY="51.0" prefHeight="17.0" prefWidth="210.0" text="%changerTab.destination" />
                                           <TextField fx:id="coreNameTextField" layoutX="13.0" layoutY="82.0" prefHeight="25.0" prefWidth="122.0" />
                                           <Label layoutX="142.0" layoutY="86.0" prefHeight="17.0" prefWidth="144.0" text="%changerTab.coreName" />
@@ -39,22 +39,17 @@
                                     </AnchorPane>
                                 </content>
                               </TitledPane>
-                              <Label layoutX="5.0" layoutY="7.0" prefHeight="15.0" prefWidth="298.0" text="!!!Obsługiwane typy plików" />
-                              <CheckBox fx:id="editExtensionsCheckBox" layoutX="5.0" layoutY="55.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="299.0" text="!!!Edytuj typy plików" />
+                              <Label layoutX="5.0" layoutY="7.0" prefHeight="15.0" prefWidth="298.0" text="%changerTab.allowedFileTypes" />
+                              <CheckBox fx:id="editExtensionsCheckBox" layoutX="5.0" layoutY="55.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="299.0" text="%changerTab.editFileTypes" />
                               <TextField fx:id="fileExtensionsTextField" editable="false" layoutX="5.0" layoutY="27.0" prefHeight="25.0" prefWidth="300.0" />
                            </children>
                         </Pane>
-                        <Pane layoutX="319.0" layoutY="10.0" prefHeight="384.0" prefWidth="280.0">
+                        <Pane layoutX="319.0" layoutY="10.0" prefHeight="384.0" prefWidth="165.0">
                            <children>
-                              <Button fx:id="runButton" layoutX="206.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="%changerTab.run" />
-                              <ListView fx:id="logListView" layoutX="2.0" layoutY="119.0" prefHeight="223.0" prefWidth="269.0" style="-fx-border-color: black;">
-                                 <effect>
-                                    <Blend />
-                                 </effect></ListView>
-                              <Label fx:id="maxIndexesLabel" layoutX="2.0" prefHeight="100.0" prefWidth="190.0" style="-fx-border-color: black;" text="max file indexes" />
-                              <Button fx:id="exitButton" layoutX="206.0" layoutY="75.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="%changerTab.exit" />
-                              <Separator layoutX="2.0" layoutY="109.0" prefWidth="270.0" />
-                              <Button fx:id="showLogButton" layoutX="179.0" layoutY="347.0" mnemonicParsing="false" text="!!!Show log" />
+                              <Button fx:id="runButton" layoutX="5.0" layoutY="5.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="%changerTab.button.run" />
+                              <Label fx:id="maxIndexesLabel" layoutX="4.0" layoutY="104.0" prefHeight="100.0" prefWidth="156.0" style="-fx-border-color: black;" text="max file indexes" />
+                              <Button fx:id="exitButton" layoutX="6.0" layoutY="68.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="%changerTab.button.exit" />
+                              <Button fx:id="showLogsButton" layoutX="5.0" layoutY="36.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="97.0" text="%changerTab.button.showLogs" />
                            </children>
                         </Pane>
                      </children>
@@ -68,5 +63,14 @@
           </Tab>
         </tabs>
       </TabPane>
+      <Pane layoutX="484.0" prefHeight="433.0" prefWidth="462.0">
+         <children>
+            <ListView fx:id="logListView" disable="true" prefHeight="433.0" prefWidth="462.0" style="-fx-border-color: black;">
+               <effect>
+                  <Blend />
+               </effect>
+            </ListView>
+         </children>
+      </Pane>
    </children>
 </AnchorPane>

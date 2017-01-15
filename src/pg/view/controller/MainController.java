@@ -35,7 +35,7 @@ public class MainController extends AbstractController {
     @FXML private Button sourceButton;
     @FXML private Button destinationButton;
     @FXML private Button exitButton;
-    @FXML private Button showLogButton;
+    @FXML private Button showLogsButton;
     @FXML private Label maxIndexesLabel;
     @FXML private Label sourceLabel;
     @FXML private Label destinationLabel;
@@ -70,19 +70,14 @@ public class MainController extends AbstractController {
     }
 
     private void setUpButtons() {
-        setImgForButton(sourceButton);
-        sourceButton.setOnAction(sourceAction());
-        setImgForButton(destinationButton);
-        destinationButton.setOnAction(destinationAction());
-        setImgForButton(runButton);
-        runButton.setOnAction(runAction());
-        setImgForButton(exitButton);
-        exitButton.setOnAction(exitAction());
-        setImgForButton(showLogButton);
-        showLogButton.setOnAction(showLoggerAction());
+        setupButton(sourceButton, sourceAction());
+        setupButton(destinationButton, destinationAction());
+        setupButton(runButton, runAction());
+        setupButton(exitButton, exitAction());
+        setupButton(showLogsButton, showLogsAction());
     }
 
-    private void setImgForButton(Button button) {
+    private void setupButton(Button button, EventHandler<ActionEvent> actionEventHandler) {
         final String imgExtension = ".png";
         try {
             Image buttonImage = resourceHelper.readImage(IMG_RESOURCE_PATH + button.getId() + imgExtension);
@@ -90,6 +85,7 @@ public class MainController extends AbstractController {
         } catch (ProgramException ex) {
             logger.log(ex);
         }
+        button.setOnAction(actionEventHandler);
     }
 
     private EventHandler<ActionEvent> exitAction() {
@@ -162,9 +158,9 @@ public class MainController extends AbstractController {
         };
     }
 
-    private EventHandler<ActionEvent> showLoggerAction() {
+    private EventHandler<ActionEvent> showLogsAction() {
         return e -> {
-            logger.log("!!!Naciśnięto przycisk 'Show Logger'.");
+            logger.log("!!!Naciśnięto przycisk '"+showLogsButton.getText()+"'.");
             viewHandler.launchLoggerView();
         };
     }
