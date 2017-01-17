@@ -22,13 +22,16 @@ public interface ViewHandler {
     void launchLoggerView();
 
     static void handleException(ProgramException exception) {
+        MessageHelper messageHelper = MessageHelper.getInstance(ResourceBundle.getBundle(
+                RESOURCE_BUNDLE, Locale.getDefault()));
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("!!!Start Exception Dialog");
-        alert.setHeaderText("!!!Look, an Exception Dialog");
-        alert.setContentText(MessageHelper.getInstance(
-                ResourceBundle.getBundle(RESOURCE_BUNDLE, Locale.getDefault())).getErrorMsg(exception.getErrorCode()));
+        alert.setTitle(messageHelper.getFullMessage("alert.title"));
+        alert.setHeaderText(messageHelper.getFullMessage("alert.error.header.text"));
+        alert.setContentText(messageHelper.getErrorMsg(exception.getErrorCode()));
+        alert.setWidth(500);
+        alert.setWidth(500);
 
-        Label label = new Label("!!!The exception message was:");
+        Label label = new Label(messageHelper.getFullMessage("alert.exceptionDetails.label"));
 
         TextArea textArea = new TextArea(exception.getMessage());
         textArea.setEditable(false);

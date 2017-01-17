@@ -65,7 +65,7 @@ public class MainController extends AbstractController {
         } catch (ProgramException ex) {
             logger.log(ex);
         } finally {
-            logger.log("!!!Setup from app config finished.");
+            logger.log(messageHelper.getFullMessage("log.app.setup.finished"));
         }
     }
 
@@ -90,24 +90,23 @@ public class MainController extends AbstractController {
 
     private EventHandler<ActionEvent> exitAction() {
         return e -> {
-            logger.log("!!!Naciśnięto przycisk 'Exit'. Program zakończy działanie.");
+            logger.log(messageHelper.getFullMessage("log.button.pressed", exitButton.getText()));
+            logger.log(messageHelper.getFullMessage("log.exit.program"));
             System.exit(0);
         };
     }
 
     private EventHandler<ActionEvent> runAction() {
         return e -> {
-            logger.log("!!!Naciśnięto przycisk 'Run'.");
+            logger.log(messageHelper.getFullMessage("log.button.pressed", runButton.getText()));
             maxIndexesLabel.setText("YOU PRESSED RUN MAN !!");
             changeDetails.setCoreName(coreNameTextField.getText());
             changeDetails.setFileNameIndexConnector(fileConnectorComboBox.getValue());
             if (!changeDetails.isReady()) {
-                String errMsg = String.format("!!!Not all required parameters are set.%nRequired parameters are:%n" +
-                        "- source%n- destination%n- core name.!");
                 Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error Dialog");
-                alert.setHeaderText("!!!Can't perform change.");
-                alert.setContentText(errMsg);
+                alert.setTitle(messageHelper.getFullMessage("alert.title"));
+                alert.setHeaderText(messageHelper.getFullMessage("alert.error.header.text"));
+                alert.setContentText(messageHelper.getFullMessage("alert.required.parameters.not.set"));
 
                 alert.showAndWait();
             } else {
@@ -117,7 +116,7 @@ public class MainController extends AbstractController {
                 } catch (ProgramException ex) {
                     buildErrorAlertWithSolution(ex);
                 } finally {
-                    logger.log("!!!Zakończono zmianę.");
+                    logger.log(messageHelper.getFullMessage("log.change.finished"));
                 }
             }
         };
@@ -125,15 +124,15 @@ public class MainController extends AbstractController {
 
     private void buildErrorAlertWithSolution(ProgramException ex) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("!!!Error Dialog");
-        alert.setHeaderText("!!!Can't perform change.");
+        alert.setTitle(messageHelper.getFullMessage("alert.title"));
+        alert.setHeaderText(messageHelper.getFullMessage("alert.error.header.text"));
         alert.setContentText(messageHelper.getErrorMsg(ex.getErrorCode(), ex.getArgument()));
         alert.showAndWait();
     }
 
     private EventHandler<ActionEvent> sourceAction() {
         return e -> {
-            logger.log("!!!Naciśnięto przycisk 'Src'.");
+            logger.log(messageHelper.getFullMessage("log.button.pressed", sourceButton.getText()));
             DirectoryChooser directoryChooser = new DirectoryChooser();
             configureDirectoryChooser(directoryChooser);
             File sourceDir = directoryChooser.showDialog(AppViewHandler.window());
@@ -143,13 +142,13 @@ public class MainController extends AbstractController {
     }
 
     private void configureDirectoryChooser(DirectoryChooser directoryChooser) {
-        directoryChooser.setTitle("!!!Wybierz katalog");
+        directoryChooser.setTitle(messageHelper.getFullMessage("fileChooser.choose.folder"));
         directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
     }
 
     private EventHandler<ActionEvent> destinationAction() {
         return e -> {
-            logger.log("!!!Naciśnięto przycisk 'Dst'.");
+            logger.log(messageHelper.getFullMessage("log.button.pressed", destinationButton.getText()));
             DirectoryChooser directoryChooser = new DirectoryChooser();
             configureDirectoryChooser(directoryChooser);
             File destinationDir = directoryChooser.showDialog(AppViewHandler.window());
@@ -160,7 +159,7 @@ public class MainController extends AbstractController {
 
     private EventHandler<ActionEvent> showLogsAction() {
         return e -> {
-            logger.log("!!!Naciśnięto przycisk '"+showLogsButton.getText()+"'.");
+            logger.log(messageHelper.getFullMessage("log.button.pressed", showLogsButton.getText()));
             viewHandler.launchLoggerView();
         };
     }

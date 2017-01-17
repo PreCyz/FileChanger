@@ -17,7 +17,7 @@ public class FileLogger extends AbstractLogger {
     public FileLogger(MessageHelper messageHelper, Class whoLogs, ListView<String> listView) {
         super(messageHelper, whoLogs);
         this.listView = listView;
-        logMessages.add("!!!FileLog initialized. " + whoLogs.getSimpleName());
+        logMessages.add(messageHelper.getFullMessage("log.fileLog.initialized", whoLogs.getSimpleName()));
         this.listView.setItems(FXCollections.observableArrayList(logMessages));
     }
 

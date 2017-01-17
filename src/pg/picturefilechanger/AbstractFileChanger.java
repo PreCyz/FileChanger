@@ -1,11 +1,14 @@
 package pg.picturefilechanger;
 
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
 import pg.exception.ProgramException;
 import pg.helper.MessageHelper;
+
+import static pg.constant.ProgramConstants.RESOURCE_BUNDLE;
 
 /**
  *
@@ -29,23 +32,25 @@ public abstract class AbstractFileChanger {
         }
     }
     
-    public static enum Params {
-        source("Folder źródłowy"),
-        destination("Folder docelowy"),
-        extensions("Rozszerzenia plików"),
-        filePrefix("Prefix nazwy nowego pliku"),
-        nameConnector("Łącznik nazwy pliku z jego indexem");
+    public enum Params {
+        source("param.source"),
+        destination("param.destination"),
+        extensions("param.extensions"),
+        filePrefix("param.filePrefix"),
+        nameConnector("param.nameConnector");
 
         private String msg;
-        public String getMsg() {
-            return msg;
-        }
+        private MessageHelper messageHelper;
         Params(String msg) {
             this.msg = msg;
+            messageHelper = MessageHelper.getInstance(
+                    ResourceBundle.getBundle(RESOURCE_BUNDLE, Locale.getDefault()));
+        }
+        public String getMsg() {
+            return messageHelper.getFullMessage(msg);
         }
     }
-    
-    
+
     public AbstractFileChanger(String[] params, ResourceBundle bundle){
         this.params = params;
         this.bundle = bundle;
