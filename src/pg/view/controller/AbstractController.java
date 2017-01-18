@@ -34,4 +34,6 @@ public abstract class AbstractController implements Initializable {
     public void setViewHandler(ViewHandler viewHandler) {
         this.viewHandler = viewHandler;
     }
+
+    public abstract void calculateWindowWidth();
 }

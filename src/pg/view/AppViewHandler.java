@@ -13,6 +13,7 @@ import pg.helper.ResourceHelper;
 import pg.logger.AbstractLogger;
 import pg.logger.AppLogger;
 import pg.logger.impl.ConsoleLogger;
+import pg.view.controller.AbstractController;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -25,9 +26,7 @@ import static pg.constant.ProgramConstants.RESOURCE_BUNDLE;
  * @author Gawa [Paweł Gawędzki]
  * 2016-10-30 14:14:25
  */
-public class AppViewHandler implements ViewHandler {
-    
-    private static Window window;
+public class AppViewHandler extends AbstractViewHandler {
 
     private Stage primaryStage;
     private ResourceBundle bundle;
@@ -39,7 +38,7 @@ public class AppViewHandler implements ViewHandler {
         bundle = ResourceBundle.getBundle(RESOURCE_BUNDLE, Locale.getDefault());
         resourceHelper = new ResourceHelper();
         logger = new ConsoleLogger(MessageHelper.getInstance(bundle));
-        AppViewHandler.window = primaryStage;
+        window = primaryStage;
     }
     
     public void launchStartView() {
@@ -54,23 +53,15 @@ public class AppViewHandler implements ViewHandler {
         try {
             primaryStage.setTitle(bundle.getString("window.title"));
             primaryStage.setResizable(false);
-            primaryStage.setScene(createStartScene(ViewDetails.START_VIEW));
-            primaryStage.show();
-        } catch (ProgramException ex) {
-            ViewHandler.handleException(ex);
-        }
-    }
-
-    private Scene createStartScene(ViewDetails viewDetails) throws ProgramException {
-        try {
             //String css = getClass().getClassLoader().getResource("pg/resource/css/start.css").toExternalForm();
-            FXMLLoader loader = new FXMLLoader(viewDetails.url(), bundle);
-            loader.setController(viewDetails.controller(this));
-            return new Scene(loader.load());
-            //scene.getStylesheets().add(css);
-            //return scene;
+            FXMLLoader loader = new FXMLLoader(ViewDetails.START_VIEW.url(), bundle);
+            AbstractController controller = ViewDetails.START_VIEW.controller(this);
+            loader.setController(controller);
+            primaryStage.setScene(new Scene(loader.load()));
+            primaryStage.show();
+            controller.calculateWindowWidth();
         } catch (IOException ex) {
-            throw new ProgramException(ErrorCode.LAUNCH_PROGRAM, ex);
+            AbstractViewHandler.handleException(new ProgramException(ErrorCode.LAUNCH_PROGRAM, ex));
         }
     }
 
@@ -88,14 +79,16 @@ public class AppViewHandler implements ViewHandler {
             loggerStage.initModality(Modality.WINDOW_MODAL);
             loggerStage.setTitle(bundle.getString("window.title"));
             loggerStage.setResizable(false);
-            loggerStage.setScene(createStartScene(ViewDetails.LOGGER_VIEW));
+            //String css = getClass().getClassLoader().getResource("pg/resource/css/start.css").toExternalForm();
+            FXMLLoader loader = new FXMLLoader(ViewDetails.LOGGER_VIEW.url(), bundle);
+            loggerStage.setScene(new Scene(loader.load()));
             loggerStage.show();
-        } catch (ProgramException ex) {
-            ViewHandler.handleException(ex);
+        } catch (IOException ex) {
+            AbstractViewHandler.handleException(new ProgramException(ErrorCode.LAUNCH_PROGRAM, ex));
         }
     }
 
-    public static Window window() {
-        return window;
+    public void changeWindowWidth(double width) {
+        window.setWidth(window.getWidth() - width);
     }
 }

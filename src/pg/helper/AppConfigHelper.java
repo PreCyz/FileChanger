@@ -58,4 +58,9 @@ public class AppConfigHelper {
     public String getExtensions() {
         return appConfig.getProperty("file.extensions");
     }
+
+    public boolean getHideLogs() {
+        String value = appConfig.getProperty("hide.logs").toLowerCase();
+        return "true".equals(value);
+    }
 }

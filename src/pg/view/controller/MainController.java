@@ -7,13 +7,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import pg.exception.ProgramException;
 import pg.helper.AppConfigHelper;
 import pg.logger.impl.FileLogger;
 import pg.picturefilechanger.ChangeDetails;
 import pg.picturefilechanger.impl.FileChangerImpl;
-import pg.view.AppViewHandler;
 
 import java.io.File;
 import java.net.URL;
@@ -42,6 +42,7 @@ public class MainController extends AbstractController {
     @FXML private ListView<String> logListView;
     @FXML private TextField fileExtensionsTextField;
     @FXML private CheckBox editExtensionsCheckBox;
+    @FXML private CheckBox hideLogCheckBox;
 
     private ChangeDetails changeDetails;
 
@@ -51,6 +52,7 @@ public class MainController extends AbstractController {
         changeDetails = new ChangeDetails();
         logger = new FileLogger(messageHelper, this.getClass(), logListView);
         editExtensionsCheckBox.setOnAction(extensionsAction());
+        hideLogCheckBox.setOnAction(hideLogAction());
         setUpFromAppProperties();
         setUpButtons();
     }
@@ -62,6 +64,7 @@ public class MainController extends AbstractController {
             fileConnectorComboBox.setItems(FXCollections.observableList(appConfigHelper.getFileConnectors()));
             fileConnectorComboBox.setValue(appConfigHelper.getFileConnectorLastUsed());
             fileExtensionsTextField.setText(appConfigHelper.getExtensions());
+            hideLogCheckBox.setSelected(appConfigHelper.getHideLogs());
         } catch (ProgramException ex) {
             logger.log(ex);
         } finally {
@@ -123,10 +126,14 @@ public class MainController extends AbstractController {
     }
 
     private void buildErrorAlertWithSolution(ProgramException ex) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(messageHelper.getFullMessage("alert.title"));
-        alert.setHeaderText(messageHelper.getFullMessage("alert.error.header.text"));
-        alert.setContentText(messageHelper.getErrorMsg(ex.getErrorCode(), ex.getArgument()));
+        buildAlert(messageHelper.getErrorMsg(ex.getErrorCode(), ex.getArgument()), Alert.AlertType.ERROR);
+    }
+
+    private void buildAlert(String message, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(messageHelper.getFullMessage("alert.title", alertType));
+        alert.setHeaderText(messageHelper.getFullMessage("alert.header.text"));
+        alert.setContentText(message);
         alert.showAndWait();
     }
 
@@ -135,9 +142,14 @@ public class MainController extends AbstractController {
             logger.log(messageHelper.getFullMessage("log.button.pressed", sourceButton.getText()));
             DirectoryChooser directoryChooser = new DirectoryChooser();
             configureDirectoryChooser(directoryChooser);
-            File sourceDir = directoryChooser.showDialog(AppViewHandler.window());
-            changeDetails.setSourceDir(sourceDir.getAbsolutePath());
-            sourceLabel.setText(sourceDir.getAbsolutePath());
+            File sourceDir = directoryChooser.showDialog(viewHandler.window());
+            if (sourceDir != null) {
+                changeDetails.setSourceDir(sourceDir.getAbsolutePath());
+                sourceLabel.setText(sourceDir.getAbsolutePath());
+            } else {
+                logger.log(messageHelper.getFullMessage("alert.source.noDir"));
+                buildAlert(messageHelper.getFullMessage("alert.source.noDir"), Alert.AlertType.WARNING);
+            }
         };
     }
 
@@ -151,9 +163,14 @@ public class MainController extends AbstractController {
             logger.log(messageHelper.getFullMessage("log.button.pressed", destinationButton.getText()));
             DirectoryChooser directoryChooser = new DirectoryChooser();
             configureDirectoryChooser(directoryChooser);
-            File destinationDir = directoryChooser.showDialog(AppViewHandler.window());
-            changeDetails.setDestinationDir(destinationDir.getAbsolutePath());
-            destinationLabel.setText(destinationDir.getAbsolutePath());
+            File destinationDir = directoryChooser.showDialog(viewHandler.window());
+            if (destinationDir != null) {
+                changeDetails.setDestinationDir(destinationDir.getAbsolutePath());
+                destinationLabel.setText(destinationDir.getAbsolutePath());
+            } else {
+                logger.log(messageHelper.getFullMessage("alert.destination.noDir"));
+                buildAlert(messageHelper.getFullMessage("alert.destination.noDir"), Alert.AlertType.WARNING);
+            }
         };
     }
 
@@ -166,6 +183,26 @@ public class MainController extends AbstractController {
 
     private EventHandler<ActionEvent> extensionsAction() {
         return e -> fileExtensionsTextField.setEditable(editExtensionsCheckBox.isSelected());
+    }
+
+    private EventHandler<ActionEvent> hideLogAction() {
+        return event -> {
+            logListView.setVisible(!hideLogCheckBox.isSelected());
+            Pane pane = (Pane) logListView.getParent();
+            if (hideLogCheckBox.isSelected()) {
+                viewHandler.changeWindowWidth(pane.getWidth());
+            } else {
+                viewHandler.changeWindowWidth(-pane.getWidth());
+            }
+        };
+    }
+
+    public void calculateWindowWidth() {
+        if (hideLogCheckBox.isSelected()) {
+            logListView.setVisible(!hideLogCheckBox.isSelected());
+            Pane pane = (Pane) logListView.getParent();
+            viewHandler.changeWindowWidth(pane.getWidth());
+        }
     }
 
 }

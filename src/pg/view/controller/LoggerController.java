@@ -22,4 +22,6 @@ public class LoggerController extends AbstractController {
         loggerListView.setItems(FXCollections.observableList(AbstractLogger.getLogs()));
     }
 
+    public void calculateWindowWidth() {}
+
 }
