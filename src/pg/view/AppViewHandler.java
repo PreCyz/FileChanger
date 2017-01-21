@@ -14,6 +14,7 @@ import pg.logger.AbstractLogger;
 import pg.logger.AppLogger;
 import pg.logger.impl.ConsoleLogger;
 import pg.view.controller.AbstractController;
+import pg.view.controller.LoggerController;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -61,7 +62,7 @@ public class AppViewHandler extends AbstractViewHandler {
             primaryStage.show();
             controller.calculateWindowWidth();
         } catch (IOException ex) {
-            AbstractViewHandler.handleException(new ProgramException(ErrorCode.LAUNCH_PROGRAM, ex));
+            handleException(new ProgramException(ErrorCode.LAUNCH_PROGRAM, ex));
         }
     }
 
@@ -81,10 +82,12 @@ public class AppViewHandler extends AbstractViewHandler {
             loggerStage.setResizable(false);
             //String css = getClass().getClassLoader().getResource("pg/resource/css/start.css").toExternalForm();
             FXMLLoader loader = new FXMLLoader(ViewDetails.LOGGER_VIEW.url(), bundle);
+            LoggerController controller = (LoggerController) ViewDetails.LOGGER_VIEW.controller(this);
+            loader.setController(controller);
             loggerStage.setScene(new Scene(loader.load()));
             loggerStage.show();
         } catch (IOException ex) {
-            AbstractViewHandler.handleException(new ProgramException(ErrorCode.LAUNCH_PROGRAM, ex));
+            handleException(new ProgramException(ErrorCode.LAUNCH_PROGRAM, ex));
         }
     }
 
