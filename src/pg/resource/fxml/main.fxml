@@ -41,7 +41,7 @@
                               </TitledPane>
                               <Label layoutX="5.0" layoutY="7.0" prefHeight="15.0" prefWidth="298.0" text="%changerTab.allowedFileTypes" />
                               <CheckBox fx:id="editExtensionsCheckBox" layoutX="5.0" layoutY="55.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="299.0" text="%changerTab.editFileTypes" />
-                              <TextField fx:id="fileExtensionsTextField" editable="false" layoutX="5.0" layoutY="27.0" prefHeight="25.0" prefWidth="300.0" />
+                              <TextField fx:id="fileExtensionsTextField" editable="false" layoutX="5.0" layoutY="27.0" prefHeight="25.0" prefWidth="300.0" style="-fx-background-color: #ececec;" />
                            </children>
                         </Pane>
                         <Pane layoutX="319.0" layoutY="10.0" prefHeight="384.0" prefWidth="165.0">

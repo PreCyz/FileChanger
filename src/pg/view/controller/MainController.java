@@ -1,5 +1,6 @@
 package pg.view.controller;
 
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -182,7 +183,12 @@ public class MainController extends AbstractController {
     }
 
     private EventHandler<ActionEvent> extensionsAction() {
-        return e -> fileExtensionsTextField.setEditable(editExtensionsCheckBox.isSelected());
+        return e -> {
+            fileExtensionsTextField.setEditable(editExtensionsCheckBox.isSelected());
+            fileExtensionsTextField.styleProperty().bind(Bindings.when(editExtensionsCheckBox.selectedProperty())
+                .then("-fx-background-color: white;")
+                .otherwise("-fx-background-color: #ECECEC;"));
+        };
     }
 
     private EventHandler<ActionEvent> hideLogAction() {
