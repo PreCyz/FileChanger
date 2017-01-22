@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
@@ -29,9 +31,15 @@
                                 <content>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="118.0" prefWidth="294.0">
                                        <children>
-                                          <Button fx:id="sourceButton" layoutX="14.0" layoutY="9.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="45.0" />
+                                          <Button fx:id="sourceButton" layoutX="14.0" layoutY="9.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="45.0">
+                                             <cursor>
+                                                <Cursor fx:constant="OPEN_HAND" />
+                                             </cursor></Button>
                                           <Label fx:id="sourceLabel" layoutX="63.0" layoutY="16.0" prefHeight="17.0" prefWidth="230.0" text="%changerTab.source" />
-                                          <Button fx:id="destinationButton" layoutX="14.0" layoutY="47.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="45.0" />
+                                          <Button fx:id="destinationButton" layoutX="14.0" layoutY="47.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="45.0">
+                                             <cursor>
+                                                <Cursor fx:constant="OPEN_HAND" />
+                                             </cursor></Button>
                                           <Label fx:id="destinationLabel" layoutX="63.0" layoutY="53.0" prefHeight="17.0" prefWidth="230.0" text="%changerTab.destination" />
                                           <TextField fx:id="coreNameTextField" layoutX="13.0" layoutY="87.0" prefHeight="25.0" prefWidth="122.0" />
                                           <Label layoutX="142.0" layoutY="91.0" prefHeight="17.0" prefWidth="144.0" text="%changerTab.coreName" />
@@ -40,17 +48,32 @@
                                 </content>
                               </TitledPane>
                               <Label layoutX="5.0" layoutY="7.0" prefHeight="15.0" prefWidth="298.0" text="%changerTab.allowedFileTypes" />
-                              <CheckBox fx:id="editExtensionsCheckBox" layoutX="5.0" layoutY="55.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="299.0" text="%changerTab.editFileTypes" />
+                              <CheckBox fx:id="editExtensionsCheckBox" layoutX="5.0" layoutY="55.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="299.0" text="%changerTab.editFileTypes">
+                                 <cursor>
+                                    <Cursor fx:constant="OPEN_HAND" />
+                                 </cursor></CheckBox>
                               <TextField fx:id="fileExtensionsTextField" editable="false" layoutX="5.0" layoutY="27.0" prefHeight="25.0" prefWidth="300.0" style="-fx-background-color: #ececec;" />
                            </children>
                         </Pane>
                         <Pane layoutX="319.0" layoutY="10.0" prefHeight="384.0" prefWidth="165.0">
                            <children>
-                              <Button fx:id="runButton" layoutX="5.0" layoutY="5.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="%changerTab.button.run" />
+                              <Button fx:id="runButton" layoutX="5.0" layoutY="5.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="%changerTab.button.run">
+                                 <cursor>
+                                    <Cursor fx:constant="OPEN_HAND" />
+                                 </cursor></Button>
                               <Label fx:id="maxIndexesLabel" layoutX="4.0" layoutY="35.0" prefHeight="100.0" prefWidth="156.0" style="-fx-border-color: black;" text="max file indexes" />
-                              <Button fx:id="exitButton" layoutX="94.0" layoutY="5.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="%changerTab.button.exit" />
-                              <Button fx:id="showLogsButton" layoutX="5.0" layoutY="140.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="97.0" text="%changerTab.button.showLogs" />
-                              <CheckBox fx:id="hideLogCheckBox" layoutX="11.0" layoutY="361.0" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" prefHeight="19.0" prefWidth="144.0" text="%changerTab.hideLogs" />
+                              <Button fx:id="exitButton" layoutX="94.0" layoutY="5.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="%changerTab.button.exit">
+                                 <cursor>
+                                    <Cursor fx:constant="OPEN_HAND" />
+                                 </cursor></Button>
+                              <Button fx:id="showLogsButton" layoutX="5.0" layoutY="140.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="97.0" text="%changerTab.button.showLogs">
+                                 <cursor>
+                                    <Cursor fx:constant="OPEN_HAND" />
+                                 </cursor></Button>
+                              <CheckBox fx:id="hideLogCheckBox" layoutX="11.0" layoutY="361.0" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" prefHeight="19.0" prefWidth="144.0" text="%changerTab.hideLogs">
+                                 <cursor>
+                                    <Cursor fx:constant="OPEN_HAND" />
+                                 </cursor></CheckBox>
                            </children>
                         </Pane>
                      </children>
