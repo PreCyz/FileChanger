@@ -88,6 +88,9 @@ public class MainController extends AbstractController {
             button.setGraphic(new ImageView(buttonImage));
         } catch (ProgramException ex) {
             logger.log(ex);
+            String buttonId = button.getId();
+            button.setText(messageHelper.getFullMessage(
+                    "changerTab.button." + buttonId.substring(0, buttonId.indexOf("Button"))));
         }
         button.setOnAction(actionEventHandler);
     }

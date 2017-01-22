@@ -29,11 +29,11 @@ public abstract class AbstractViewHandler implements ViewHandler {
         MessageHelper messageHelper = MessageHelper.getInstance(ResourceBundle.getBundle(
                 RESOURCE_BUNDLE, Locale.getDefault()));
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(messageHelper.getFullMessage("alert.title" + Alert.AlertType.ERROR));
+        alert.setTitle(messageHelper.getFullMessage("alert.title", Alert.AlertType.ERROR));
         alert.setHeaderText(messageHelper.getFullMessage("alert.header.text"));
         alert.setContentText(messageHelper.getErrorMsg(exception.getErrorCode()));
-        alert.setWidth(500);
-        alert.setWidth(500);
+        alert.setWidth(1000);
+        alert.setWidth(750);
 
         Label label = new Label(messageHelper.getFullMessage("alert.exceptionDetails.label"));
 
