@@ -21,8 +21,8 @@
                                 <content>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="76.0" prefWidth="298.0">
                                        <children>
-                                          <ComboBox fx:id="fileConnectorComboBox" layoutX="10.0" layoutY="17.0" prefHeight="25.0" prefWidth="53.0" />
-                                          <Label layoutX="74.0" layoutY="21.0" prefHeight="17.0" prefWidth="207.0" text="%changerTab.fileConnector" />
+                                          <ComboBox fx:id="fileConnectorComboBox" layoutX="10.0" layoutY="17.0" prefHeight="25.0" prefWidth="60.0" />
+                                          <Label layoutX="83.0" layoutY="21.0" prefHeight="17.0" prefWidth="207.0" text="%changerTab.fileConnector" />
                                        </children>
                                     </AnchorPane>
                                 </content>
