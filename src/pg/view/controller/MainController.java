@@ -47,6 +47,8 @@ public class MainController extends AbstractController {
 
     private ChangeDetails changeDetails;
 
+    private final short numberOfCharacters = 29;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         super.initialize(location, resources);
@@ -149,7 +151,7 @@ public class MainController extends AbstractController {
             File sourceDir = directoryChooser.showDialog(viewHandler.window());
             if (sourceDir != null) {
                 changeDetails.setSourceDir(sourceDir.getAbsolutePath());
-                sourceLabel.setText(sourceDir.getAbsolutePath());
+                sourceLabel.setText(fitValueToLabel(sourceDir.getAbsolutePath()));
             } else {
                 logger.log(messageHelper.getFullMessage("alert.source.noDir"));
                 buildAlert(messageHelper.getFullMessage("alert.source.noDir"), Alert.AlertType.WARNING);
@@ -162,6 +164,13 @@ public class MainController extends AbstractController {
         directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
     }
 
+    private String fitValueToLabel(String value) {
+        if (value.length() > numberOfCharacters) {
+            return String.format("...%s", value.substring(value.length() - numberOfCharacters, value.length()));
+        }
+        return value;
+    }
+
     private EventHandler<ActionEvent> destinationAction() {
         return e -> {
             logger.log(messageHelper.getFullMessage("log.button.pressed", destinationButton.getText()));
@@ -170,7 +179,7 @@ public class MainController extends AbstractController {
             File destinationDir = directoryChooser.showDialog(viewHandler.window());
             if (destinationDir != null) {
                 changeDetails.setDestinationDir(destinationDir.getAbsolutePath());
-                destinationLabel.setText(destinationDir.getAbsolutePath());
+                destinationLabel.setText(fitValueToLabel(destinationDir.getAbsolutePath()));
             } else {
                 logger.log(messageHelper.getFullMessage("alert.destination.noDir"));
                 buildAlert(messageHelper.getFullMessage("alert.destination.noDir"), Alert.AlertType.WARNING);
