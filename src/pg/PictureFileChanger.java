@@ -7,8 +7,9 @@ import pg.logger.impl.ConsoleLogger;
 import pg.helper.MessageHelper;
 import pg.helper.PropertiesHelper;
 import pg.logger.AppLogger;
-import pg.picturefilechanger.AbstractFileChanger;
 import pg.picturefilechanger.impl.FileChangerImpl;
+import pg.picturefilechanger.validator.Validator;
+import pg.picturefilechanger.validator.impl.ArgsValidator;
 
 /**
  *
@@ -37,21 +38,9 @@ public class PictureFileChanger {
     }
 
     protected static void runProgram(String[] args) throws ProgramException {
-        argumentsValidation(args);
         bundle = PropertiesHelper.readBundles();
+        new ArgsValidator(args, bundle).validate();
         new FileChangerImpl(args, bundle).run();
-    }
-
-    protected static void argumentsValidation(String[] args) throws ProgramException {
-        if(args == null || args.length == 0){
-            throw new ProgramException(ErrorCode.NO_ARGUMENTS);
-        }
-        
-        for(String arg : args){
-            if(MessageHelper.empty(arg)){
-                throw new ProgramException(ErrorCode.NULL_ARGUMENT, arg);
-            }
-        }
     }
     
 }

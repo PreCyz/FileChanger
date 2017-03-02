@@ -179,11 +179,6 @@ public class FileChangerImplTest {
         public FileChanger(String[] params) throws Exception {
             super(params, PropertiesHelper.readBundles());
         }
-
-        @Override
-        public Properties transformArgumentsToProperties(String[] args) {
-            return super.transformArgumentsToProperties(args);
-        }
     
     }
 }

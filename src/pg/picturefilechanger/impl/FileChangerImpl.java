@@ -20,56 +20,6 @@ public class FileChangerImpl extends AbstractFileChanger {
         super(params, bundle);
     }
 
-    //example source=sciezka destination=sciezka extensions=ext1,ext2,ext3,ext4...
-    @Override
-    protected Properties transformArgumentsToProperties(String[] args) {
-        Properties properties = new Properties();
-        for (String s : args) {
-            properties.put(s.substring(0, s.indexOf("=")), s.substring(s.indexOf("=") + 1));
-        }
-        return properties;
-    }
-
-    @Override
-    protected void exitOnEmptyProperties(Properties properties) {
-        if (properties.isEmpty()) {
-            System.err.println("argument.empty");
-            System.exit(0);
-        }
-    }
-
-    @Override
-    protected void displayPropertiesDetails(Properties properties) {
-        StringBuilder sb = new StringBuilder(ProgramConstants.LINE_SEPARATOR);
-        properties.entrySet().stream().forEach((entry) -> {
-            sb.append(
-                    String.format("%s[%s]=%s %s",
-                            entry.getKey(),
-                            Params.valueOf(entry.getKey() + "").getMsg(),
-                            entry.getValue(),
-                            ProgramConstants.LINE_SEPARATOR)
-            );
-        });
-        System.out.println(messageHelper.getFullMessage("argument.details", sb.toString()));
-    }
-
-    @Override
-    protected void exitOnPropertiesValidationError(Properties properties) {
-        for (Params param : Params.values()) {
-            if (properties.getProperty(param.name()) == null || "".equals(properties.getProperty(param.name()))) {
-                System.err.println(messageHelper.getFullMessage("argument.wrong.value",
-                        param.name(), param.getMsg(), properties.getProperty(param.name()))
-                );
-                System.exit(1);
-            }
-        }
-    }
-
-    @Override
-    protected void displaySourceInfo(Properties properties) {
-        System.out.println(messageHelper.getFullMessage("file.source", properties.getProperty(Params.source.name())));
-    }
-
     @Override
     protected ChangeDetails createChangeDetails(Properties properties) {
         ChangeDetails changeDetails = new ChangeDetails(

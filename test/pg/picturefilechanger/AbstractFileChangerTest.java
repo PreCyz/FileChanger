@@ -39,28 +39,6 @@ public class AbstractFileChangerTest {
         }
 
         @Override
-        public Properties transformArgumentsToProperties(String[] params) {
-            order += String.format("%s,", "transformArgumentsToProperties");
-            return null;
-        }
-
-        @Override
-        public void exitOnEmptyProperties(Properties properties) {
-            order += String.format("%s,", "exitOnEmptyProperties");
-        }
-
-        @Override
-        public void displayPropertiesDetails(Properties properties) {
-            order += String.format("%s,", "displayPropertiesDetails");
-        }
-
-        @Override
-        public void exitOnPropertiesValidationError(Properties properties) {
-            order += String.format("%s,", "exitOnPropertiesValidationError");
-            
-        }
-
-        @Override
         protected ChangeDetails createChangeDetails(Properties properties) {
             order += String.format("%s,", "createChangeDetails");
             return null;
@@ -82,10 +60,6 @@ public class AbstractFileChangerTest {
             order += String.format("%s,", "processChange");
         }
 
-        @Override
-        protected void displaySourceInfo(Properties properties) {
-            order += String.format("%s,", "displaySourceInfo");
-        }
     }
     
 }

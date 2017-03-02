@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 
 import pg.exception.ProgramException;
 import pg.helper.MessageHelper;
+import pg.picturefilechanger.validator.Validator;
 
 import static pg.constant.ProgramConstants.RESOURCE_BUNDLE;
 
@@ -15,10 +16,11 @@ import static pg.constant.ProgramConstants.RESOURCE_BUNDLE;
  * @author Gawa
  */
 public abstract class AbstractFileChanger {
-    protected final String[] params;
+
+    private final String[] params;
     protected final ResourceBundle bundle;
     protected final MessageHelper messageHelper;
-    
+
     public enum Extensions {
         jpg, jpeg, mp4, gif;
 
@@ -59,22 +61,21 @@ public abstract class AbstractFileChanger {
     
     public void run() throws ProgramException {
         Properties properties = transformArgumentsToProperties(params);
-        exitOnEmptyProperties(properties);
-        displayPropertiesDetails(properties);
-        exitOnPropertiesValidationError(properties);
-        displaySourceInfo(properties);
         ChangeDetails changeDetails = createChangeDetails(properties);
         createDestinationIfNotExists(changeDetails);
         Map<String, Integer> maxExtIdxMap = createMaxIndexMap(properties);
         processChange(maxExtIdxMap, changeDetails);
     }
 
-    
-    protected abstract Properties transformArgumentsToProperties(String[] params);
-    protected abstract void exitOnEmptyProperties(Properties properties);
-    protected abstract void displayPropertiesDetails(Properties properties);
-    protected abstract void exitOnPropertiesValidationError(Properties properties);
-    protected abstract void displaySourceInfo(Properties properties);
+    //example source=sciezka destination=sciezka extensions=ext1,ext2,ext3,ext4...
+    public static Properties transformArgumentsToProperties(String[] params) {
+        Properties properties = new Properties();
+        for (String s : params) {
+            properties.put(s.substring(0, s.indexOf("=")), s.substring(s.indexOf("=") + 1));
+        }
+        return properties;
+    }
+
     protected abstract ChangeDetails createChangeDetails(Properties properties);
     protected abstract void createDestinationIfNotExists(ChangeDetails changeDetails) throws ProgramException;
     protected abstract Map<String, Integer> createMaxIndexMap(Properties properties);
