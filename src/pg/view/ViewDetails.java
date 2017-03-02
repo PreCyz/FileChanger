@@ -7,6 +7,8 @@ import pg.view.controller.MainController;
 
 import java.net.URL;
 
+import static pg.constant.ProgramConstants.IMG_RESOURCE_PATH;
+
 /**
  * @author Gawa [Paweł Gawędzki]
  * 2016-11-21 20:31:16
@@ -36,8 +38,8 @@ public enum ViewDetails {
         return controller;
     }
 
-    public String windowImgFileName() {
-        return windowImgFileName;
+    public String windowImgFilePath() {
+        return IMG_RESOURCE_PATH + windowImgFileName;
     }
 
     public String windowTitleBundle() {

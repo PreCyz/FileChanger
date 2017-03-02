@@ -20,6 +20,79 @@ public class FileChangerImpl extends AbstractFileChanger {
         super(params, bundle);
     }
 
+    //example source=sciezka destination=sciezka extensions=ext1,ext2,ext3,ext4...
+    @Override
+    protected Properties transformArgumentsToProperties(String[] args) {
+        Properties properties = new Properties();
+        for (String s : args) {
+            properties.put(s.substring(0, s.indexOf("=")), s.substring(s.indexOf("=") + 1));
+        }
+        return properties;
+    }
+
+    @Override
+    protected void exitOnEmptyProperties(Properties properties) {
+        if (properties.isEmpty()) {
+            System.err.println("argument.empty");
+            System.exit(0);
+        }
+    }
+
+    @Override
+    protected void displayPropertiesDetails(Properties properties) {
+        StringBuilder sb = new StringBuilder(ProgramConstants.LINE_SEPARATOR);
+        properties.entrySet().stream().forEach((entry) -> {
+            sb.append(
+                    String.format("%s[%s]=%s %s",
+                            entry.getKey(),
+                            Params.valueOf(entry.getKey() + "").getMsg(),
+                            entry.getValue(),
+                            ProgramConstants.LINE_SEPARATOR)
+            );
+        });
+        System.out.println(messageHelper.getFullMessage("argument.details", sb.toString()));
+    }
+
+    @Override
+    protected void exitOnPropertiesValidationError(Properties properties) {
+        for (Params param : Params.values()) {
+            if (properties.getProperty(param.name()) == null || "".equals(properties.getProperty(param.name()))) {
+                System.err.println(messageHelper.getFullMessage("argument.wrong.value",
+                        param.name(), param.getMsg(), properties.getProperty(param.name()))
+                );
+                System.exit(1);
+            }
+        }
+    }
+
+    @Override
+    protected void displaySourceInfo(Properties properties) {
+        System.out.println(messageHelper.getFullMessage("file.source", properties.getProperty(Params.source.name())));
+    }
+
+    @Override
+    protected ChangeDetails createChangeDetails(Properties properties) {
+        ChangeDetails changeDetails = new ChangeDetails(
+                properties.getProperty(Params.source.name()),
+                properties.getProperty(Params.destination.name()),
+                properties.getProperty(Params.filePrefix.name()),
+                properties.getProperty(Params.nameConnector.name()));
+        return changeDetails;
+    }
+
+    @Override
+    protected void createDestinationIfNotExists(ChangeDetails changeDetails) throws ProgramException {
+        File destFile = new File(changeDetails.getDestinationDir());
+        if (!destFile.exists()) {
+            boolean destCreated = destFile.mkdir();
+            if (destCreated) {
+                System.out.println(messageHelper.getFullMessage("file.dir.created", changeDetails.getDestinationDir()));
+            } else {
+                throw new ProgramException(ErrorCode.DESTINATION_NOT_CREATED, changeDetails.getDestinationDir());
+            }
+        }
+    }
+
     @Override
     protected Map<String, Integer> createMaxIndexMap(Properties properties) {
         Map<String, Integer> maxExtIdxMap = new HashMap<>();
@@ -34,6 +107,27 @@ public class FileChangerImpl extends AbstractFileChanger {
             maxExtIdxMap.put(ext.name(), findNextAfterMaxIndex(changeDetails));
         }
         return maxExtIdxMap;
+    }
+
+    private int findNextAfterMaxIndex(ChangeDetails changeDetails) {
+        File destination = new File(changeDetails.getDestinationDir());
+        int max = 0;
+        for (File file : destination.listFiles()) {
+            if (file.getName().contains(changeDetails.getFileExtension())) {
+                int num = extractFileIndex(file, changeDetails);
+                if (num > max) {
+                    max = num;
+                }
+            }
+        }
+        System.out.println(messageHelper.getFullMessage("file.maximum.idx", changeDetails.getFileExtension(), max));
+        return max + 1;
+    }
+
+    private int extractFileIndex(File file, ChangeDetails changeDetails) throws NumberFormatException {
+        int beginIdx = file.getName().indexOf(changeDetails.getFileNameIndexConnector()) + 1;
+        int endIdx = file.getName().indexOf(".");
+        return Integer.parseInt(file.getName().substring(beginIdx, endIdx));
     }
 
     @Override
@@ -81,97 +175,4 @@ public class FileChangerImpl extends AbstractFileChanger {
                 + "." + changeFileDetails.getFileExtension();
     }
 
-    private int findNextAfterMaxIndex(ChangeDetails changeDetails) {
-        File destination = new File(changeDetails.getDestinationDir());
-        int max = 0;
-        for (File file : destination.listFiles()) {
-            if (file.getName().contains(changeDetails.getFileExtension())) {
-                int num = extractFileIndex(file, changeDetails);
-                if (num > max) {
-                    max = num;
-                }
-            }
-        }
-        System.out.println(messageHelper.getFullMessage("file.maximum.idx", changeDetails.getFileExtension(), max));
-        return max + 1;
-    }
-
-    private int extractFileIndex(File file, ChangeDetails changeDetails) throws NumberFormatException {
-        int beginIdx = file.getName().indexOf(changeDetails.getFileNameIndexConnector()) + 1;
-        int endIdx = file.getName().indexOf(".");
-        return Integer.parseInt(file.getName().substring(beginIdx, endIdx));
-    }
-
-    //example source=sciezka destination=sciezka extensions=ext1,ext2,ext3,ext4...
-    @Override
-    protected Properties transformArgumentsToProperties(String[] args) {
-        Properties properties = new Properties();
-        for (String s : args) {
-            properties.put(s.substring(0, s.indexOf("=")), s.substring(s.indexOf("=") + 1));
-        }
-        return properties;
-    }
-
-    @Override
-    protected void exitOnPropertiesValidationError(Properties properties) {
-        for (Params param : Params.values()) {
-            if (properties.getProperty(param.name()) == null || "".equals(properties.getProperty(param.name()))) {
-                System.err.println(messageHelper.getFullMessage("argument.wrong.value", 
-                        param.name(), param.getMsg(), properties.getProperty(param.name()))
-                );
-                System.exit(1);
-            }
-        }
-    }
-
-    @Override
-    protected void displaySourceInfo(Properties properties) {
-        System.out.println(messageHelper.getFullMessage("file.source", properties.getProperty(Params.source.name())));
-    }
-
-    @Override
-    protected void exitOnEmptyProperties(Properties properties) {
-        if (properties.isEmpty()) {
-            System.err.println("argument.empty");
-            System.exit(0);
-        }
-    }
-
-    @Override
-    protected void displayPropertiesDetails(Properties properties) {
-        StringBuilder sb = new StringBuilder(ProgramConstants.LINE_SEPARATOR);
-        properties.entrySet().stream().forEach((entry) -> {
-            sb.append(
-                    String.format("%s[%s]=%s %s", 
-                            entry.getKey(), 
-                            Params.valueOf(entry.getKey() + "").getMsg(), 
-                            entry.getValue(), 
-                            ProgramConstants.LINE_SEPARATOR)
-            );
-        });
-        System.out.println(messageHelper.getFullMessage("argument.details", sb.toString()));
-    }
-
-    @Override
-    protected ChangeDetails createChangeDetails(Properties properties) {
-        ChangeDetails changeDetails = new ChangeDetails(
-                properties.getProperty(Params.source.name()),
-                properties.getProperty(Params.destination.name()),
-                properties.getProperty(Params.filePrefix.name()),
-                properties.getProperty(Params.nameConnector.name()));
-        return changeDetails;
-    }
-
-    @Override
-    protected void createDestinationIfNotExists(ChangeDetails changeDetails) throws ProgramException {
-        File destFile = new File(changeDetails.getDestinationDir());
-        if (!destFile.exists()) {
-            boolean destCreated = destFile.mkdir();
-            if (destCreated) {
-                System.out.println(messageHelper.getFullMessage("file.dir.created", changeDetails.getDestinationDir()));
-            } else {
-                throw new ProgramException(ErrorCode.DESTINATION_NOT_CREATED, changeDetails.getDestinationDir());
-            }
-        }
-    }
 }

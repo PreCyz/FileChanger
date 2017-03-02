@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import static pg.constant.ProgramConstants.IMG_RESOURCE_PATH;
 import static pg.constant.ProgramConstants.RESOURCE_BUNDLE;
 
 /**
@@ -52,7 +51,7 @@ public class AppViewHandler extends AbstractViewHandler {
 
     private void buildScene(Stage stage, ViewDetails viewDetails) {
         try {
-            Image icon = resourceHelper.readImage(IMG_RESOURCE_PATH + viewDetails.windowImgFileName());
+            Image icon = resourceHelper.readImage(viewDetails.windowImgFilePath());
             stage.getIcons().add(icon);
         } catch (ProgramException ex) {
             logger.log(ex);

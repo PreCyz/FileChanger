@@ -16,7 +16,6 @@ import pg.picturefilechanger.impl.FileChangerImpl;
  */
 public class PictureFileChanger {
     
-    private static AbstractFileChanger fileChanger;
     private static ResourceBundle bundle;
 
     /**
@@ -40,8 +39,7 @@ public class PictureFileChanger {
     protected static void runProgram(String[] args) throws ProgramException {
         argumentsValidation(args);
         bundle = PropertiesHelper.readBundles();
-        createFileChanger(args, bundle);
-        fileChanger.run();
+        new FileChangerImpl(args, bundle).run();
     }
 
     protected static void argumentsValidation(String[] args) throws ProgramException {
@@ -56,8 +54,4 @@ public class PictureFileChanger {
         }
     }
     
-    protected static void createFileChanger(String[] args, ResourceBundle bundle) {
-        fileChanger = new FileChangerImpl(args, bundle);
-    }
-
 }
