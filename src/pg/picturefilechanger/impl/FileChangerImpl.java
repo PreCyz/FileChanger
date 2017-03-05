@@ -20,9 +20,14 @@ public class FileChangerImpl extends AbstractFileChanger {
         super(params, bundle);
     }
 
+    public FileChangerImpl(ChangeDetails changeDetails, ResourceBundle bundle) {
+        super(changeDetails, bundle);
+    }
+
     @Override
-    protected ChangeDetails createChangeDetails(Properties properties) {
-        ChangeDetails changeDetails = new ChangeDetails(
+    protected ChangeDetails createChangeDetails(String[] parameters) {
+        Properties properties = AbstractFileChanger.transformArgumentsToProperties(parameters);
+        changeDetails = new ChangeDetails(
                 properties.getProperty(Params.source.name()),
                 properties.getProperty(Params.destination.name()),
                 properties.getProperty(Params.filePrefix.name()),
@@ -31,12 +36,13 @@ public class FileChangerImpl extends AbstractFileChanger {
     }
 
     @Override
-    protected void createDestinationIfNotExists(ChangeDetails changeDetails) throws ProgramException {
+    protected void createDestinationIfNotExists() throws ProgramException {
         File destFile = new File(changeDetails.getDestinationDir());
         if (!destFile.exists()) {
             boolean destCreated = destFile.mkdir();
             if (destCreated) {
-                System.out.println(messageHelper.getFullMessage("file.dir.created", changeDetails.getDestinationDir()));
+                System.out.println(messageHelper.getFullMessage("file.dir.created",
+                        changeDetails.getDestinationDir()));
             } else {
                 throw new ProgramException(ErrorCode.DESTINATION_NOT_CREATED, changeDetails.getDestinationDir());
             }
@@ -44,17 +50,17 @@ public class FileChangerImpl extends AbstractFileChanger {
     }
 
     @Override
-    protected Map<String, Integer> createMaxIndexMap(Properties properties) {
+    protected Map<String, Integer> createMaxIndexMap() {
         Map<String, Integer> maxExtIdxMap = new HashMap<>();
         for (Extensions ext : Extensions.values()) {
-            ChangeDetails changeDetails = new ChangeDetails(
+            ChangeDetails tempChangeDetails = new ChangeDetails(
                     null,
-                    properties.getProperty(Params.destination.name()),
+                    changeDetails.getDestinationDir(),
                     null,
-                    properties.getProperty(Params.nameConnector.name())
+                    changeDetails.getFileNameIndexConnector()
             );
-            changeDetails.setFileExtension(ext.name());
-            maxExtIdxMap.put(ext.name(), findNextAfterMaxIndex(changeDetails));
+            tempChangeDetails.setFileExtension(ext.name());
+            maxExtIdxMap.put(ext.name(), findNextAfterMaxIndex(tempChangeDetails));
         }
         return maxExtIdxMap;
     }
@@ -70,7 +76,8 @@ public class FileChangerImpl extends AbstractFileChanger {
                 }
             }
         }
-        System.out.println(messageHelper.getFullMessage("file.maximum.idx", changeDetails.getFileExtension(), max));
+        System.out.println(messageHelper.getFullMessage("file.maximum.idx",
+                changeDetails.getFileExtension(), max));
         return max + 1;
     }
 
@@ -85,7 +92,7 @@ public class FileChangerImpl extends AbstractFileChanger {
         File[] dirContent = new File(changeDetails.getSourceDir()).listFiles();
         for (File file : dirContent) {
             if (file.isFile()) {
-                processChangeFile(file, idxMap, changeDetails);
+                processChangeFile(file, idxMap);
             } else if (file.isDirectory()) {
                 String dirPath = String.format("%s%s", file.getPath(), ProgramConstants.FILE_SEPARATOR);
                 ChangeDetails dirChangeDetails = new ChangeDetails(
@@ -99,20 +106,20 @@ public class FileChangerImpl extends AbstractFileChanger {
         }
     }
 
-    private void processChangeFile(File fileToProces, Map<String, Integer> maxIdxMap, ChangeDetails changeDetails) {
+    private void processChangeFile(File fileToProces, Map<String, Integer> maxIdxMap) {
         String fileExt = fileToProces.getName().substring(fileToProces.getName().indexOf(".") + 1).toLowerCase();
         if (Extensions.isFileExtensionProcessable(fileExt)) {
             int maxIdx = maxIdxMap.get(fileExt);
             changeDetails.setFileIndex(maxIdx);
             changeDetails.setFileExtension(fileExt);
 
-            changeFileName(fileToProces, changeDetails);
+            changeFileName(fileToProces);
 
             maxIdxMap.put(fileExt, ++maxIdx);
         }
     }
 
-    private void changeFileName(File file, ChangeDetails changeDetails) {
+    private void changeFileName(File file) {
         String newName = createFileName(changeDetails);
         if (file.renameTo(new File(newName))) {
             System.out.println(messageHelper.getFullMessage("file.name.changed", file.getName(), newName));

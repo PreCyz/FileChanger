@@ -11,14 +11,14 @@ import pg.helper.MessageHelper;
 import static pg.constant.ProgramConstants.RESOURCE_BUNDLE;
 
 /**
- *
  * @author Gawa
  */
 public abstract class AbstractFileChanger {
 
-    private final String[] params;
+    private String[] params;
     protected final ResourceBundle bundle;
     protected final MessageHelper messageHelper;
+    protected ChangeDetails changeDetails;
 
     public enum Extensions {
         jpg, jpeg, mp4, gif;
@@ -58,12 +58,19 @@ public abstract class AbstractFileChanger {
         this.bundle = bundle;
         messageHelper = MessageHelper.getInstance(bundle);
     }
+
+    public AbstractFileChanger(ChangeDetails changeDetails, ResourceBundle bundle){
+        this.changeDetails = changeDetails;
+        this.bundle = bundle;
+        messageHelper = MessageHelper.getInstance(bundle);
+    }
     
     public void run() throws ProgramException {
-        Properties properties = transformArgumentsToProperties(params);
-        ChangeDetails changeDetails = createChangeDetails(properties);
-        createDestinationIfNotExists(changeDetails);
-        Map<String, Integer> maxExtIdxMap = createMaxIndexMap(properties);
+        if (changeDetails == null) {
+            createChangeDetails(params);
+        }
+        createDestinationIfNotExists();
+        Map<String, Integer> maxExtIdxMap = createMaxIndexMap();
         processChange(maxExtIdxMap, changeDetails);
     }
 
@@ -76,8 +83,8 @@ public abstract class AbstractFileChanger {
         return properties;
     }
 
-    protected abstract ChangeDetails createChangeDetails(Properties properties);
-    protected abstract void createDestinationIfNotExists(ChangeDetails changeDetails) throws ProgramException;
-    protected abstract Map<String, Integer> createMaxIndexMap(Properties properties);
+    protected abstract ChangeDetails createChangeDetails(String[] parameters);
+    protected abstract void createDestinationIfNotExists() throws ProgramException;
+    protected abstract Map<String, Integer> createMaxIndexMap();
     protected abstract void processChange(Map<String, Integer> maxExtIdxMap, ChangeDetails changeDetails);
 }

@@ -11,13 +11,13 @@ import static org.junit.Assert.*;
 
 import pg.exception.ProgramException;
 import pg.helper.PropertiesHelper;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
+
 import static org.mockito.Mockito.when;
 
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import pg.picturefilechanger.AbstractFileChanger;
 import pg.picturefilechanger.ChangeDetails;
 
 /**
@@ -61,77 +61,63 @@ public class FileChangerImplTest {
     
     @Test(expected = NullPointerException.class) 
     public void transformNullToProperties() {
-        assertNull(changer.transformArgumentsToProperties(null));
+        assertNull(AbstractFileChanger.transformArgumentsToProperties(null));
     }
     
     @Test 
     public void transformArgumentsToProperties() {
-        assertEquals(changer.transformArgumentsToProperties(args), properties);
+        assertEquals(AbstractFileChanger.transformArgumentsToProperties(args), properties);
     }
     
     @Test 
     public void transformArgumentsToPropertiesNotSame() {
-        assertNotSame(changer.transformArgumentsToProperties(args), properties);
+        assertNotSame(AbstractFileChanger.transformArgumentsToProperties(args), properties);
     }
     
     @Test 
     public void transformArgumentsToPropertiesDifferentValue() {
-        assertNotSame(changer.transformArgumentsToProperties(args), properties);
+        assertNotSame(AbstractFileChanger.transformArgumentsToProperties(args), properties);
     }
 
     @Test
     public void testCreateMaxIndexMap() {
         Map<String, Integer> expected = new HashMap<>();
         expected.put("someKey", 1);
-        when(mockChanger.createMaxIndexMap(properties)).thenReturn(expected);
-        Map<String, Integer> actual = mockChanger.createMaxIndexMap(properties);
+        when(mockChanger.createMaxIndexMap()).thenReturn(expected);
+        Map<String, Integer> actual = mockChanger.createMaxIndexMap();
         assertNotNull(actual);
         assertTrue(!actual.isEmpty());
     }
     
     @Test
-    public void testCreateMaxIndexMap_throwsException() {
-        when(mockChanger.createMaxIndexMap(null)).thenThrow(NullPointerException.class);
+    public void givenNullParamsOrChangeDetailsWhenCreateMaxIndexMapThenThrowNullPointerException() {
         try {
-            mockChanger.createMaxIndexMap(null);
-            fail("Should be NullPointerException");
-        } catch(NullPointerException ex){
-            assertNotNull(ex);
-            verify(mockChanger).createMaxIndexMap(eq(null));
-        }
-        
-        properties = new Properties();
-        when(mockChanger.createMaxIndexMap(properties)).thenThrow(NullPointerException.class);
-        try{
-            mockChanger.createMaxIndexMap(properties);
-            fail("Should be NullPointerException");
-        } catch(NullPointerException ex) {
-            assertNotNull(ex);
-            verify(mockChanger).createMaxIndexMap(eq(properties));
+            String[] params = null;
+            changer = new FileChanger(params);
+            changer.createMaxIndexMap();
+            fail("Should throw NullPointerException.");
+        } catch (Exception ex) {
+            assertTrue(ex instanceof NullPointerException);
         }
 
-        properties = new Properties();
-        properties.put("destination", String.format("d:%stesty%sdst%s", FILE_SEPARATOR, FILE_SEPARATOR, FILE_SEPARATOR));
-        properties.put("nameConnector", "");
-        when(mockChanger.createMaxIndexMap(properties)).thenThrow(NumberFormatException.class);
-        try{
-            mockChanger.createMaxIndexMap(properties);
-            fail("Should be NumberFormatException");
-        } catch(NumberFormatException ex) {
-            assertNotNull(ex);
-            verify(mockChanger).createMaxIndexMap(eq(properties));
+        try {
+            ChangeDetails changeDetails = null;
+            changer = new FileChanger(changeDetails);
+            changer.createMaxIndexMap();
+            fail("Should throw NullPointerException.");
+        } catch (Exception ex) {
+            assertTrue(ex instanceof NullPointerException);
         }
-        
     }
     
     @Test(expected = ProgramException.class)
     public void givenNotExistingDestinationWhenCreateChangeDetailsThenReturnZeros() throws ProgramException {
-        String notExists = String.format("d:%stesty%snotExists%s", FILE_SEPARATOR, FILE_SEPARATOR, FILE_SEPARATOR);
-        properties.put("destination", notExists);
-        ChangeDetails changeDetails = changer.createChangeDetails(properties);
-        changer.createDestinationIfNotExists(changeDetails);
+        ChangeDetails changeDetails = changer.createChangeDetails(args);
+        changeDetails.setDestinationDir(
+                String.format("d:%stesty%snotExists%s", FILE_SEPARATOR, FILE_SEPARATOR, FILE_SEPARATOR));
+        changer.createDestinationIfNotExists();
 
-        Map<String, Integer> indexMap = changer.createMaxIndexMap(properties);
+        Map<String, Integer> indexMap = changer.createMaxIndexMap();
 
         assertEquals("Map should not be empty.", 4, indexMap.size());
         indexMap.entrySet().stream().forEach((entry) ->
@@ -144,7 +130,7 @@ public class FileChangerImplTest {
         String actualDestination = String.format("d:%stesty%sdst%s", FILE_SEPARATOR, FILE_SEPARATOR, FILE_SEPARATOR);
         String actualFilePrefix = "xperiaM2";
         String actualNameConnector = "_";
-        ChangeDetails details = changer.createChangeDetails(properties);
+        ChangeDetails details = changer.createChangeDetails(args);
         
         assertEquals(actualSrc, details.getSourceDir());
         assertEquals(actualDestination, details.getDestinationDir());
@@ -164,20 +150,28 @@ public class FileChangerImplTest {
     }
     
     @Test(expected = ProgramException.class)
-    public void givenNoDestinationWhenCreateDestinationIfNotExistsThenCreateDestinationDirectory() throws  Exception {
-        String notExists = String.format("d:%snotExists%s", FILE_SEPARATOR, FILE_SEPARATOR);
-        properties.put("destination", notExists);
-        ChangeDetails details = changer.createChangeDetails(properties);
-        changer.createDestinationIfNotExists(details);
-        File destination = new File(details.getDestinationDir());
+    public void givenNoDestinationWhenCreateDestinationIfNotExistsThenCreateDestinationDirectory()
+            throws Exception {
+        String src = String.format("d:%stesty%ssrc%s", FILE_SEPARATOR, FILE_SEPARATOR, FILE_SEPARATOR);
+        String dest = String.format("%s", String.format("d:%snotExists%s", FILE_SEPARATOR, FILE_SEPARATOR));
+        String coreName = "xperiaM2";
+        String nameConnector = "_";
+        ChangeDetails changeDetails = new ChangeDetails(src, dest, coreName, nameConnector);
+        changer = new FileChanger(changeDetails);
+        changer.createDestinationIfNotExists();
+        File destination = new File(changeDetails.getDestinationDir());
         assertTrue("Destination should exists.", destination.exists());
         destination.deleteOnExit();
     }
     
     private class FileChanger extends FileChangerImpl {
 
-        public FileChanger(String[] params) throws Exception {
+        FileChanger(String[] params) throws Exception {
             super(params, PropertiesHelper.readBundles());
+        }
+
+        FileChanger(ChangeDetails changeDetails) throws Exception {
+            super(changeDetails, PropertiesHelper.readBundles());
         }
     
     }

@@ -1,7 +1,6 @@
 package pg.picturefilechanger;
 
 import java.util.Map;
-import java.util.Properties;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -37,18 +36,18 @@ public class AbstractFileChangerTest {
         }
 
         @Override
-        protected ChangeDetails createChangeDetails(Properties properties) {
+        protected ChangeDetails createChangeDetails(String[] parameters) {
             order += String.format("%s,", "createChangeDetails");
             return null;
         }
         
         @Override
-        protected void createDestinationIfNotExists(ChangeDetails chnageDetails) {
+        protected void createDestinationIfNotExists() {
             order += String.format("%s,", "createDestinationIfNotExists");
         }
         
         @Override
-        public Map<String, Integer> createMaxIndexMap(Properties properties) {
+        public Map<String, Integer> createMaxIndexMap() {
             order += String.format("%s,", "createMaxIndexMap");
             return null;
         }
