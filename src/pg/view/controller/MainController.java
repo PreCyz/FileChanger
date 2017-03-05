@@ -115,8 +115,8 @@ public class MainController extends AbstractController {
             changeDetails.setFileExtension(fileExtensionsTextField.getText());
             if (!changeDetails.isReady()) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle(messageHelper.getFullMessage("alert.title"));
-                alert.setHeaderText(messageHelper.getFullMessage("alert.error.header.text"));
+                alert.setTitle(messageHelper.getFullMessage("alert.title", Alert.AlertType.ERROR.name()));
+                alert.setHeaderText(messageHelper.getFullMessage("alert.header.text"));
                 alert.setContentText(messageHelper.getFullMessage("alert.required.parameters.not.set"));
 
                 alert.showAndWait();
