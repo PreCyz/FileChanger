@@ -7,7 +7,6 @@ import java.util.ResourceBundle;
 
 import pg.exception.ProgramException;
 import pg.helper.MessageHelper;
-import pg.picturefilechanger.validator.Validator;
 
 import static pg.constant.ProgramConstants.RESOURCE_BUNDLE;
 
@@ -43,12 +42,13 @@ public abstract class AbstractFileChanger {
 
         private String msg;
         private MessageHelper messageHelper;
+
         Params(String msg) {
             this.msg = msg;
             messageHelper = MessageHelper.getInstance(
                     ResourceBundle.getBundle(RESOURCE_BUNDLE, Locale.getDefault()));
         }
-        public String getMsg() {
+        public String message() {
             return messageHelper.getFullMessage(msg);
         }
     }

@@ -128,4 +128,69 @@ public class ArgsValidatorTest {
         }
     }
 
+    @Test
+    public void givenNoNameConnectorWhenValidateThenThrowProgramException() {
+        try {
+            validator = new ArgsValidator(
+                    new String[] {"source=1", "destination=2", "extensions=1", "filePrefix=1"},
+                    PropertiesHelper.readBundles()
+            );
+            validator.validate();
+            fail("There should be no IllegalArgumentException.");
+        } catch (ProgramException ex) {
+            String expectedMsg = "Zła wartość wymaganego argumentu nameConnector[Łącznik nazwy pliku z jego " +
+                    "indexem]=[null].";
+            assertEquals(ErrorCode.ARGUMENT_WRONG_VALUE, ex.getErrorCode());
+            assertEquals(expectedMsg, ex.getArgument());
+        }
+    }
+
+    @Test
+    public void givenNoFilePrefixWhenValidateThenThrowProgramException() {
+        try {
+            validator = new ArgsValidator(
+                    new String[] {"source=1", "destination=2", "extensions=1"},
+                    PropertiesHelper.readBundles()
+            );
+            validator.validate();
+            fail("There should be no IllegalArgumentException.");
+        } catch (ProgramException ex) {
+            String expectedMsg = "Zła wartość wymaganego argumentu filePrefix[Prefix nazwy nowego pliku]=[null].";
+            assertEquals(ErrorCode.ARGUMENT_WRONG_VALUE, ex.getErrorCode());
+            assertEquals(expectedMsg, ex.getArgument());
+        }
+    }
+
+    @Test
+    public void givenNoExtensionsWhenValidateThenThrowProgramException() {
+        try {
+            validator = new ArgsValidator(
+                    new String[] {"source=1", "destination=2"},
+                    PropertiesHelper.readBundles()
+            );
+            validator.validate();
+            fail("There should be no IllegalArgumentException.");
+        } catch (ProgramException ex) {
+            String expectedMsg = "Zła wartość wymaganego argumentu extensions[Rozszerzenia plików]=[null].";
+            assertEquals(ErrorCode.ARGUMENT_WRONG_VALUE, ex.getErrorCode());
+            assertEquals(expectedMsg, ex.getArgument());
+        }
+    }
+
+    @Test
+    public void givenNoDestinationWhenValidateThenThrowProgramException() {
+        try {
+            validator = new ArgsValidator(
+                    new String[] {"source=1"},
+                    PropertiesHelper.readBundles()
+            );
+            validator.validate();
+            fail("There should be no IllegalArgumentException.");
+        } catch (ProgramException ex) {
+            String expectedMsg = "Zła wartość wymaganego argumentu destination[Folder docelowy]=[null].";
+            assertEquals(ErrorCode.ARGUMENT_WRONG_VALUE, ex.getErrorCode());
+            assertEquals(expectedMsg, ex.getArgument());
+        }
+    }
+
 }

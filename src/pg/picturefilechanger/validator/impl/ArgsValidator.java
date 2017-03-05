@@ -60,7 +60,7 @@ public class ArgsValidator implements Validator {
             sb.append(
                     String.format("%s[%s]=%s %s",
                             entry.getKey(),
-                            AbstractFileChanger.Params.valueOf(entry.getKey() + "").getMsg(),
+                            AbstractFileChanger.Params.valueOf(entry.getKey() + "").message(),
                             entry.getValue(),
                             ProgramConstants.LINE_SEPARATOR)
             );
@@ -75,7 +75,7 @@ public class ArgsValidator implements Validator {
         for (AbstractFileChanger.Params param : AbstractFileChanger.Params.values()) {
             if (properties.getProperty(param.name()) == null || "".equals(properties.getProperty(param.name()))) {
                 String errMsg = messageHelper.getFullMessage("argument.wrong.value",
-                        param.name(), param.getMsg(), properties.getProperty(param.name()));
+                        param.name(), param.message(), properties.getProperty(param.name()));
                 System.err.println(errMsg);
                 throw new ProgramException(ErrorCode.ARGUMENT_WRONG_VALUE, errMsg);
             }
