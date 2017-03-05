@@ -1,14 +1,12 @@
 package pg;
 
 import java.util.ResourceBundle;
-import pg.exception.ErrorCode;
 import pg.exception.ProgramException;
 import pg.logger.impl.ConsoleLogger;
 import pg.helper.MessageHelper;
 import pg.helper.PropertiesHelper;
 import pg.logger.AppLogger;
 import pg.picturefilechanger.impl.FileChangerImpl;
-import pg.picturefilechanger.validator.Validator;
 import pg.picturefilechanger.validator.impl.ArgsValidator;
 
 /**
@@ -26,21 +24,17 @@ public class PictureFileChanger {
         runProgramWithExceptionHandling(args);
     }
 
-    public static void runProgramWithExceptionHandling(String[] args) {
+    private static void runProgramWithExceptionHandling(String[] args) {
         try {
-            runProgram(args);
+            bundle = PropertiesHelper.readBundles();
+            new ArgsValidator(args, bundle).validate();
+            new FileChangerImpl(args, bundle).run();
         } catch (ProgramException ex) {
             MessageHelper messageHelper = MessageHelper.getInstance(bundle);
             AppLogger logger = new ConsoleLogger(messageHelper);
             logger.log(ex);
             System.err.println(ex.getMessage());
         }
-    }
-
-    protected static void runProgram(String[] args) throws ProgramException {
-        bundle = PropertiesHelper.readBundles();
-        new ArgsValidator(args, bundle).validate();
-        new FileChangerImpl(args, bundle).run();
     }
     
 }
