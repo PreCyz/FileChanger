@@ -15,43 +15,10 @@ import static pg.constant.ProgramConstants.RESOURCE_BUNDLE;
  */
 public abstract class AbstractFileChanger {
 
-    private String[] params;
     protected final ResourceBundle bundle;
     protected final MessageHelper messageHelper;
     protected ChangeDetails changeDetails;
-
-    public enum Extensions {
-        jpg, jpeg, mp4, gif;
-
-        public static boolean isFileExtensionProcessable(String fileExt) {
-            for (Extensions ext : Extensions.values()) {
-                if (fileExt.equalsIgnoreCase(ext.name())) {
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
-    
-    public enum Params {
-        source("param.source"),
-        destination("param.destination"),
-        extensions("param.extensions"),
-        filePrefix("param.filePrefix"),
-        nameConnector("param.nameConnector");
-
-        private String msg;
-        private MessageHelper messageHelper;
-
-        Params(String msg) {
-            this.msg = msg;
-            messageHelper = MessageHelper.getInstance(
-                    ResourceBundle.getBundle(RESOURCE_BUNDLE, Locale.getDefault()));
-        }
-        public String message() {
-            return messageHelper.getFullMessage(msg);
-        }
-    }
+    private String[] params;
 
     public AbstractFileChanger(String[] params, ResourceBundle bundle){
         this.params = params;
@@ -87,4 +54,5 @@ public abstract class AbstractFileChanger {
     protected abstract void createDestinationIfNotExists() throws ProgramException;
     protected abstract Map<String, Integer> createMaxIndexMap();
     protected abstract void processChange(Map<String, Integer> maxExtIdxMap, ChangeDetails changeDetails);
+
 }

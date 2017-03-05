@@ -2,6 +2,11 @@ package pg.picturefilechanger;
 
 import pg.helper.MessageHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static pg.picturefilechanger.Params.*;
+
 /**
  *
  * @author premik
@@ -10,17 +15,18 @@ public class ChangeDetails {
 
     private String sourceDir;
     private String destinationDir;
-    private String coreName;
+    private String fileCoreName;
     private String fileNameIndexConnector;
     private String fileExtension;
     private int fileIndex;
 
     public ChangeDetails() {}
 
-    public ChangeDetails(String sourceDir, String destinationDir, String coreName, String fileNameIndexConnector) {
+    public ChangeDetails(String sourceDir, String destinationDir, String fileCoreName,
+                         String fileNameIndexConnector) {
         this.sourceDir = sourceDir;
         this.destinationDir = destinationDir;
-        this.coreName = coreName;
+        this.fileCoreName = fileCoreName;
         this.fileNameIndexConnector = fileNameIndexConnector;
     }
 
@@ -40,12 +46,12 @@ public class ChangeDetails {
         this.destinationDir = destinationDir;
     }
 
-    public String getCoreName() {
-        return coreName;
+    public String getFileCoreName() {
+        return fileCoreName;
     }
 
-    public void setCoreName(String coreName) {
-        this.coreName = coreName;
+    public void setFileCoreName(String fileCoreName) {
+        this.fileCoreName = fileCoreName;
     }
 
     public String getFileNameIndexConnector() {
@@ -73,15 +79,35 @@ public class ChangeDetails {
     }
 
     public boolean isReady() {
-        boolean ready = !MessageHelper.empty(destinationDir);
-        ready &= !MessageHelper.empty(sourceDir);
-        ready &= !MessageHelper.empty(coreName);
+        boolean ready = !MessageHelper.empty(sourceDir);
+        ready &= !MessageHelper.empty(destinationDir);
+        ready &= !MessageHelper.empty(fileCoreName);
         return ready;
     }
 
     public String[] toStringArray() {
-        return new String[] {"source="+sourceDir, "destination="+destinationDir, "extensions="+fileExtension,
-                "filePrefix="+coreName, "nameConnector="+fileNameIndexConnector
-        };
+        int actualSize = 0;
+        List<String> params = new ArrayList<>(6);
+        if (!MessageHelper.empty(sourceDir)) {
+            params.add(source+"="+sourceDir);
+            ++actualSize;
+        }
+        if (!MessageHelper.empty(destinationDir)) {
+            params.add(destination+"="+destinationDir);
+            ++actualSize;
+        }
+        if (!MessageHelper.empty(fileExtension)) {
+            params.add(extensions+"="+fileExtension);
+            ++actualSize;
+        }
+        if (!MessageHelper.empty(fileCoreName)) {
+            params.add(coreName +"="+ fileCoreName);
+            ++actualSize;
+        }
+        if (!MessageHelper.empty(fileNameIndexConnector)) {
+            params.add(nameConnector+"="+fileNameIndexConnector);
+            ++actualSize;
+        }
+        return params.toArray(new String[actualSize]);
     }
 }

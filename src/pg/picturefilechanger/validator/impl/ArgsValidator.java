@@ -4,7 +4,8 @@ import pg.constant.ProgramConstants;
 import pg.exception.ErrorCode;
 import pg.exception.ProgramException;
 import pg.helper.MessageHelper;
-import pg.picturefilechanger.AbstractFileChanger;
+import pg.picturefilechanger.ChangeDetails;
+import pg.picturefilechanger.Params;
 import pg.picturefilechanger.validator.Validator;
 
 import java.util.Properties;
@@ -12,16 +13,18 @@ import java.util.ResourceBundle;
 
 import static pg.picturefilechanger.AbstractFileChanger.transformArgumentsToProperties;
 
-/**
- * Created by gawa on 02.03.17.
- */
 public class ArgsValidator implements Validator {
 
-    private final String[] args;
     private final MessageHelper messageHelper;
+    private final String[] args;
 
     public ArgsValidator(String[] args, ResourceBundle bundle) {
         this.args = args;
+        this.messageHelper = MessageHelper.getInstance(bundle);
+    }
+
+    public ArgsValidator(ChangeDetails changeDetails, ResourceBundle bundle) {
+        this.args = changeDetails.toStringArray();
         this.messageHelper = MessageHelper.getInstance(bundle);
     }
 
@@ -60,7 +63,7 @@ public class ArgsValidator implements Validator {
             sb.append(
                     String.format("%s[%s]=%s %s",
                             entry.getKey(),
-                            AbstractFileChanger.Params.valueOf(entry.getKey() + "").message(),
+                            Params.valueOf(entry.getKey() + "").message(),
                             entry.getValue(),
                             ProgramConstants.LINE_SEPARATOR)
             );
@@ -72,7 +75,7 @@ public class ArgsValidator implements Validator {
 
     private void throwProgramExceptionWhenPropertiesValidationError(Properties properties)
             throws ProgramException {
-        for (AbstractFileChanger.Params param : AbstractFileChanger.Params.values()) {
+        for (Params param : Params.values()) {
             if (properties.getProperty(param.name()) == null || "".equals(properties.getProperty(param.name()))) {
                 String errMsg = messageHelper.getFullMessage("argument.wrong.value",
                         param.name(), param.message(), properties.getProperty(param.name()));
@@ -83,6 +86,7 @@ public class ArgsValidator implements Validator {
     }
 
     private void displaySourceInfo(Properties properties) {
-        System.out.println(messageHelper.getFullMessage("file.source", properties.getProperty(AbstractFileChanger.Params.source.name())));
+        System.out.println(messageHelper.getFullMessage("file.source",
+                properties.getProperty(Params.source.name())));
     }
 }

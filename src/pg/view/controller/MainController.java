@@ -15,6 +15,7 @@ import pg.helper.AppConfigHelper;
 import pg.logger.impl.FileLogger;
 import pg.picturefilechanger.ChangeDetails;
 import pg.picturefilechanger.impl.FileChangerImpl;
+import pg.picturefilechanger.validator.impl.ArgsValidator;
 
 import java.io.File;
 import java.net.URL;
@@ -109,8 +110,9 @@ public class MainController extends AbstractController {
         return e -> {
             logger.log(messageHelper.getFullMessage("log.button.pressed", runButton.getText()));
             maxIndexesLabel.setText("YOU PRESSED RUN MAN !!");
-            changeDetails.setCoreName(coreNameTextField.getText());
+            changeDetails.setFileCoreName(coreNameTextField.getText());
             changeDetails.setFileNameIndexConnector(fileConnectorComboBox.getValue());
+            changeDetails.setFileExtension(fileExtensionsTextField.getText());
             if (!changeDetails.isReady()) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle(messageHelper.getFullMessage("alert.title"));
@@ -120,7 +122,8 @@ public class MainController extends AbstractController {
                 alert.showAndWait();
             } else {
                 try {
-                    new FileChangerImpl(changeDetails.toStringArray(), bundle).run();
+                    new ArgsValidator(changeDetails, bundle);
+                    new FileChangerImpl(changeDetails, bundle).run();
                     AppConfigHelper.getInstance().updateAppConfiguration(changeDetails);
                 } catch (ProgramException ex) {
                     buildErrorAlertWithSolution(ex);

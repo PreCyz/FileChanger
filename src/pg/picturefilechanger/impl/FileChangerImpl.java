@@ -10,6 +10,7 @@ import pg.exception.ErrorCode;
 import pg.exception.ProgramException;
 import pg.picturefilechanger.ChangeDetails;
 import pg.picturefilechanger.AbstractFileChanger;
+import pg.picturefilechanger.Params;
 
 /**
  * @author Paweł Gawędzki
@@ -30,7 +31,7 @@ public class FileChangerImpl extends AbstractFileChanger {
         changeDetails = new ChangeDetails(
                 properties.getProperty(Params.source.name()),
                 properties.getProperty(Params.destination.name()),
-                properties.getProperty(Params.filePrefix.name()),
+                properties.getProperty(Params.coreName.name()),
                 properties.getProperty(Params.nameConnector.name()));
         return changeDetails;
     }
@@ -52,15 +53,15 @@ public class FileChangerImpl extends AbstractFileChanger {
     @Override
     protected Map<String, Integer> createMaxIndexMap() {
         Map<String, Integer> maxExtIdxMap = new HashMap<>();
-        for (Extensions ext : Extensions.values()) {
+        for (String extension : changeDetails.getFileExtension().split(",")) {
             ChangeDetails tempChangeDetails = new ChangeDetails(
                     null,
                     changeDetails.getDestinationDir(),
                     null,
                     changeDetails.getFileNameIndexConnector()
             );
-            tempChangeDetails.setFileExtension(ext.name());
-            maxExtIdxMap.put(ext.name(), findNextAfterMaxIndex(tempChangeDetails));
+            tempChangeDetails.setFileExtension(extension);
+            maxExtIdxMap.put(extension, findNextAfterMaxIndex(tempChangeDetails));
         }
         return maxExtIdxMap;
     }
@@ -98,7 +99,7 @@ public class FileChangerImpl extends AbstractFileChanger {
                 ChangeDetails dirChangeDetails = new ChangeDetails(
                         dirPath,
                         changeDetails.getDestinationDir(),
-                        changeDetails.getCoreName(),
+                        changeDetails.getFileCoreName(),
                         changeDetails.getFileNameIndexConnector()
                 );
                 processChange(idxMap, dirChangeDetails);
@@ -106,17 +107,26 @@ public class FileChangerImpl extends AbstractFileChanger {
         }
     }
 
-    private void processChangeFile(File fileToProces, Map<String, Integer> maxIdxMap) {
-        String fileExt = fileToProces.getName().substring(fileToProces.getName().indexOf(".") + 1).toLowerCase();
-        if (Extensions.isFileExtensionProcessable(fileExt)) {
+    private void processChangeFile(File fileToProcess, Map<String, Integer> maxIdxMap) {
+        String fileExt = fileToProcess.getName().substring(fileToProcess.getName().indexOf(".") + 1).toLowerCase();
+        if (isFileExtensionProcessable(fileExt)) {
             int maxIdx = maxIdxMap.get(fileExt);
             changeDetails.setFileIndex(maxIdx);
             changeDetails.setFileExtension(fileExt);
 
-            changeFileName(fileToProces);
+            changeFileName(fileToProcess);
 
             maxIdxMap.put(fileExt, ++maxIdx);
         }
+    }
+
+    private boolean isFileExtensionProcessable(String fileExt) {
+        for (String extension : changeDetails.getFileExtension().split(",")) {
+            if (extension.equalsIgnoreCase(fileExt)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void changeFileName(File file) {
@@ -127,7 +137,7 @@ public class FileChangerImpl extends AbstractFileChanger {
     }
 
     private String createFileName(ChangeDetails changeFileDetails) {
-        return changeFileDetails.getDestinationDir() + changeFileDetails.getCoreName()
+        return changeFileDetails.getDestinationDir() + changeFileDetails.getFileCoreName()
                 + changeFileDetails.getFileNameIndexConnector() + changeFileDetails.getFileIndex()
                 + "." + changeFileDetails.getFileExtension();
     }

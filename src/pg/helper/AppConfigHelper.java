@@ -31,7 +31,7 @@ public class AppConfigHelper {
     }
 
     public void updateAppConfiguration(ChangeDetails changeDetails) throws ProgramException {
-        appConfig.setProperty("core.name.lastUsed", changeDetails.getCoreName());
+        appConfig.setProperty("core.name.lastUsed", changeDetails.getFileCoreName());
         appConfig.setProperty("file.connector.lastUsed", changeDetails.getFileNameIndexConnector());
         appConfig.setProperty("file.extensions", changeDetails.getFileExtension());
 

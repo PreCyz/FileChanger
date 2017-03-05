@@ -40,7 +40,7 @@ public class FileChangerImplTest {
         args = new String[] {
                 String.format("source=d:%stesty%ssrc%s", FILE_SEPARATOR, FILE_SEPARATOR, FILE_SEPARATOR),
                 String.format("destination=d:%stesty%sdst%s", FILE_SEPARATOR, FILE_SEPARATOR, FILE_SEPARATOR),
-                "extensions=jpg,jpeg,gif,mp4", "filePrefix=xperiaM2", "nameConnector=_"};
+                "extensions=jpg,jpeg,gif,mp4", "coreName=xperiaM2", "nameConnector=_"};
         changer = new FileChanger(args);
         properties = new Properties();
         properties.put("source",
@@ -48,7 +48,7 @@ public class FileChangerImplTest {
         properties.put("destination",
                 String.format("d:%stesty%sdst%s", FILE_SEPARATOR, FILE_SEPARATOR, FILE_SEPARATOR));
         properties.put("extensions", "jpg,jpeg,gif,mp4");
-        properties.put("filePrefix", "xperiaM2");
+        properties.put("coreName", "xperiaM2");
         properties.put("nameConnector", "_");
     }
     
@@ -135,7 +135,7 @@ public class FileChangerImplTest {
         assertEquals(actualSrc, details.getSourceDir());
         assertEquals(actualDestination, details.getDestinationDir());
         assertNull(details.getFileExtension());
-        assertEquals(actualFilePrefix, details.getCoreName());
+        assertEquals(actualFilePrefix, details.getFileCoreName());
         assertEquals(actualNameConnector, details.getFileNameIndexConnector());
     }
     
