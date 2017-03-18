@@ -1,5 +1,7 @@
 package pg.logger;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import pg.helper.MessageHelper;
 
 import java.util.ArrayList;
@@ -11,14 +13,14 @@ import java.util.List;
  */
 public abstract class AbstractLogger implements AppLogger {
 
+    protected static Logger logger;
     protected static List<String> logMessages = new LinkedList<>();
 
     protected final MessageHelper messageHelper;
-    protected final Class whoLogs;
 
-    public AbstractLogger(MessageHelper messageHelper, Class whoLogs) {
+    public AbstractLogger(MessageHelper messageHelper) {
         this.messageHelper = messageHelper;
-        this.whoLogs = whoLogs;
+        logger = LogManager.getLogger(this.getClass().getSimpleName());
     }
 
     public static void addMessage(String message) {

@@ -1,5 +1,7 @@
 package pg.logger.impl;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import pg.exception.ProgramException;
 import pg.helper.MessageHelper;
 import pg.logger.AppLogger;
@@ -9,6 +11,9 @@ import pg.logger.AppLogger;
  * 2016-12-02 23:16:18
  */
 public class ConsoleLogger implements AppLogger {
+
+    private static Logger logger = LogManager.getLogger(ConsoleLogger.class.getSimpleName());
+
     private final MessageHelper messageHelper;
 
     public ConsoleLogger(MessageHelper messageHelper) {
@@ -17,12 +22,15 @@ public class ConsoleLogger implements AppLogger {
     
     @Override
     public void log(ProgramException ex) {
-        System.out.println(messageHelper.getErrorMsg(ex.getErrorCode(), ex.getArgument()));
+        String errorMsg = messageHelper.getErrorMsg(ex.getErrorCode(), ex.getArgument());
+        logger.log(logger.getLevel(), errorMsg);
+        //System.out.println(errorMsg);
     }
 
     @Override
     public void log(String message) {
-        System.out.println(message);
+        logger.log(logger.getLevel(), message);
+        //System.out.println(message);
     }
 
 }

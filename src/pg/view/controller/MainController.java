@@ -54,7 +54,7 @@ public class MainController extends AbstractController {
     public void initialize(URL location, ResourceBundle resources) {
         super.initialize(location, resources);
         changeDetails = new ChangeDetails();
-        logger = new FileLogger(messageHelper, this.getClass(), logListView);
+        logger = new FileLogger(messageHelper, logListView);
         editExtensionsCheckBox.setOnAction(extensionsAction());
         hideLogCheckBox.setOnAction(hideLogAction());
         setUpFromAppProperties();
@@ -100,7 +100,7 @@ public class MainController extends AbstractController {
 
     private EventHandler<ActionEvent> exitAction() {
         return e -> {
-            logger.log(messageHelper.getFullMessage("log.button.pressed", exitButton.getText()));
+            logger.log(messageHelper.getFullMessage("log.button.pressed", exitButton.getId()));
             logger.log(messageHelper.getFullMessage("log.exit.program"));
             System.exit(0);
         };
@@ -108,7 +108,7 @@ public class MainController extends AbstractController {
 
     private EventHandler<ActionEvent> runAction() {
         return e -> {
-            logger.log(messageHelper.getFullMessage("log.button.pressed", runButton.getText()));
+            logger.log(messageHelper.getFullMessage("log.button.pressed", runButton.getId()));
             maxIndexesLabel.setText("YOU PRESSED RUN MAN !!");
             changeDetails.setFileCoreName(coreNameTextField.getText());
             changeDetails.setFileNameIndexConnector(fileConnectorComboBox.getValue());
@@ -148,7 +148,7 @@ public class MainController extends AbstractController {
 
     private EventHandler<ActionEvent> sourceAction() {
         return e -> {
-            logger.log(messageHelper.getFullMessage("log.button.pressed", sourceButton.getText()));
+            logger.log(messageHelper.getFullMessage("log.button.pressed", sourceButton.getId()));
             DirectoryChooser directoryChooser = new DirectoryChooser();
             configureDirectoryChooser(directoryChooser);
             File sourceDir = directoryChooser.showDialog(viewHandler.window());
@@ -176,7 +176,7 @@ public class MainController extends AbstractController {
 
     private EventHandler<ActionEvent> destinationAction() {
         return e -> {
-            logger.log(messageHelper.getFullMessage("log.button.pressed", destinationButton.getText()));
+            logger.log(messageHelper.getFullMessage("log.button.pressed", destinationButton.getId()));
             DirectoryChooser directoryChooser = new DirectoryChooser();
             configureDirectoryChooser(directoryChooser);
             File destinationDir = directoryChooser.showDialog(viewHandler.window());
@@ -192,7 +192,7 @@ public class MainController extends AbstractController {
 
     private EventHandler<ActionEvent> showLogsAction() {
         return e -> {
-            logger.log(messageHelper.getFullMessage("log.button.pressed", showLogsButton.getText()));
+            logger.log(messageHelper.getFullMessage("log.button.pressed", showLogsButton.getId()));
             viewHandler.launchLoggerView();
         };
     }

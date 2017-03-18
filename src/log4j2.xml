@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="debug" strict="true" name="FileChangerLog4jConfig">
+    <Properties>
+        <Property name="rollingFile">log/log</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="[%level] %d{HH:mm:ss.SSS} [%t] %logger{36} - %msg%n" />
+        </Console>
+        <RollingFile name="RollingFile" fileName="${rollingFile}.log" filePattern="${rollingFile}-%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="[%level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %logger{36} - %msg%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="FileLogger" level="info" additivity="true">
+            <Appender-ref ref="RollingFile" />
+        </Logger>
+        <Logger name="ConsoleLogger" level="debug" additivity="true">
+            <Appender-ref ref="Console" />
+        </Logger>
+        <Root level="all">
+            <AppenderRef ref="Console" />
+        </Root>
+    </Loggers>
+
+</Configuration>

@@ -7,3 +7,4 @@
 manifest.mf
 build.xml
 *.iml
+/log/

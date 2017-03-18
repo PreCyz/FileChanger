@@ -7,24 +7,25 @@ import pg.helper.MessageHelper;
 import pg.logger.AbstractLogger;
 
 /**
- * @author Gawa [Paweł Gawędzki]
- * 2016-12-14 21:07:43
+ * @author Gawa 2016-12-14 21:07:43
  */
 public class FileLogger extends AbstractLogger {
 
     private final ListView<String> listView;
 
-    public FileLogger(MessageHelper messageHelper, Class whoLogs, ListView<String> listView) {
-        super(messageHelper, whoLogs);
-        logMessages.add(messageHelper.getFullMessage("log.fileLog.initialized", whoLogs.getSimpleName()));
+    public FileLogger(MessageHelper messageHelper, ListView<String> listView) {
+        super(messageHelper);
         this.listView = listView;
         this.listView.setItems(FXCollections.observableArrayList(logMessages));
+        log(messageHelper.getFullMessage("log.fileLog.initialized", logger.getName()));
     }
 
     @Override
     public void log(ProgramException ex) {
-        logMessages.add(messageHelper.getErrorMsg(ex.getErrorCode(), ex.getArgument()));
+        String errorMsg = messageHelper.getErrorMsg(ex.getErrorCode(), ex.getArgument());
+        logMessages.add(errorMsg);
         showOnListView();
+        logger.log(logger.getLevel(), errorMsg);
     }
 
     private void showOnListView() {
@@ -36,6 +37,7 @@ public class FileLogger extends AbstractLogger {
     public void log(String message) {
         logMessages.add(message);
         showOnListView();
+        logger.log(logger.getLevel(), message);
     }
 
 }
