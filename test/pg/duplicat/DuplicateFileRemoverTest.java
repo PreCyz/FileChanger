@@ -1,8 +1,10 @@
 package pg.duplicat;
 
 import static org.junit.Assert.*;
+
 import java.time.*;
 import org.junit.*;
+import pg.helper.TimeHelper;
 
 /**
  *
@@ -32,21 +34,21 @@ public class DuplicateFileRemoverTest {
         Duration hours = Duration.ofHours(1);
         LocalTime stop = start.plus(hours);
         
-        //assertEquals(1, dfr.getDurationInfo(start, stop));
+        //assertEquals(1, dfr.durationInfo(start, stop));
         
         Duration minutes = Duration.ofMinutes(3);
         stop = start.plus(minutes);
-        assertEquals("Czas trwania: 3[m].", dfr.getDurationInfo(start, stop));
+        assertEquals("Czas trwania: 3[m].", TimeHelper.durationInfo(start, stop));
         minutes = Duration.ofMinutes(60);
         stop = start.plus(minutes);
-        assertEquals("Czas trwania: 1[h].", dfr.getDurationInfo(start, stop));
+        assertEquals("Czas trwania: 1[h].", TimeHelper.durationInfo(start, stop));
         
         Duration seconds = Duration.ofSeconds(4);
         stop = start.plus(seconds);
-        assertEquals("Czas trwania: 4[s].", dfr.getDurationInfo(start, stop));
+        assertEquals("Czas trwania: 4[s].", TimeHelper.durationInfo(start, stop));
         seconds = Duration.ofSeconds(60);
         stop = start.plus(seconds);
-        assertEquals("Czas trwania: 1[m].", dfr.getDurationInfo(start, stop));
+        assertEquals("Czas trwania: 1[m].", TimeHelper.durationInfo(start, stop));
     }
     
     @Test

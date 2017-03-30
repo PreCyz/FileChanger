@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
  *
  * @author Gawa
  */
-public class FileHelper {
+public class DuplicateRemover {
     
     private final String dirPath;
     private final String destDir;
@@ -18,7 +18,7 @@ public class FileHelper {
     private Map<String, File> noDuplicatesMap;
     private List<File> duplicatesList;
 
-    public FileHelper(String dirPath) {
+    public DuplicateRemover(String dirPath) {
         this.dirPath = dirPath;
         this.destDir = String.format("%sduplikaty\\", dirPath);
     }
@@ -42,7 +42,7 @@ public class FileHelper {
         duplicatesList.forEach(file -> {
             System.out.println(String.format("Duplikat: %s", file.getName()));
         });
-        if(!duplicatesList.isEmpty()){
+        if (!duplicatesList.isEmpty()) {
             createDuplicateDirIfNotExists();
             moveDuplicates();
         }
@@ -73,22 +73,21 @@ public class FileHelper {
     
     protected void createDuplicatesList() throws NoSuchAlgorithmException, IOException {
         duplicatesList = new ArrayList<>();
-        for(File possibleDuplicate : possibleDuplicates){
-            File notDuplicate = (File)noDuplicatesMap.get(
+        for (File possibleDuplicate : possibleDuplicates) {
+            File notDuplicate = noDuplicatesMap.get(
                     String.valueOf(possibleDuplicate.length())
             );
-            if(notDuplicate != null){
+            if (notDuplicate != null) {
                 String posDupHash = getSHAHashForFile(possibleDuplicate);
                 String notDupHash = getSHAHashForFile(notDuplicate);
-                if(posDupHash.equals(notDupHash)){
+                if (posDupHash.equals(notDupHash)) {
                     duplicatesList.add(possibleDuplicate);
                 }
             }
         }
     }
     
-    protected String getSHAHashForFile(File file) throws NoSuchAlgorithmException
-            , FileNotFoundException, IOException {
+    protected String getSHAHashForFile(File file) throws NoSuchAlgorithmException, IOException {
         MessageDigest md = MessageDigest.getInstance("SHA-512");
         byte[] dataBytes = getByteArrayFromFile(file);
         byte[] mdbytes = md.digest(dataBytes);
@@ -100,8 +99,7 @@ public class FileHelper {
         return hexString.toString();
     }
     
-    protected byte[] getByteArrayFromFile(File file) throws FileNotFoundException
-            , IOException {
+    protected byte[] getByteArrayFromFile(File file) throws IOException {
         byte[] byteArray;
         try (FileInputStream fis = new FileInputStream(file)) {
             byteArray = new byte[(int)file.length()];
@@ -113,7 +111,7 @@ public class FileHelper {
     
     public void createDuplicateDirIfNotExists() throws IOException {
         Path dstDir = Paths.get(destDir);
-        if(!Files.exists(dstDir)){
+        if (!Files.exists(dstDir)) {
             Files.createDirectory(dstDir);
         }
     }
@@ -134,7 +132,7 @@ public class FileHelper {
                 );
                 duplicatesList.remove(file);
             } catch (IOException ex) {
-                System.out.println("Nie można przenieść pliku."+ex.getMessage());
+                System.out.println("Nie można przenieść pliku." + ex.getMessage());
             }
         });
     }
