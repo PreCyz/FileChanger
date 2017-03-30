@@ -1,7 +1,6 @@
 package pg.view.window.impl;
 
-import pg.view.ViewHandler;
-import pg.view.controller.LoggerController;
+import pg.view.controller.AbstractController;
 import pg.view.window.AbstractWindow;
 
 import java.util.ResourceBundle;
@@ -11,9 +10,8 @@ import java.util.ResourceBundle;
  */
 public class LoggerWindow extends AbstractWindow {
 
-	public LoggerWindow(ViewHandler viewHandler, ResourceBundle bundle) {
-		super(viewHandler, bundle);
-		this.controller = new LoggerController(viewHandler);
+	public LoggerWindow(AbstractController controller, ResourceBundle bundle) {
+		super(controller, bundle);
 	}
 
 	@Override

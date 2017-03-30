@@ -16,9 +16,10 @@ import java.util.ResourceBundle;
 public abstract class AbstractWindow {
 
 	private final ResourceBundle bundle;
-	protected AbstractController controller;
+	private final AbstractController controller;
 
-	public AbstractWindow(ViewHandler viewHandler, ResourceBundle bundle) {
+	public AbstractWindow(AbstractController controller, ResourceBundle bundle) {
+		this.controller = controller;
 		this.bundle = bundle;
 	}
 

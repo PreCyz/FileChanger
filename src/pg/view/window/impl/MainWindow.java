@@ -1,7 +1,6 @@
 package pg.view.window.impl;
 
-import pg.view.ViewHandler;
-import pg.view.controller.MainController;
+import pg.view.controller.AbstractController;
 import pg.view.window.AbstractWindow;
 
 import java.util.ResourceBundle;
@@ -11,9 +10,8 @@ import java.util.ResourceBundle;
  */
 public class MainWindow extends AbstractWindow {
 
-	public MainWindow(ViewHandler viewHandler, ResourceBundle bundle) {
-		super(viewHandler, bundle);
-		this.controller = new MainController(viewHandler);
+	public MainWindow(AbstractController controller, ResourceBundle bundle) {
+		super(controller, bundle);
 	}
 
 	@Override
