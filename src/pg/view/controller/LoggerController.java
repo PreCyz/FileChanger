@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import pg.logger.AbstractLogger;
+import pg.view.ViewHandler;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -15,6 +16,10 @@ import java.util.ResourceBundle;
 public class LoggerController extends AbstractController {
 
     @FXML private ListView<String> loggerListView;
+
+    public LoggerController(ViewHandler viewHandler) {
+        super(viewHandler);
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

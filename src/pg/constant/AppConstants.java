@@ -4,7 +4,7 @@ package pg.constant;
  * @author Gawa [Paweł Gawędzki]
  * 2016-11-27 15:51:34
  */
-public final class ProgramConstants {
+public final class AppConstants {
 
     public static final String LINE_SEPARATOR = System.getProperty("line.separator");
     public static final String FILE_SEPARATOR = System.getProperty("file.separator");
@@ -16,7 +16,8 @@ public final class ProgramConstants {
     public static final String APP_CONFIG_PATH = String.format("%s%s", RESOURCE_PATH, APP_CONFIG);
     public static final String IMG_RESOURCE_PATH = RESOURCE_PATH + "img/";
     public static final String FXML_RESOURCE_PATH = RESOURCE_PATH + "fxml/";
+    public static final String CSS_RESOURCE_PATH = RESOURCE_PATH + "css/";
 
-    private ProgramConstants() {}
+    private AppConstants() {}
 
 }

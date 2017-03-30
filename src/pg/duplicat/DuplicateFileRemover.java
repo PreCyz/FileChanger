@@ -1,6 +1,7 @@
 package pg.duplicat;
 
-import pg.helper.FileHelper;
+import pg.helper.DuplicateRemover;
+import pg.helper.TimeHelper;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -12,13 +13,13 @@ import java.time.*;
  */
 public class DuplicateFileRemover {
 
-    private FileHelper helper;
+    private DuplicateRemover helper;
 
     public DuplicateFileRemover(String srcDirPath) {
-        this.helper = new FileHelper(srcDirPath);
+        this.helper = new DuplicateRemover(srcDirPath);
     }
 
-    public FileHelper getHelper() {
+    public DuplicateRemover getHelper() {
         return helper;
     }
 
@@ -30,24 +31,10 @@ public class DuplicateFileRemover {
             DuplicateFileRemover dfr = new DuplicateFileRemover(sourcePath);
             dfr.getHelper().processDuplicates();
             LocalTime stop = LocalTime.now();
-            System.out.println(dfr.getDurationInfo(start, stop));
+            System.out.println(TimeHelper.durationInfo(start, stop));
         } catch (NoSuchAlgorithmException | IOException | UnsupportedOperationException ex) {
             System.out.println(ex.getMessage());
         }
-    }
-
-    public String getDurationInfo(LocalTime begin, LocalTime end) {
-        long oneSecond = 1;
-        long oneMinute = 60 * oneSecond;
-        long oneHour = 60 * oneMinute;
-        Duration duration = Duration.between(begin, end);
-        if(duration.getSeconds() >= oneHour){
-            return String.format("Czas trwania: %d[h].", duration.getSeconds() / oneHour);
-        }
-        if(duration.getSeconds() >= oneMinute){
-            return String.format("Czas trwania: %d[m].", duration.getSeconds() / oneMinute);
-        }
-        return String.format("Czas trwania: %d[s].", duration.getSeconds());
     }
 
     protected static void validateArgs(String[] args) {

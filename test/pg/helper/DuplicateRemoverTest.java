@@ -12,15 +12,15 @@ import org.junit.*;
  *
  * @author premik
  */
-public class FileHelperTest {
+public class DuplicateRemoverTest {
     
-private FileHelper helper;
+private DuplicateRemover helper;
     private final String FILE_NOT_FOUND = "FileNotFoundException expected.";
     private final String dirPath = "d:\\testy\\";
     
     @Before
     public void setUp(){
-        helper = new FileHelper(dirPath);
+        helper = new DuplicateRemover(dirPath);
     }
     
     @After
@@ -81,7 +81,7 @@ private FileHelper helper;
     
     @Test
     public void testCreateDuplicateList() throws Exception{
-        FileHelper helperF = Mockito.mock(FileHelper.class);
+        DuplicateRemover helperF = Mockito.mock(DuplicateRemover.class);
         when(helperF.getDuplicatesList()).thenReturn(new ArrayList<>())
                 .thenReturn(new ArrayList<>());
         assertNotNull(helperF.getDuplicatesList());

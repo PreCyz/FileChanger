@@ -1,6 +1,6 @@
 package pg.helper;
 
-import pg.constant.ProgramConstants;
+import pg.constant.AppConstants;
 import pg.exception.ProgramException;
 import pg.picturefilechanger.ChangeDetails;
 
@@ -19,7 +19,7 @@ public class AppConfigHelper {
     private Properties appConfig;
 
     private AppConfigHelper() throws ProgramException {
-        URL url = getClass().getClassLoader().getResource(ProgramConstants.APP_CONFIG_PATH);
+        URL url = getClass().getClassLoader().getResource(AppConstants.APP_CONFIG_PATH);
         appConfig = new PropertiesHelper().loadProgramProperties(url.getPath());
     }
 
@@ -35,7 +35,7 @@ public class AppConfigHelper {
         appConfig.setProperty("file.connector.lastUsed", changeDetails.getFileNameIndexConnector());
         appConfig.setProperty("file.extensions", changeDetails.getFileExtension());
 
-        new PropertiesHelper().saveProgramProperties(appConfig, ProgramConstants.APP_CONFIG_PATH);
+        new PropertiesHelper().saveProgramProperties(appConfig, AppConstants.APP_CONFIG_PATH);
     }
 
     public String getCoreNameLastUsed() {

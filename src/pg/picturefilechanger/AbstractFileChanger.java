@@ -1,14 +1,11 @@
 package pg.picturefilechanger;
 
-import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
 import pg.exception.ProgramException;
 import pg.helper.MessageHelper;
-
-import static pg.constant.ProgramConstants.RESOURCE_BUNDLE;
 
 /**
  * @author Gawa
@@ -41,7 +38,7 @@ public abstract class AbstractFileChanger {
         processChange(maxExtIdxMap, changeDetails);
     }
 
-    //example source=sciezka destination=sciezka extensions=ext1,ext2,ext3,ext4...
+    //example source=srcPath destination=destPath extensions=ext1,ext2,ext3,ext4...
     public static Properties transformArgumentsToProperties(String[] params) {
         Properties properties = new Properties();
         for (String s : params) {

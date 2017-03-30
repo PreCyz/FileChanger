@@ -7,7 +7,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import pg.constant.ProgramConstants;
+import pg.constant.AppConstants;
 
 /**
  * @author Gawa [Paweł Gawędzki]
@@ -32,7 +32,7 @@ public class PropertiesHelperTest {
 
     @Test
     public void givenPropertyFileWhenLoadProgramPropertiesThenFileLoaded() throws Exception {
-        URL url = classLoader.getResource(ProgramConstants.APP_CONFIG_PATH);
+        URL url = classLoader.getResource(AppConstants.APP_CONFIG_PATH);
         Properties properties = helper.loadProgramProperties(url.getPath());
         assertEquals("Props should contains value.", properties.getProperty("core.name.lastUsed"), "wakacje");
         String fileConnectors = properties.getProperty("file.connectors");

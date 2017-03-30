@@ -15,12 +15,16 @@ import pg.view.ViewHandler;
  */
 public abstract class AbstractController implements Initializable {
 
+    protected final ViewHandler viewHandler;
     protected ResourceBundle bundle;
     protected URL location;
     protected ResourceHelper resourceHelper;
     protected AppLogger logger;
-    protected ViewHandler viewHandler;
     protected MessageHelper messageHelper;
+
+    public AbstractController(ViewHandler viewHandler) {
+        this.viewHandler = viewHandler;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -29,10 +33,6 @@ public abstract class AbstractController implements Initializable {
         resourceHelper = new ResourceHelper();
         messageHelper = MessageHelper.getInstance(bundle);
         logger = new ConsoleLogger(messageHelper);
-    }
-
-    public void setViewHandler(ViewHandler viewHandler) {
-        this.viewHandler = viewHandler;
     }
 
     public abstract void calculateWindowWidth();

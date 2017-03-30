@@ -1,6 +1,6 @@
 package pg.helper;
 
-import pg.constant.ProgramConstants;
+import pg.constant.AppConstants;
 import pg.exception.ErrorCode;
 import pg.exception.ProgramException;
 
@@ -44,7 +44,7 @@ public class PropertiesHelper {
     }
 
     public static ResourceBundle readBundles() throws ProgramException {
-        ResourceBundle bundle = ResourceBundle.getBundle(ProgramConstants.BUNDLE_PATH);
+        ResourceBundle bundle = ResourceBundle.getBundle(AppConstants.BUNDLE_PATH);
         if (bundle == null) {
             throw new ProgramException(ErrorCode.LOAD_BUNDLE);
         }

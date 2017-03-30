@@ -1,6 +1,6 @@
 package pg.picturefilechanger.validator.impl;
 
-import pg.constant.ProgramConstants;
+import pg.constant.AppConstants;
 import pg.exception.ErrorCode;
 import pg.exception.ProgramException;
 import pg.helper.MessageHelper;
@@ -58,14 +58,14 @@ public class ArgsValidator implements Validator {
     }
 
     private void displayPropertiesDetails(Properties properties) {
-        StringBuilder sb = new StringBuilder(ProgramConstants.LINE_SEPARATOR);
+        StringBuilder sb = new StringBuilder(AppConstants.LINE_SEPARATOR);
         properties.entrySet().stream().forEach((entry) -> {
             sb.append(
                     String.format("%s[%s]=%s %s",
                             entry.getKey(),
                             Params.valueOf(entry.getKey() + "").message(),
                             entry.getValue(),
-                            ProgramConstants.LINE_SEPARATOR)
+                            AppConstants.LINE_SEPARATOR)
             );
         });
         System.out.println(

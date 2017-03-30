@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
-import pg.constant.ProgramConstants;
+import pg.constant.AppConstants;
 import pg.exception.ErrorCode;
 import pg.exception.ProgramException;
 import pg.picturefilechanger.ChangeDetails;
@@ -95,7 +95,7 @@ public class FileChangerImpl extends AbstractFileChanger {
             if (file.isFile()) {
                 processChangeFile(file, idxMap);
             } else if (file.isDirectory()) {
-                String dirPath = String.format("%s%s", file.getPath(), ProgramConstants.FILE_SEPARATOR);
+                String dirPath = String.format("%s%s", file.getPath(), AppConstants.FILE_SEPARATOR);
                 ChangeDetails dirChangeDetails = new ChangeDetails(
                         dirPath,
                         changeDetails.getDestinationDir(),

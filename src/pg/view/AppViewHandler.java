@@ -1,6 +1,5 @@
 package pg.view;
 
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
@@ -12,13 +11,14 @@ import pg.helper.ResourceHelper;
 import pg.logger.AbstractLogger;
 import pg.logger.AppLogger;
 import pg.logger.impl.ConsoleLogger;
-import pg.view.controller.AbstractController;
+import pg.view.factory.WindowFactory;
+import pg.view.window.AbstractWindow;
 
 import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import static pg.constant.ProgramConstants.RESOURCE_BUNDLE;
+import static pg.constant.AppConstants.RESOURCE_BUNDLE;
 
 /**
  * @author Gawa [Paweł Gawędzki]
@@ -40,18 +40,18 @@ public class AppViewHandler extends AbstractViewHandler {
     }
 
     public void launchStartView() {
-        buildScene(primaryStage, ViewDetails.START_VIEW);
+        buildScene(primaryStage, WindowFactory.START.createWindow(this, bundle));
     }
 
     public void launchLoggerView() {
         Stage loggerStage = new Stage();
         loggerStage.initModality(Modality.WINDOW_MODAL);
-        buildScene(loggerStage, ViewDetails.LOGGER_VIEW);
+        buildScene(loggerStage, WindowFactory.LOGGER.createWindow(this, bundle));
     }
 
-    private void buildScene(Stage stage, ViewDetails viewDetails) {
+    private void buildScene(Stage stage, AbstractWindow window) {
         try {
-            Image icon = resourceHelper.readImage(viewDetails.windowImgFilePath());
+            Image icon = resourceHelper.readImage(window.windowImgFilePath());
             stage.getIcons().add(icon);
         } catch (ProgramException ex) {
             logger.log(ex);
@@ -59,15 +59,11 @@ public class AppViewHandler extends AbstractViewHandler {
             AbstractLogger.addMessage(errorMsg);
         }
         try {
-            stage.setTitle(bundle.getString(viewDetails.windowTitleBundle()));
-            stage.setResizable(false);
-            //String css = getClass().getClassLoader().getResource("pg/resource/css/start.css").toExternalForm();
-            FXMLLoader loader = new FXMLLoader(viewDetails.url(), bundle);
-            AbstractController controller = viewDetails.controller(this);
-            loader.setController(controller);
-            stage.setScene(new Scene(loader.load()));
+            stage.setTitle(bundle.getString(window.windowTitleBundle()));
+            stage.setResizable(window.resizable());
+            stage.setScene(new Scene(window.root()));
             stage.show();
-            controller.calculateWindowWidth();
+            window.refreshWindowSize();
         } catch (IOException ex) {
             handleException(new ProgramException(ErrorCode.LAUNCH_PROGRAM, ex));
         }

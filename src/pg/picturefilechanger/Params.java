@@ -5,7 +5,7 @@ import pg.helper.MessageHelper;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import static pg.constant.ProgramConstants.RESOURCE_BUNDLE;
+import static pg.constant.AppConstants.RESOURCE_BUNDLE;
 
 /** Created by gawa*/
 public enum Params {

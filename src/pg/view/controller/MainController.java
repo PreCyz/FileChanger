@@ -16,12 +16,13 @@ import pg.logger.impl.FileLogger;
 import pg.picturefilechanger.ChangeDetails;
 import pg.picturefilechanger.impl.FileChangerImpl;
 import pg.picturefilechanger.validator.impl.ArgsValidator;
+import pg.view.ViewHandler;
 
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import static pg.constant.ProgramConstants.IMG_RESOURCE_PATH;
+import static pg.constant.AppConstants.IMG_RESOURCE_PATH;
 
 /**
  * @author Gawa [Paweł Gawędzki]
@@ -49,6 +50,10 @@ public class MainController extends AbstractController {
     private ChangeDetails changeDetails;
 
     private final short numberOfCharacters = 29;
+
+    public MainController(ViewHandler viewHandler) {
+        super(viewHandler);
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
