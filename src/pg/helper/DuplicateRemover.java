@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
  * @author Gawa
  */
 public class DuplicateRemover {
+
+    private static final String DUPLICATES = "duplicates" + File.separator;
     
     private final String dirPath;
     private final String destDir;
@@ -20,7 +22,7 @@ public class DuplicateRemover {
 
     public DuplicateRemover(String dirPath) {
         this.dirPath = dirPath;
-        this.destDir = String.format("%sduplikaty\\", dirPath);
+        this.destDir = String.format("%s%s", dirPath, DUPLICATES);
     }
     
     protected List<File> getPossibleDuplicates(){
@@ -89,7 +91,7 @@ public class DuplicateRemover {
     
     protected String getSHAHashForFile(File file) throws NoSuchAlgorithmException, IOException {
         MessageDigest md = MessageDigest.getInstance("SHA-512");
-        byte[] dataBytes = getByteArrayFromFile(file);
+        byte[] dataBytes = Files.readAllBytes(file.toPath());
         byte[] mdbytes = md.digest(dataBytes);
 
         StringBuilder hexString = new StringBuilder();
@@ -97,16 +99,6 @@ public class DuplicateRemover {
             hexString.append(Integer.toHexString(0xFF & mdbytes[i]));
         }
         return hexString.toString();
-    }
-    
-    protected byte[] getByteArrayFromFile(File file) throws IOException {
-        byte[] byteArray;
-        try (FileInputStream fis = new FileInputStream(file)) {
-            byteArray = new byte[(int)file.length()];
-            fis.read(byteArray);
-            fis.close();
-        }
-        return byteArray;
     }
     
     public void createDuplicateDirIfNotExists() throws IOException {

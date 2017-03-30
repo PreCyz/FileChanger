@@ -1,120 +1,158 @@
 package pg.helper;
 
-import static org.mockito.Mockito.when;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.arrayWithSize;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.junit.Assert.*;
-import org.mockito.Mockito;
+
+import org.junit.runner.RunWith;
+
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
+
 import org.junit.*;
+import org.junit.runners.MethodSorters;
+import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  *
  * @author premik
  */
+@RunWith(MockitoJUnitRunner.class)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class DuplicateRemoverTest {
-    
-private DuplicateRemover helper;
-    private final String FILE_NOT_FOUND = "FileNotFoundException expected.";
-    private final String dirPath = "d:\\testy\\";
-    
+
+	private static final String TEST_FILES = String.format("test%sresources%stestFiles%s",
+			File.separator, File.separator, File.separator);
+	private static final int NUMBER_OF_TEST_FILES = 5;
+	private static final String ONE_JPG = "one.jpg";
+	private static final String TWO_JPG = "two.jpg";
+
+	private DuplicateRemover spyRemover;
+
+	private DuplicateRemover remover;
+	private String fileOnePath;
+	private String duplicates;
+
     @Before
-    public void setUp(){
-        helper = new DuplicateRemover(dirPath);
+    public void setUp() {
+    	remover = new DuplicateRemover(getTestFileFullPath());
+    	fileOnePath = getTestFileFullPath() + ONE_JPG;
+    	duplicates = String.format("%sduplicates%s", getTestFileFullPath(), File.separator);
     }
-    
+
+	private String getTestFileFullPath() {
+		String path = new File(".").toURI().getPath();
+		return String.format("%s%s", path, TEST_FILES);
+	}
+
     @After
-    public void tearDown(){
-        helper = null;
+    public void cleanup() {
+    	remover = null;
+        spyRemover = null;
+        fileOnePath = null;
+
+	    cleanupDuplicates();
+	    duplicates = null;
+    }
+
+	private void cleanupDuplicates() {
+		Path duplicatesPath = Paths.get(duplicates);
+		if (!Files.exists(duplicatesPath)) {
+			return;
+		}
+		try {
+			Files.list(duplicatesPath).filter(path -> Files.exists(path)).forEach(path -> {
+				try (OutputStream fis = new FileOutputStream(getTestFileFullPath() + path.getFileName())) {
+					Files.copy(path, fis);
+					Files.delete(path);
+				} catch (IOException e) {
+					fail("Should have never happened - deleting duplicates.");
+				}
+			});
+			Files.deleteIfExists(duplicatesPath);
+		} catch (IOException e) {
+			fail("Should have never happened - deleting dir.");
+		}
+	}
+
+    @Test
+    public void givenRemoverWhenGetFileOnlyListThenReturnListOfFiles() {
+	    List<File> fileOnlyList = remover.getFileOnlyList();
+	    assertThat(fileOnlyList, notNullValue());
+        assertThat(fileOnlyList, hasSize(NUMBER_OF_TEST_FILES));
+    }
+
+    @Test(expected = IOException.class)
+    public void givenNotExistingFileWhenGetSHAHashForFileThenThrowFileNotFoundException() throws Exception {
+	    remover.getSHAHashForFile(new File(""));
+    }
+
+	@Test
+	public void givenFileWhenGetSHAHashForFileThenReturnNotEmptyHash() throws Exception {
+		String fileHash = remover.getSHAHashForFile(new File(fileOnePath));
+		assertThat(fileHash, is( not( isEmptyOrNullString() )));
+	}
+    
+    @Test
+    public void givenTwoDifferentFilesWhenGetSHAHashForFileThenReturnDifferentHashes() throws Exception {
+        String firstHash = remover.getSHAHashForFile(new File(fileOnePath));
+        String secondFileHash = remover.getSHAHashForFile(new File(getTestFileFullPath() + TWO_JPG));
+        assertThat(firstHash, is( not( equalTo( secondFileHash))));
+    }
+
+	@Test
+	public void givenTheSameFilesWhenGetSHAHashForFileThenReturnTheSameHash() throws Exception {
+		String firstHash = remover.getSHAHashForFile(new File(fileOnePath));
+		String secondFileHash = remover.getSHAHashForFile(new File(fileOnePath));
+		assertThat(firstHash, is( equalTo( secondFileHash)));
+	}
+
+	@Test
+	public void givenFilesWhenCreatePossibleDuplicateFileListThenReturnNotEmptyList() throws Exception {
+		remover.createPossibleDuplicateFileList();
+		List<File> possibleDuplicates = remover.getPossibleDuplicates();
+		assertThat(possibleDuplicates, notNullValue());
+		assertThat(possibleDuplicates, hasSize(1));
+	}
+
+    @Test
+    public void givenFilesWhenCreateDuplicateListThenReturnNotEmptyList() throws Exception {
+	    remover.createPossibleDuplicateFileList();
+	    remover.createDuplicatesList();
+	    List<File> duplicatesList = remover.getDuplicatesList();
+	    assertThat(duplicatesList, notNullValue());
+	    assertThat(duplicatesList, hasSize(1));
+    }
+
+	@Test
+	public void whenCreateDuplicateDirIfNotExistsThenDirIsCreated() throws Exception {
+		Path dir = Paths.get(duplicates);
+		assertThat(Files.exists(dir), is( equalTo(false)));
+		remover.createDuplicateDirIfNotExists();
+		assertThat(Files.isDirectory(dir), is( equalTo(true)));
+		assertTrue(Files.deleteIfExists(dir));
+	}
+
+    @Test
+    public void whenMoveDuplicatesThenDuplicatesAreMoved() throws Exception {
+        remover.createPossibleDuplicateFileList();
+        remover.createDuplicatesList();
+        remover.createDuplicateDirIfNotExists();
+        remover.moveDuplicates();
+        assertThat(new File(duplicates).listFiles(), arrayWithSize(1));
+        assertThat(remover.getDuplicatesList(), hasSize(0));
     }
 
     @Test
-    public void testFileList() {
-        assertNotNull(helper.getFileOnlyList());
-        assertEquals(6, helper.getFileOnlyList().size());
-    }
-    
-    @Test 
-    public void testHashForFile() throws Exception{
-        try{
-            helper.getSHAHashForFile(new File(""));
-            fail(FILE_NOT_FOUND);
-        }catch(FileNotFoundException ex){
-            assertTrue(FILE_NOT_FOUND, ex != null);
-        }
-        String fileHash = helper.getSHAHashForFile(new File("d:\\wjazd.ods"));
-        assertNotNull(fileHash);
-        assertFalse("".equals(fileHash));
-        
-        String secondFileHash = helper.getSHAHashForFile(new File("d:\\run.bat"));
-        assertFalse(fileHash.equalsIgnoreCase(secondFileHash));
-    }
-    
-    @Test 
-    public void testGetByteArrayFromFile() throws Exception{
-        byte[] actual = helper.getByteArrayFromFile(new File("d:\\wjazd.ods"));
-        assertNotNull(actual);
-        
-        Path filePath = Paths.get("d:\\wjazd.ods");
-        byte[] byteArray = Files.readAllBytes(filePath);
-        assertArrayEquals(byteArray, actual);
-        
-        byteArray = helper.getByteArrayFromFile(new File("d:\\run.bat"));
-        assertFalse(Arrays.equals(byteArray, actual));
-        
-        try{
-            helper.getByteArrayFromFile(new File(""));
-        } catch(FileNotFoundException ex){
-            assertTrue(FILE_NOT_FOUND, true);
-        }
-    }
-    
-    @Test
-    public void testGetPossibleDuplicateFileList() throws Exception{
-        List<File> possibleDuplicate = Mockito.mock(List.class);
-        when(possibleDuplicate.size()).thenReturn(3);
-        Map<String, File> noDuplicatesMap = Mockito.mock(Map.class);
-        when(noDuplicatesMap.size()).thenReturn(6);
-        assertEquals(3, possibleDuplicate.size());
-        assertEquals(6, noDuplicatesMap.size());
-    }
-    
-    @Test
-    public void testCreateDuplicateList() throws Exception{
-        DuplicateRemover helperF = Mockito.mock(DuplicateRemover.class);
-        when(helperF.getDuplicatesList()).thenReturn(new ArrayList<>())
-                .thenReturn(new ArrayList<>());
-        assertNotNull(helperF.getDuplicatesList());
-        
-        List<File> duplicates = Mockito.mock(List.class);
-        when(duplicates.isEmpty()).thenReturn(false);
-        duplicates.addAll(helperF.getDuplicatesList());
-        assertTrue(!duplicates.isEmpty());
-    }
-    
-    @Test
-    public void testMoveDuplicates() throws Exception{
-        helper.createPossibleDuplicateFileList();
-        helper.createDuplicatesList();
-        helper.moveDuplicates();
-        assertNotNull(helper.getDuplicatesList());
-        assertTrue(helper.getDuplicatesList().isEmpty());
-    }
-    
-    @Test
-    public void testProcessDuplicates() throws Exception{
-        helper.processDuplicates();
-        assertNotNull(helper.getDuplicatesList());
-        assertTrue(helper.getDuplicatesList().isEmpty());
-    }
-    
-    @Test
-    public void testFolderCreation() throws Exception{
-        String dstDir = String.format("%sduplikaty\\", dirPath);
-        Path dir = Paths.get(dstDir);
-        assertFalse(Files.exists(dir));
-        helper.createDuplicateDirIfNotExists();
-        assertTrue(Files.isDirectory(dir));
-        assertTrue(Files.deleteIfExists(dir));
+    public void givenFilesWhenProcessDuplicatesThenSuccess() throws Exception{
+        remover.processDuplicates();
+	    assertThat(new File(duplicates).listFiles(), arrayWithSize(1));
+	    assertThat(remover.getDuplicatesList(), hasSize(0));
     }
 }
