@@ -2,8 +2,8 @@ package pg;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import pg.view.ViewHandler;
-import pg.view.AppViewHandler;
+import pg.view.WindowHandler;
+import pg.view.AppWindowHandler;
 
 /**
  * @author Gawa [Paweł Gawędzki]
@@ -13,8 +13,8 @@ public class ChangerFXStart extends Application {
 
     @Override
     public void start(Stage stage) {
-        ViewHandler viewHandler = new AppViewHandler(stage);
-        viewHandler.launchStartView();
+        WindowHandler windowHandler = new AppWindowHandler(stage);
+        windowHandler.launchStartView();
     }
 
     /**

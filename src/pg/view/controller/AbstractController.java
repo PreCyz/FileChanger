@@ -7,7 +7,7 @@ import pg.helper.ResourceHelper;
 import pg.logger.impl.ConsoleLogger;
 import pg.helper.MessageHelper;
 import pg.logger.AppLogger;
-import pg.view.ViewHandler;
+import pg.view.WindowHandler;
 
 /**
  * @author Gawa [Paweł Gawędzki]
@@ -15,15 +15,15 @@ import pg.view.ViewHandler;
  */
 public abstract class AbstractController implements Initializable {
 
-    protected final ViewHandler viewHandler;
+    protected final WindowHandler windowHandler;
     protected ResourceBundle bundle;
     protected URL location;
     protected ResourceHelper resourceHelper;
     protected AppLogger logger;
     protected MessageHelper messageHelper;
 
-    public AbstractController(ViewHandler viewHandler) {
-        this.viewHandler = viewHandler;
+    public AbstractController(WindowHandler windowHandler) {
+        this.windowHandler = windowHandler;
     }
 
     @Override

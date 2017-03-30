@@ -24,14 +24,14 @@ import static pg.constant.AppConstants.RESOURCE_BUNDLE;
  * @author Gawa [Paweł Gawędzki]
  * 2016-10-30 14:14:25
  */
-public class AppViewHandler extends AbstractViewHandler {
+public class AppWindowHandler extends AbstractWindowHandler {
 
     private Stage primaryStage;
     private ResourceBundle bundle;
     private ResourceHelper resourceHelper;
     private AppLogger logger;
 
-    public AppViewHandler(Stage primaryStage) {
+    public AppWindowHandler(Stage primaryStage) {
         this.primaryStage = primaryStage;
         bundle = ResourceBundle.getBundle(RESOURCE_BUNDLE, Locale.getDefault());
         resourceHelper = new ResourceHelper();

@@ -3,7 +3,6 @@ package pg.view.window;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import pg.constant.AppConstants;
-import pg.view.ViewHandler;
 import pg.view.controller.AbstractController;
 
 import java.io.IOException;

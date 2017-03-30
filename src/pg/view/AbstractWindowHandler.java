@@ -17,7 +17,7 @@ import static pg.constant.AppConstants.RESOURCE_BUNDLE;
 /**
  * Created by gawa on 18.01.17.
  */
-public abstract class AbstractViewHandler implements ViewHandler {
+public abstract class AbstractWindowHandler implements WindowHandler {
 
     protected Window window;
 

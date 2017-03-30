@@ -16,7 +16,7 @@ import pg.logger.impl.FileLogger;
 import pg.picturefilechanger.ChangeDetails;
 import pg.picturefilechanger.impl.FileChangerImpl;
 import pg.picturefilechanger.validator.impl.ArgsValidator;
-import pg.view.ViewHandler;
+import pg.view.WindowHandler;
 
 import java.io.File;
 import java.net.URL;
@@ -51,8 +51,8 @@ public class MainController extends AbstractController {
 
     private final short numberOfCharacters = 29;
 
-    public MainController(ViewHandler viewHandler) {
-        super(viewHandler);
+    public MainController(WindowHandler windowHandler) {
+        super(windowHandler);
     }
 
     @Override
@@ -156,7 +156,7 @@ public class MainController extends AbstractController {
             logger.log(messageHelper.getFullMessage("log.button.pressed", sourceButton.getId()));
             DirectoryChooser directoryChooser = new DirectoryChooser();
             configureDirectoryChooser(directoryChooser);
-            File sourceDir = directoryChooser.showDialog(viewHandler.window());
+            File sourceDir = directoryChooser.showDialog(windowHandler.window());
             if (sourceDir != null) {
                 changeDetails.setSourceDir(sourceDir.getAbsolutePath());
                 sourceLabel.setText(fitValueToLabel(sourceDir.getAbsolutePath()));
@@ -184,7 +184,7 @@ public class MainController extends AbstractController {
             logger.log(messageHelper.getFullMessage("log.button.pressed", destinationButton.getId()));
             DirectoryChooser directoryChooser = new DirectoryChooser();
             configureDirectoryChooser(directoryChooser);
-            File destinationDir = directoryChooser.showDialog(viewHandler.window());
+            File destinationDir = directoryChooser.showDialog(windowHandler.window());
             if (destinationDir != null) {
                 changeDetails.setDestinationDir(destinationDir.getAbsolutePath());
                 destinationLabel.setText(fitValueToLabel(destinationDir.getAbsolutePath()));
@@ -198,7 +198,7 @@ public class MainController extends AbstractController {
     private EventHandler<ActionEvent> showLogsAction() {
         return e -> {
             logger.log(messageHelper.getFullMessage("log.button.pressed", showLogsButton.getId()));
-            viewHandler.launchLoggerView();
+            windowHandler.launchLoggerView();
         };
     }
 
@@ -216,9 +216,9 @@ public class MainController extends AbstractController {
             logListView.setVisible(!hideLogCheckBox.isSelected());
             Pane pane = (Pane) logListView.getParent();
             if (hideLogCheckBox.isSelected()) {
-                viewHandler.changeWindowWidth(pane.getWidth());
+                windowHandler.changeWindowWidth(pane.getWidth());
             } else {
-                viewHandler.changeWindowWidth(-pane.getWidth());
+                windowHandler.changeWindowWidth(-pane.getWidth());
             }
         };
     }
@@ -227,7 +227,7 @@ public class MainController extends AbstractController {
         if (hideLogCheckBox.isSelected()) {
             logListView.setVisible(!hideLogCheckBox.isSelected());
             Pane pane = (Pane) logListView.getParent();
-            viewHandler.changeWindowWidth(pane.getWidth());
+            windowHandler.changeWindowWidth(pane.getWidth());
         }
     }
 

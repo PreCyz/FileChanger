@@ -1,6 +1,6 @@
 package pg.view.factory;
 
-import pg.view.ViewHandler;
+import pg.view.WindowHandler;
 import pg.view.controller.LoggerController;
 import pg.view.controller.MainController;
 import pg.view.window.AbstractWindow;
@@ -17,16 +17,16 @@ public enum WindowFactory {
 
     START {
         @Override
-        public AbstractWindow createWindow(ViewHandler viewHandler, ResourceBundle bundle) {
-            return new MainWindow(new MainController(viewHandler), bundle);
+        public AbstractWindow createWindow(WindowHandler windowHandler, ResourceBundle bundle) {
+            return new MainWindow(new MainController(windowHandler), bundle);
         }
     },
     LOGGER {
         @Override
-        public AbstractWindow createWindow(ViewHandler viewHandler, ResourceBundle bundle) {
-            return new LoggerWindow(new LoggerController(viewHandler), bundle);
+        public AbstractWindow createWindow(WindowHandler windowHandler, ResourceBundle bundle) {
+            return new LoggerWindow(new LoggerController(windowHandler), bundle);
         }
     };
 
-    public abstract AbstractWindow createWindow(ViewHandler viewHandler, ResourceBundle bundle);
+    public abstract AbstractWindow createWindow(WindowHandler windowHandler, ResourceBundle bundle);
 }

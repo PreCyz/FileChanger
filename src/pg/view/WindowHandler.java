@@ -5,7 +5,7 @@ import javafx.stage.Window;
 /**
  * Created by gawa on 14.01.17.
  */
-public interface ViewHandler {
+public interface WindowHandler {
 
     void launchStartView();
     void launchLoggerView();
