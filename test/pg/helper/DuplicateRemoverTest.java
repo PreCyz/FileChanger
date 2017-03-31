@@ -154,7 +154,7 @@ public class DuplicateRemoverTest {
     }
 
     @Test
-    public void givenFilesWhenProcessDuplicatesThenSuccess() throws Exception{
+    public void givenFilesWhenProcessDuplicatesThenSuccess() throws Exception {
     	DuplicateRemover spyRemover = spy(remover);
 
         spyRemover.processDuplicates();

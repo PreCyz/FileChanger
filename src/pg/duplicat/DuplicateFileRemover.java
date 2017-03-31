@@ -13,14 +13,14 @@ import java.time.*;
  */
 public class DuplicateFileRemover {
 
-    private DuplicateRemover helper;
+    private DuplicateRemover duplicateRemover;
 
     public DuplicateFileRemover(String srcDirPath) {
-        this.helper = new DuplicateRemover(srcDirPath);
+        this.duplicateRemover = new DuplicateRemover(srcDirPath);
     }
 
-    public DuplicateRemover getHelper() {
-        return helper;
+    public DuplicateRemover getDuplicateRemover() {
+        return duplicateRemover;
     }
 
     public static void main(String[] args) {
@@ -29,7 +29,7 @@ public class DuplicateFileRemover {
             String sourcePath = args[0];
             LocalTime start = LocalTime.now();
             DuplicateFileRemover dfr = new DuplicateFileRemover(sourcePath);
-            dfr.getHelper().processDuplicates();
+            dfr.getDuplicateRemover().processDuplicates();
             LocalTime stop = LocalTime.now();
             System.out.println(TimeHelper.durationInfo(start, stop));
         } catch (NoSuchAlgorithmException | IOException | UnsupportedOperationException ex) {
