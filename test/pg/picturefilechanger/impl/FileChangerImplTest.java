@@ -1,24 +1,19 @@
 package pg.picturefilechanger.impl;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
-
-import pg.exception.ProgramException;
-import pg.helper.PropertiesHelper;
-
-import static org.mockito.Mockito.when;
-
+import java.util.*;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import pg.picturefilechanger.AbstractFileChanger;
-import pg.picturefilechanger.ChangeDetails;
+
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
+
+import pg.helper.PropertiesHelper;
+import pg.exception.ProgramException;
+import pg.picturefilechanger.*;
 
 /**
  * @author Gawa
@@ -85,28 +80,32 @@ public class FileChangerImplTest {
         expected.put("someKey", 1);
         when(mockChanger.createMaxIndexMap()).thenReturn(expected);
         Map<String, Integer> actual = mockChanger.createMaxIndexMap();
-        assertNotNull(actual);
-        assertTrue(!actual.isEmpty());
+
+        assertThat(actual, notNullValue());
+	    assertThat(actual.size(), greaterThan(0));
     }
     
     @Test
-    public void givenNullParamsOrChangeDetailsWhenCreateMaxIndexMapThenThrowNullPointerException() {
+    public void givenNullParamsWhenCreateMaxIndexMapThenThrowNullPointerException() {
         try {
             String[] params = null;
             changer = new FileChanger(params);
             changer.createMaxIndexMap();
             fail("Should throw NullPointerException.");
         } catch (Exception ex) {
-            assertTrue(ex instanceof NullPointerException);
+	        assertThat(ex, instanceOf(NullPointerException.class));
         }
+    }
 
+    @Test
+    public void givenNullChangeDetailsWhenCreateMaxIndexMapThenThrowNullPointerException() {
         try {
             ChangeDetails changeDetails = null;
             changer = new FileChanger(changeDetails);
             changer.createMaxIndexMap();
             fail("Should throw NullPointerException.");
         } catch (Exception ex) {
-            assertTrue(ex instanceof NullPointerException);
+            assertThat(ex, instanceOf(NullPointerException.class));
         }
     }
     
