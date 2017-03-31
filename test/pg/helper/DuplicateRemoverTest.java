@@ -8,6 +8,9 @@ import static org.hamcrest.Matchers.arrayWithSize;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import org.junit.runner.RunWith;
 
@@ -27,13 +30,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class DuplicateRemoverTest {
 
-	private static final String TEST_FILES = String.format("test%sresources%stestFiles%s",
-			File.separator, File.separator, File.separator);
 	private static final int NUMBER_OF_TEST_FILES = 5;
 	private static final String ONE_JPG = "one.jpg";
 	private static final String TWO_JPG = "two.jpg";
-
-	private DuplicateRemover spyRemover;
+	private static final String TEST_FILES = String.format("test%sresources%stestFiles%s",
+			File.separator, File.separator, File.separator);
 
 	private DuplicateRemover remover;
 	private String fileOnePath;
@@ -54,14 +55,12 @@ public class DuplicateRemoverTest {
     @After
     public void cleanup() {
     	remover = null;
-        spyRemover = null;
         fileOnePath = null;
-
-	    cleanupDuplicates();
+	    cleanupDuplicatesDir();
 	    duplicates = null;
     }
 
-	private void cleanupDuplicates() {
+	private void cleanupDuplicatesDir() {
 		Path duplicatesPath = Paths.get(duplicates);
 		if (!Files.exists(duplicatesPath)) {
 			return;
@@ -151,8 +150,15 @@ public class DuplicateRemoverTest {
 
     @Test
     public void givenFilesWhenProcessDuplicatesThenSuccess() throws Exception{
-        remover.processDuplicates();
+    	DuplicateRemover spyRemover = spy(remover);
+
+        spyRemover.processDuplicates();
+
+        verify(spyRemover, times(1)).createPossibleDuplicateFileList();
+        verify(spyRemover, times(1)).createDuplicatesList();
+        verify(spyRemover, times(1)).createDuplicateDirIfNotExists();
+        verify(spyRemover, times(1)).moveDuplicates();
 	    assertThat(new File(duplicates).listFiles(), arrayWithSize(1));
-	    assertThat(remover.getDuplicatesList(), hasSize(0));
+	    assertThat(spyRemover.getDuplicatesList(), hasSize(0));
     }
 }
