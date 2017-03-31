@@ -92,6 +92,11 @@ public class DuplicateRemoverTest {
 	    remover.getSHAHashForFile(new File(""));
     }
 
+	@Test(expected = NullPointerException.class)
+	public void givenNullWhenGetSHAHashForFileThenThrowFileNotFoundException() throws Exception {
+		remover.getSHAHashForFile(null);
+	}
+
 	@Test
 	public void givenFileWhenGetSHAHashForFileThenReturnNotEmptyHash() throws Exception {
 		String fileHash = remover.getSHAHashForFile(new File(fileOnePath));
