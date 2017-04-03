@@ -1,6 +1,6 @@
-package pg.duplicat;
+package pg;
 
-import pg.helper.DuplicateRemover;
+import pg.duplicat.DuplicateRemover;
 import pg.helper.TimeHelper;
 
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package pg.helper;
+package pg.duplicat;
 
 import java.io.*;
 import java.nio.file.*;
