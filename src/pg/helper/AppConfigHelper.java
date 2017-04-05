@@ -20,7 +20,7 @@ public class AppConfigHelper {
 
     private AppConfigHelper() throws ProgramException {
         URL url = getClass().getClassLoader().getResource(AppConstants.APP_CONFIG_PATH);
-        appConfig = new PropertiesHelper().loadProgramProperties(url.getPath());
+        appConfig = PropertiesHelper.loadProgramProperties(url.getPath());
     }
 
     public static AppConfigHelper getInstance() throws ProgramException {
@@ -35,7 +35,7 @@ public class AppConfigHelper {
         appConfig.setProperty("file.connector.lastUsed", changeDetails.getFileNameIndexConnector());
         appConfig.setProperty("file.extensions", changeDetails.getFileExtension());
 
-        new PropertiesHelper().saveProgramProperties(appConfig, AppConstants.APP_CONFIG_PATH);
+        PropertiesHelper.saveProgramProperties(appConfig, AppConstants.APP_CONFIG_PATH);
     }
 
     public String getCoreNameLastUsed() {

@@ -1,13 +1,17 @@
 package pg.helper;
 
+import java.io.*;
 import java.net.URL;
 import java.util.Properties;
 import java.util.ResourceBundle;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.*;
+
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
+
 import pg.constant.AppConstants;
+import pg.exception.*;
 
 /**
  * @author Gawa [Paweł Gawędzki]
@@ -15,55 +19,94 @@ import pg.constant.AppConstants;
  */
 public class PropertiesHelperTest {
 
-    private PropertiesHelper helper;
-    private ClassLoader classLoader;
+    private static Properties backup = new Properties();
+	private static URL propertiesUrl;
 
-    @Before
-    public void setUp() throws Exception {
-        helper = new PropertiesHelper();
-        classLoader = this.getClass().getClassLoader();
-    }
+	@BeforeClass
+	public static void backup() throws IOException {
+		propertiesUrl = PropertiesHelperTest.class.getClassLoader().getResource(AppConstants.APP_CONFIG_PATH);
+		try (Reader reader = new FileReader(propertiesUrl.getPath())) {
+			backup.load(reader);
+		}
+	}
 
     @After
-    public void tearDown() throws Exception {
-        helper = null;
-        classLoader = null;
+    public void cleanup() throws IOException {
+	    try (Writer writer = new PrintWriter(propertiesUrl.getPath())) {
+		    backup.store(writer, "");
+		    writer.flush();
+	    }
     }
 
     @Test
     public void givenPropertyFileWhenLoadProgramPropertiesThenFileLoaded() throws Exception {
-        URL url = classLoader.getResource(AppConstants.APP_CONFIG_PATH);
-        Properties properties = helper.loadProgramProperties(url.getPath());
-        assertEquals("Props should contains value.", properties.getProperty("core.name.lastUsed"), "wakacje");
+        Properties properties = PropertiesHelper.loadProgramProperties(propertiesUrl.getPath());
+        assertThat(properties.getProperty("core.name.lastUsed"), is( equalTo("wakacje")));
         String fileConnectors = properties.getProperty("file.connectors");
-        assertEquals("Props should contains value.", fileConnectors, "-,+,_");
+        assertThat(fileConnectors, is( equalTo("-,+,_")));
     }
+
+	@Test
+	public void givenNullFilePathWhenLoadProgramPropertiesThenFileLoaded() throws Exception {
+		assertThat(PropertiesHelper.loadProgramProperties(null), nullValue());
+	}
+
+	@Test
+	public void givenEmptyFilePathWhenLoadProgramPropertiesThenFileLoaded() throws Exception {
+		assertThat(PropertiesHelper.loadProgramProperties(""), nullValue());
+	}
+
+	@Test
+	public void givenFilePathAsSpaceWhenLoadProgramPropertiesThenThrowProgramExceptionWithLoadPropertiesErrorCode()
+			throws Exception {
+		try {
+			PropertiesHelper.loadProgramProperties(" ");
+			fail("Should be thrown ProgramException.");
+		} catch (ProgramException ex) {
+			assertThat(ex.getErrorCode(), is( equalTo(ErrorCode.LOAD_PROPERTIES)));
+		}
+	}
     
     @Test
     public void givenBundleFileWhenReadBundleThenSuccess() throws Exception {
         ResourceBundle bundle = PropertiesHelper.readBundles();
-        assertNotNull("Bundle should be created.", bundle);
-        assertTrue("Bundle should not be empty.", !bundle.keySet().isEmpty());
+        assertThat(bundle, notNullValue());
+        assertThat(bundle.keySet().size(), greaterThan(0));
     }
 
     @Test
-    public void testLoadProgramProperties() throws Exception {
+    public void givenNullPropertiesWhenSaveProgramPropertiesThenThrowProgramException() {
+    	try {
+    		PropertiesHelper.saveProgramProperties(null, propertiesUrl.getPath());
+    		fail("Should be thrown NullPointerException.");
+	    } catch (ProgramException ex) {
+    		assertThat(ex.getErrorCode(), is( equalTo(ErrorCode.SAVE_PROPERTIES)));
+	    }
     }
 
-    @Test
-    public void testSaveProgramProperties() throws Exception {
-    }
+	@Test
+	public void givenNullPropertiesFilePathWhenSaveProgramPropertiesThenThrowProgramException() {
+		try {
+			PropertiesHelper.saveProgramProperties(new Properties(), null);
+			fail("Should be thrown ProgramException.");
+		} catch (ProgramException ex) {
+			assertThat(ex.getErrorCode(), is( equalTo(ErrorCode.SAVE_PROPERTIES)));
+		}
+	}
 
-    @Test
-    public void testChangeProperty() {
-    }
-
-    @Test
-    public void testOverwriteProperty() {
-    }
-
-    @Test
-    public void testIsAnyPropertyChanged() {
-    }
+	@Test
+	public void givenPropertiesFilePathWhenSaveProgramPropertiesThenSaveWithSuccess() throws Exception {
+		Properties properties = PropertiesHelper.loadProgramProperties(propertiesUrl.getPath());
+		String testKey = "test.key";
+		String testValue = "test value";
+		properties.setProperty(testKey, testValue);
+		PropertiesHelper.saveProgramProperties(properties, propertiesUrl.getPath());
+		properties = PropertiesHelper.loadProgramProperties(propertiesUrl.getPath());
+		assertThat(properties.get(testKey), is( equalTo(testValue)));
+		properties.remove(testKey);
+		PropertiesHelper.saveProgramProperties(properties, propertiesUrl.getPath());
+		properties = PropertiesHelper.loadProgramProperties(propertiesUrl.getPath());
+		assertThat(properties.get(testKey), nullValue());
+	}
 
 }

@@ -14,9 +14,11 @@ import java.util.ResourceBundle;
 /**
  * @author Gawa [Paweł Gawędzki]
  */
-public class PropertiesHelper {
+public final class PropertiesHelper {
 
-    public Properties loadProgramProperties(String filePath) throws ProgramException {
+	private PropertiesHelper() {}
+
+	public static Properties loadProgramProperties(String filePath) throws ProgramException {
         if (filePath == null || filePath.length() == 0) {
             return null;
         }
@@ -29,18 +31,13 @@ public class PropertiesHelper {
         return props;
     }
 
-    public void saveProgramProperties(Properties props, String filePath) throws ProgramException {
-        try (Writer writer = new PrintWriter(filePath)){
+    public static void saveProgramProperties(Properties props, String filePath) throws ProgramException {
+        try (Writer writer = new PrintWriter(filePath)) {
             props.store(writer, "");
             writer.flush();
         } catch (Exception ex) {
             throw new ProgramException(ErrorCode.SAVE_PROPERTIES, ex);
         }
-    }
-
-    public void addProperty(Properties properties, String key, String valueToBeAdded) {
-        String newValue = String.format("%s%s", properties.getProperty(key), valueToBeAdded);
-        properties.setProperty(key, newValue);
     }
 
     public static ResourceBundle readBundles() throws ProgramException {
