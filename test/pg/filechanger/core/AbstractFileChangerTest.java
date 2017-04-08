@@ -3,6 +3,7 @@ package pg.filechanger.core;
 import java.util.Map;
 import org.junit.Test;
 import pg.filechanger.dto.ChangeDetails;
+import pg.logger.impl.ConsoleLogger;
 
 import static org.junit.Assert.*;
 
@@ -34,7 +35,7 @@ public class AbstractFileChangerTest {
         }
 
         AbstractFileChangerImpl() {
-            super(new String[] {}, null);
+            super(new String[] {}, null, new ConsoleLogger());
         }
 
         @Override
@@ -49,7 +50,7 @@ public class AbstractFileChangerTest {
         }
         
         @Override
-        public Map<String, Integer> createMaxIndexMap() {
+        public Map<String, Integer> createMaxIndexMap(ChangeDetails changeDetails) {
             order += String.format("%s,", "createMaxIndexMap");
             return null;
         }

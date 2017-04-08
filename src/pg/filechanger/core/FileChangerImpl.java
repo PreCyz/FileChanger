@@ -10,18 +10,23 @@ import pg.exception.ErrorCode;
 import pg.exception.ProgramException;
 import pg.filechanger.dto.ChangeDetails;
 import pg.filechanger.dto.FileChangerParams;
+import pg.logger.AppLogger;
 
 /**
  * @author Paweł Gawędzki
  */
 public class FileChangerImpl extends AbstractFileChanger {
 
-    public FileChangerImpl(String[] params, ResourceBundle bundle) {
-        super(params, bundle);
+	public FileChangerImpl(AppLogger logger, ResourceBundle bundle) {
+		super(logger, bundle);
+	}
+
+	public FileChangerImpl(String[] params, ResourceBundle bundle, AppLogger logger) {
+        super(params, bundle, logger);
     }
 
-    public FileChangerImpl(ChangeDetails changeDetails, ResourceBundle bundle) {
-        super(changeDetails, bundle);
+    public FileChangerImpl(ChangeDetails changeDetails, ResourceBundle bundle, AppLogger logger) {
+        super(changeDetails, bundle, logger);
     }
 
     @Override
@@ -41,8 +46,8 @@ public class FileChangerImpl extends AbstractFileChanger {
         if (!destFile.exists()) {
             boolean destCreated = destFile.mkdir();
             if (destCreated) {
-                System.out.println(messageHelper.getFullMessage("file.dir.created",
-                        changeDetails.getDestinationDir()));
+                logger.log(messageHelper.getFullMessage("file.dir.created",
+		                changeDetails.getDestinationDir()));
             } else {
                 throw new ProgramException(ErrorCode.DESTINATION_NOT_CREATED, changeDetails.getDestinationDir());
             }
@@ -50,13 +55,13 @@ public class FileChangerImpl extends AbstractFileChanger {
     }
 
     @Override
-    protected Map<String, Integer> createMaxIndexMap() {
+    public Map<String, Integer> createMaxIndexMap(ChangeDetails changeDetails) {
+	    logger.log(messageHelper.getFullMessage("log.fileName.pattern", " ",
+			    changeDetails.getFileNameIndexConnector()));
         Map<String, Integer> maxExtIdxMap = new HashMap<>();
         for (String extension : changeDetails.getFileExtension().split(",")) {
             ChangeDetails tempChangeDetails = new ChangeDetails(
-                    null,
                     changeDetails.getDestinationDir(),
-                    null,
                     changeDetails.getFileNameIndexConnector()
             );
             tempChangeDetails.setFileExtension(extension);
@@ -76,13 +81,15 @@ public class FileChangerImpl extends AbstractFileChanger {
                 }
             }
         }
-        System.out.println(messageHelper.getFullMessage("file.maximum.idx",
-                changeDetails.getFileExtension(), max));
+        logger.log(messageHelper.getFullMessage("file.maximum.idx", changeDetails.getFileExtension(), max));
         return max + 1;
     }
 
     private int extractFileIndex(File file, ChangeDetails changeDetails) throws NumberFormatException {
         int beginIdx = file.getName().indexOf(changeDetails.getFileNameIndexConnector()) + 1;
+        if (beginIdx <= 0) {
+        	return 0;
+        }
         int endIdx = file.getName().indexOf(".");
         return Integer.parseInt(file.getName().substring(beginIdx, endIdx));
     }
@@ -131,14 +138,19 @@ public class FileChangerImpl extends AbstractFileChanger {
     private void changeFileName(File file) {
         String newName = createFileName(changeDetails);
         if (file.renameTo(new File(newName))) {
-            System.out.println(messageHelper.getFullMessage("file.name.changed", file.getName(), newName));
+            logger.log(messageHelper.getFullMessage("file.name.changed", file.getName(), newName));
         }
     }
 
     private String createFileName(ChangeDetails changeFileDetails) {
-        return changeFileDetails.getDestinationDir() + changeFileDetails.getFileCoreName()
-                + changeFileDetails.getFileNameIndexConnector() + changeFileDetails.getFileIndex()
-                + "." + changeFileDetails.getFileExtension();
+        StringBuilder builder = new StringBuilder();
+        builder.append(changeFileDetails.getDestinationDir())
+                .append(changeFileDetails.getFileCoreName())
+                .append(changeFileDetails.getFileNameIndexConnector())
+                .append(changeFileDetails.getFileIndex())
+                .append(".")
+                .append(changeFileDetails.getFileExtension());
+        return builder.toString();
     }
 
 }

@@ -1,6 +1,7 @@
 package pg.view.controller;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.*;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -11,7 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import pg.exception.ProgramException;
-import pg.helper.AppConfigHelper;
+import pg.helper.*;
 import pg.logger.impl.FileLogger;
 import pg.filechanger.dto.ChangeDetails;
 import pg.filechanger.core.FileChangerImpl;
@@ -20,7 +21,7 @@ import pg.view.WindowHandler;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import static pg.constant.AppConstants.IMG_RESOURCE_PATH;
 
@@ -49,9 +50,7 @@ public class MainController extends AbstractController {
 
     private ChangeDetails changeDetails;
 
-    private final short numberOfCharacters = 29;
-
-    public MainController(WindowHandler windowHandler) {
+	public MainController(WindowHandler windowHandler) {
         super(windowHandler);
     }
 
@@ -73,7 +72,11 @@ public class MainController extends AbstractController {
             coreNameTextField.setText(appConfigHelper.getCoreNameLastUsed());
             fileConnectorComboBox.setItems(FXCollections.observableList(appConfigHelper.getFileConnectors()));
             fileConnectorComboBox.setValue(appConfigHelper.getFileConnectorLastUsed());
+            fileConnectorComboBox.valueProperty().addListener(fileConnectorChangeListener());
+            changeDetails.setFileNameIndexConnector(appConfigHelper.getFileConnectorLastUsed());
             fileExtensionsTextField.setText(appConfigHelper.getExtensions());
+	        fileExtensionsTextField.setOnAction(fileExtensionsAction());
+	        changeDetails.setFileExtension(appConfigHelper.getExtensions());
             hideLogCheckBox.setSelected(appConfigHelper.getHideLogs());
         } catch (ProgramException ex) {
             logger.log(messageHelper.getErrorMsg(ex.getErrorCode()));
@@ -81,6 +84,38 @@ public class MainController extends AbstractController {
             logger.log(messageHelper.getFullMessage("log.app.setup.finished"));
         }
     }
+
+	private ChangeListener<? super String> fileConnectorChangeListener() {
+		return (ChangeListener<String>) (observableValue, oldValue, currentValue) -> {
+			logger.log(messageHelper.getFullMessage("log.fileConnector.valueChanged", currentValue));
+			changeDetails.setFileNameIndexConnector(currentValue);
+			updateIndexes();
+		};
+	}
+
+    private void updateIndexes() {
+
+        if (!MessageHelper.empty(changeDetails.getDestinationDir())
+                && !MessageHelper.empty(changeDetails.getFileExtension())) {
+            Map<String, Integer> maxIndexMap =
+		            new FileChangerImpl(logger, bundle).createMaxIndexMap(changeDetails);
+            StringBuilder builder = new StringBuilder();
+	        final String eof = "\n";
+	        builder.append(messageHelper.getFullMessage("log.fileName.pattern", eof,
+			        changeDetails.getFileNameIndexConnector()));
+            maxIndexMap.forEach((key, value) -> builder.append(key).append(" = ").append(value).append(eof));
+            maxIndexesLabel.setText(builder.toString());
+        }
+    }
+
+	private EventHandler<ActionEvent> fileExtensionsAction() {
+		return e -> {
+			changeDetails.setFileExtension(fileExtensionsTextField.getText());
+			logger.log(messageHelper.getFullMessage("log.fileExtensions.valueChanged",
+					fileExtensionsTextField.getText()));
+			updateIndexes();
+		};
+	}
 
     private void setUpButtons() {
         setupButton(sourceButton, sourceAction());
@@ -96,7 +131,7 @@ public class MainController extends AbstractController {
             Image buttonImage = resourceHelper.readImage(IMG_RESOURCE_PATH + button.getId() + imgExtension);
             button.setGraphic(new ImageView(buttonImage));
         } catch (ProgramException ex) {
-            logger.log(messageHelper.getErrorMsg(ex.getErrorCode()));
+            logger.log(messageHelper.getErrorMsg(ex.getErrorCode(), button.getId()));
             String buttonId = button.getId();
             button.setText(messageHelper.getFullMessage(
                     "changerTab.button." + buttonId.substring(0, buttonId.indexOf("Button"))));
@@ -128,8 +163,8 @@ public class MainController extends AbstractController {
                 alert.showAndWait();
             } else {
                 try {
-                    new FileChangerValidator(changeDetails, bundle);
-                    new FileChangerImpl(changeDetails, bundle).run();
+                    new FileChangerValidator(changeDetails, bundle).validate();
+                    new FileChangerImpl(changeDetails, bundle, logger).run();
                     AppConfigHelper.getInstance().updateAppConfiguration(changeDetails);
                 } catch (ProgramException ex) {
                     buildErrorAlertWithSolution(ex);
@@ -174,8 +209,9 @@ public class MainController extends AbstractController {
     }
 
     private String fitValueToLabel(String value) {
-        if (value.length() > numberOfCharacters) {
-            return String.format("...%s", value.substring(value.length() - numberOfCharacters, value.length()));
+	    final short maxNumberOfCharactersOnLabel = 29;
+	    if (value.length() > maxNumberOfCharactersOnLabel) {
+            return String.format("...%s", value.substring(value.length() - maxNumberOfCharactersOnLabel, value.length()));
         }
         return value;
     }
@@ -189,6 +225,7 @@ public class MainController extends AbstractController {
             if (destinationDir != null) {
                 changeDetails.setDestinationDir(destinationDir.getAbsolutePath());
                 destinationLabel.setText(fitValueToLabel(destinationDir.getAbsolutePath()));
+	            updateIndexes();
             } else {
                 logger.log(messageHelper.getFullMessage("alert.destination.noDir"));
                 buildAlert(messageHelper.getFullMessage("alert.destination.noDir"), Alert.AlertType.WARNING);
@@ -196,7 +233,7 @@ public class MainController extends AbstractController {
         };
     }
 
-    private EventHandler<ActionEvent> showLogsAction() {
+	private EventHandler<ActionEvent> showLogsAction() {
         return e -> {
             logger.log(messageHelper.getFullMessage("log.button.pressed", showLogsButton.getId()));
             windowHandler.launchLoggerView();

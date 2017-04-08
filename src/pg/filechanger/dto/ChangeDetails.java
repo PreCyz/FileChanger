@@ -22,12 +22,16 @@ public class ChangeDetails {
 
     public ChangeDetails() {}
 
+    public ChangeDetails(String destinationDir, String fileNameIndexConnector) {
+    	this.destinationDir = destinationDir;
+    	this.fileNameIndexConnector = fileNameIndexConnector;
+    }
+
     public ChangeDetails(String sourceDir, String destinationDir, String fileCoreName,
                          String fileNameIndexConnector) {
+    	this(destinationDir, fileNameIndexConnector);
         this.sourceDir = sourceDir;
-        this.destinationDir = destinationDir;
         this.fileCoreName = fileCoreName;
-        this.fileNameIndexConnector = fileNameIndexConnector;
     }
 
     public String getSourceDir() {

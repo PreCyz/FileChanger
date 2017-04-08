@@ -4,16 +4,20 @@ import java.io.File;
 import java.util.*;
 import org.junit.*;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 import pg.filechanger.dto.ChangeDetails;
 import pg.helper.PropertiesHelper;
 import pg.exception.ProgramException;
+import pg.logger.impl.ConsoleLogger;
 
 /**
  * @author Gawa
@@ -70,23 +74,11 @@ public class FileChangerImplTest {
     public void whenCreateMaxIndexMapThenReturnProperMap() {
         Map<String, Integer> expected = new HashMap<>();
         expected.put("someKey", 1);
-        when(mockChanger.createMaxIndexMap()).thenReturn(expected);
-        Map<String, Integer> actual = mockChanger.createMaxIndexMap();
+        when(mockChanger.createMaxIndexMap(any(ChangeDetails.class))).thenReturn(expected);
+        Map<String, Integer> actual = mockChanger.createMaxIndexMap(new ChangeDetails());
 
         assertThat(actual, notNullValue());
 	    assertThat(actual.size(), greaterThan(0));
-    }
-    
-    @Test
-    public void givenNullParamsWhenCreateMaxIndexMapThenThrowNullPointerException() {
-        try {
-            String[] params = null;
-            changer = new FileChanger(params);
-            changer.createMaxIndexMap();
-            fail("Should throw NullPointerException.");
-        } catch (Exception ex) {
-	        assertThat(ex, instanceOf(NullPointerException.class));
-        }
     }
 
     @Test
@@ -94,7 +86,7 @@ public class FileChangerImplTest {
         try {
             ChangeDetails changeDetails = null;
             changer = new FileChanger(changeDetails);
-            changer.createMaxIndexMap();
+            changer.createMaxIndexMap(changeDetails);
             fail("Should throw NullPointerException.");
         } catch (Exception ex) {
             assertThat(ex, instanceOf(NullPointerException.class));
@@ -108,7 +100,7 @@ public class FileChangerImplTest {
                 String.format("d:%stesty%snotExists%s", FILE_SEPARATOR, FILE_SEPARATOR, FILE_SEPARATOR));
         changer.createDestinationIfNotExists();
 
-        Map<String, Integer> indexMap = changer.createMaxIndexMap();
+        Map<String, Integer> indexMap = changer.createMaxIndexMap(changeDetails);
 
         assertEquals("Map should not be empty.", 4, indexMap.size());
         indexMap.entrySet().stream().forEach((entry) ->
@@ -158,11 +150,11 @@ public class FileChangerImplTest {
     private class FileChanger extends FileChangerImpl {
 
         FileChanger(String[] params) throws Exception {
-            super(params, PropertiesHelper.readBundles());
+            super(params, PropertiesHelper.readBundles(), new ConsoleLogger());
         }
 
         FileChanger(ChangeDetails changeDetails) throws Exception {
-            super(changeDetails, PropertiesHelper.readBundles());
+            super(changeDetails, PropertiesHelper.readBundles(), new ConsoleLogger());
         }
     
     }

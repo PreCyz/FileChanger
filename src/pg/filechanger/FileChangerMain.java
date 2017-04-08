@@ -41,7 +41,7 @@ public class FileChangerMain {
 	    argsValidator = new FileChangerValidator(args, bundle);
         try {
 	        argsValidator.validate();
-	        fileChanger = new FileChangerImpl(args, bundle);
+	        fileChanger = new FileChangerImpl(args, bundle, logger);
 	        fileChanger.run();
         } catch (ProgramException ex) {
             logger.log(messageHelper.getErrorMsg(ex.getErrorCode(), ex.getArgument()));
