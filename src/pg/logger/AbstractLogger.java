@@ -30,4 +30,9 @@ public abstract class AbstractLogger implements AppLogger {
         return new ArrayList<>(logMessages);
     }
 
+    @Override
+    public void logBundle(String bundleKey) {
+        logger.log(logger.getLevel(), messageHelper.getFullMessage(bundleKey));
+    }
+
 }

@@ -55,27 +55,19 @@ public class FileChangerImplTest {
     }
     
     @Test(expected = NullPointerException.class) 
-    public void transformNullToProperties() {
+    public void givenNullWhenTransformNullToPropertiesThenThrowNullPointerException() {
         assertNull(AbstractFileChanger.transformArgumentsToProperties(null));
     }
     
     @Test 
-    public void transformArgumentsToProperties() {
-        assertEquals(AbstractFileChanger.transformArgumentsToProperties(args), properties);
-    }
-    
-    @Test 
-    public void transformArgumentsToPropertiesNotSame() {
-        assertNotSame(AbstractFileChanger.transformArgumentsToProperties(args), properties);
-    }
-    
-    @Test 
-    public void transformArgumentsToPropertiesDifferentValue() {
-        assertNotSame(AbstractFileChanger.transformArgumentsToProperties(args), properties);
+    public void givenStringArrayWithArgumentsWhenTransformArgumentsToPropertiesThenReturnProperties() {
+        Properties expected = AbstractFileChanger.transformArgumentsToProperties(args);
+        assertEquals(expected, properties);
+        assertNotSame(expected, properties);
     }
 
     @Test
-    public void testCreateMaxIndexMap() {
+    public void whenCreateMaxIndexMapThenReturnProperMap() {
         Map<String, Integer> expected = new HashMap<>();
         expected.put("someKey", 1);
         when(mockChanger.createMaxIndexMap()).thenReturn(expected);
@@ -124,7 +116,7 @@ public class FileChangerImplTest {
     }
 
     @Test
-    public void testCreateChangeDetails() {
+    public void whenCreateChangeDetailsThenReturnChangeDetails() {
         String actualSrc = String.format("d:%stesty%ssrc%s", FILE_SEPARATOR, FILE_SEPARATOR, FILE_SEPARATOR);
         String actualDestination = String.format("d:%stesty%sdst%s", FILE_SEPARATOR, FILE_SEPARATOR, FILE_SEPARATOR);
         String actualFilePrefix = "xperiaM2";
@@ -139,11 +131,11 @@ public class FileChangerImplTest {
     }
     
     @Test
-    public void testCreateChangeDetails_throwsException() {
-        try{
+    public void givenNullParametersWhenCreateChangeDetailsThenThrowNullPointerException() {
+        try {
             changer.createChangeDetails(null);
             fail("Should throw NullPointerException.");
-        } catch(NullPointerException ex){
+        } catch(NullPointerException ex) {
             assertNotNull(ex);
         }
     }

@@ -24,13 +24,16 @@ public class ConsoleLogger implements AppLogger {
     public void log(ProgramException ex) {
         String errorMsg = messageHelper.getErrorMsg(ex.getErrorCode(), ex.getArgument());
         logger.log(logger.getLevel(), errorMsg);
-        //System.out.println(errorMsg);
     }
 
     @Override
     public void log(String message) {
         logger.log(logger.getLevel(), message);
-        //System.out.println(message);
+    }
+
+    @Override
+    public void logBundle(String bundleKey) {
+        logger.log(logger.getLevel(), messageHelper.getFullMessage(bundleKey));
     }
 
 }

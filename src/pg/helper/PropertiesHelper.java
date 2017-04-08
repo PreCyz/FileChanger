@@ -45,8 +45,6 @@ public final class PropertiesHelper {
         if (bundle == null) {
             throw new ProgramException(ErrorCode.LOAD_BUNDLE);
         }
-        MessageHelper helper = MessageHelper.getInstance(bundle);
-        System.out.println(helper.getFullMessage("bundle.loaded"));
         return bundle;
     }
 }

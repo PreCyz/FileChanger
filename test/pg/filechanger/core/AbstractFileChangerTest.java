@@ -1,8 +1,7 @@
-package pg.filechanger;
+package pg.filechanger.core;
 
 import java.util.Map;
 import org.junit.Test;
-import pg.filechanger.core.AbstractFileChanger;
 import pg.filechanger.dto.ChangeDetails;
 
 import static org.junit.Assert.*;

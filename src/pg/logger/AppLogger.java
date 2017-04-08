@@ -10,5 +10,6 @@ public interface AppLogger {
     
     void log(ProgramException ex);
     void log(String message);
+    void logBundle(String bundleKey);
 
 }

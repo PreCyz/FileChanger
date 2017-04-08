@@ -15,7 +15,7 @@ public class MessageHelper {
     }
     
     public static MessageHelper getInstance(ResourceBundle bundle) {
-        if (instance == null) {
+        if (instance == null || instance.bundle == null) {
             instance = new MessageHelper(bundle);
         }
         return instance;
