@@ -1,29 +1,29 @@
-package pg.picturefilechanger.validator.impl;
+package pg.filechanger.validator.impl;
 
 import pg.constant.AppConstants;
 import pg.exception.ErrorCode;
 import pg.exception.ProgramException;
 import pg.helper.MessageHelper;
-import pg.picturefilechanger.ChangeDetails;
-import pg.picturefilechanger.Params;
-import pg.picturefilechanger.validator.Validator;
+import pg.filechanger.dto.ChangeDetails;
+import pg.filechanger.dto.FileChangerParams;
+import pg.filechanger.validator.ArgsValidator;
 
 import java.util.Properties;
 import java.util.ResourceBundle;
 
-import static pg.picturefilechanger.AbstractFileChanger.transformArgumentsToProperties;
+import static pg.filechanger.core.AbstractFileChanger.transformArgumentsToProperties;
 
-public class ArgsValidator implements Validator {
+public class FileChangerValidator implements ArgsValidator {
 
     private final MessageHelper messageHelper;
     private final String[] args;
 
-    public ArgsValidator(String[] args, ResourceBundle bundle) {
+    public FileChangerValidator(String[] args, ResourceBundle bundle) {
         this.args = args;
         this.messageHelper = MessageHelper.getInstance(bundle);
     }
 
-    public ArgsValidator(ChangeDetails changeDetails, ResourceBundle bundle) {
+    public FileChangerValidator(ChangeDetails changeDetails, ResourceBundle bundle) {
         this.args = changeDetails.toStringArray();
         this.messageHelper = MessageHelper.getInstance(bundle);
     }
@@ -39,12 +39,12 @@ public class ArgsValidator implements Validator {
     }
 
     private void argumentsValidation() throws ProgramException {
-        if(args == null || args.length == 0){
+        if (args == null || args.length == 0) {
             throw new ProgramException(ErrorCode.NO_ARGUMENTS);
         }
 
-        for(String arg : args){
-            if(MessageHelper.empty(arg)){
+        for (String arg : args) {
+            if (MessageHelper.empty(arg)) {
                 throw new ProgramException(ErrorCode.NULL_ARGUMENT, arg);
             }
         }
@@ -63,7 +63,7 @@ public class ArgsValidator implements Validator {
             sb.append(
                     String.format("%s[%s]=%s %s",
                             entry.getKey(),
-                            Params.valueOf(entry.getKey() + "").message(),
+                            FileChangerParams.valueOf(entry.getKey() + "").message(),
                             entry.getValue(),
                             AppConstants.LINE_SEPARATOR)
             );
@@ -75,7 +75,7 @@ public class ArgsValidator implements Validator {
 
     private void throwProgramExceptionWhenPropertiesValidationError(Properties properties)
             throws ProgramException {
-        for (Params param : Params.values()) {
+        for (FileChangerParams param : FileChangerParams.values()) {
             if (properties.getProperty(param.name()) == null || "".equals(properties.getProperty(param.name()))) {
                 String errMsg = messageHelper.getFullMessage("argument.wrong.value",
                         param.name(), param.message(), properties.getProperty(param.name()));
@@ -87,6 +87,6 @@ public class ArgsValidator implements Validator {
 
     private void displaySourceInfo(Properties properties) {
         System.out.println(messageHelper.getFullMessage("file.source",
-                properties.getProperty(Params.source.name())));
+                properties.getProperty(FileChangerParams.source.name())));
     }
 }
