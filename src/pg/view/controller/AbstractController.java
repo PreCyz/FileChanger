@@ -32,7 +32,7 @@ public abstract class AbstractController implements Initializable {
         bundle = resources;
         resourceHelper = new ResourceHelper();
         messageHelper = MessageHelper.getInstance(bundle);
-        logger = new ConsoleLogger(messageHelper);
+        logger = new ConsoleLogger();
     }
 
     public abstract void calculateWindowWidth();

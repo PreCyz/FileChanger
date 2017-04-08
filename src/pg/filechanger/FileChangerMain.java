@@ -26,15 +26,14 @@ public class FileChangerMain {
     }
 
     private static void runProgramWithExceptionHandling(String[] args) {
-        AppLogger logger;
+        AppLogger logger = new ConsoleLogger();
         MessageHelper messageHelper = null;
 	    ArgsValidator argsValidator;
 	    AbstractFileChanger fileChanger;
         try {
 	        bundle = PropertiesHelper.readBundles();
 	        messageHelper = MessageHelper.getInstance(bundle);
-	        logger = new ConsoleLogger(messageHelper);
-	        logger.logBundle("bundle.loaded");
+	        logger.log(messageHelper.getFullMessage("bundle.loaded"));
         } catch (ProgramException ex) {
 	        System.err.println(ex.getMessage());
 	        System.exit(-1);
@@ -45,8 +44,7 @@ public class FileChangerMain {
 	        fileChanger = new FileChangerImpl(args, bundle);
 	        fileChanger.run();
         } catch (ProgramException ex) {
-            logger = new ConsoleLogger(messageHelper);
-            logger.log(ex);
+            logger.log(messageHelper.getErrorMsg(ex.getErrorCode(), ex.getArgument()));
             System.err.println(ex.getMessage());
         }
     }

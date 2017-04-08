@@ -59,7 +59,8 @@ public class MainController extends AbstractController {
     public void initialize(URL location, ResourceBundle resources) {
         super.initialize(location, resources);
         changeDetails = new ChangeDetails();
-        logger = new FileLogger(messageHelper, logListView);
+        logger = new FileLogger(logListView);
+        logger.log(messageHelper.getFullMessage("log.fileLog.initialized", FileLogger.class.getSimpleName()));
         editExtensionsCheckBox.setOnAction(extensionsAction());
         hideLogCheckBox.setOnAction(hideLogAction());
         setUpFromAppProperties();
@@ -75,7 +76,7 @@ public class MainController extends AbstractController {
             fileExtensionsTextField.setText(appConfigHelper.getExtensions());
             hideLogCheckBox.setSelected(appConfigHelper.getHideLogs());
         } catch (ProgramException ex) {
-            logger.log(ex);
+            logger.log(messageHelper.getErrorMsg(ex.getErrorCode()));
         } finally {
             logger.log(messageHelper.getFullMessage("log.app.setup.finished"));
         }
@@ -95,7 +96,7 @@ public class MainController extends AbstractController {
             Image buttonImage = resourceHelper.readImage(IMG_RESOURCE_PATH + button.getId() + imgExtension);
             button.setGraphic(new ImageView(buttonImage));
         } catch (ProgramException ex) {
-            logger.log(ex);
+            logger.log(messageHelper.getErrorMsg(ex.getErrorCode()));
             String buttonId = button.getId();
             button.setText(messageHelper.getFullMessage(
                     "changerTab.button." + buttonId.substring(0, buttonId.indexOf("Button"))));

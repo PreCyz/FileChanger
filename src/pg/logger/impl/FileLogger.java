@@ -13,19 +13,10 @@ public class FileLogger extends AbstractLogger {
 
     private final ListView<String> listView;
 
-    public FileLogger(MessageHelper messageHelper, ListView<String> listView) {
-        super(messageHelper);
+    public FileLogger(ListView<String> listView) {
+        super();
         this.listView = listView;
         this.listView.setItems(FXCollections.observableArrayList(logMessages));
-        log(messageHelper.getFullMessage("log.fileLog.initialized", logger.getName()));
-    }
-
-    @Override
-    public void log(ProgramException ex) {
-        String errorMsg = messageHelper.getErrorMsg(ex.getErrorCode(), ex.getArgument());
-        logMessages.add(errorMsg);
-        showOnListView();
-        logger.log(logger.getLevel(), errorMsg);
     }
 
     private void showOnListView() {

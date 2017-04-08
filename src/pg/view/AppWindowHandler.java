@@ -30,12 +30,14 @@ public class AppWindowHandler extends AbstractWindowHandler {
     private ResourceBundle bundle;
     private ResourceHelper resourceHelper;
     private AppLogger logger;
+    private MessageHelper messageHelper;
 
     public AppWindowHandler(Stage primaryStage) {
         this.primaryStage = primaryStage;
         bundle = ResourceBundle.getBundle(RESOURCE_BUNDLE, Locale.getDefault());
+        messageHelper = MessageHelper.getInstance(bundle);
         resourceHelper = new ResourceHelper();
-        logger = new ConsoleLogger(MessageHelper.getInstance(bundle));
+        logger = new ConsoleLogger();
         window = primaryStage;
     }
 
@@ -54,7 +56,7 @@ public class AppWindowHandler extends AbstractWindowHandler {
             Image icon = resourceHelper.readImage(window.windowImgFilePath());
             stage.getIcons().add(icon);
         } catch (ProgramException ex) {
-            logger.log(ex);
+            logger.log(messageHelper.getErrorMsg(ex.getErrorCode()));
             String errorMsg = MessageHelper.getInstance(bundle).getErrorMsg(ex.getErrorCode(), ex.getArgument());
             AbstractLogger.addMessage(errorMsg);
         }

@@ -2,7 +2,6 @@ package pg.logger;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import pg.helper.MessageHelper;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -13,13 +12,10 @@ import java.util.List;
  */
 public abstract class AbstractLogger implements AppLogger {
 
-    protected static Logger logger;
     protected static List<String> logMessages = new LinkedList<>();
+	protected final Logger logger;
 
-    protected final MessageHelper messageHelper;
-
-    public AbstractLogger(MessageHelper messageHelper) {
-        this.messageHelper = messageHelper;
+    public AbstractLogger() {
         logger = LogManager.getLogger(this.getClass().getSimpleName());
     }
 
@@ -28,11 +24,6 @@ public abstract class AbstractLogger implements AppLogger {
     }
     public static List<String> getLogs() {
         return new ArrayList<>(logMessages);
-    }
-
-    @Override
-    public void logBundle(String bundleKey) {
-        logger.log(logger.getLevel(), messageHelper.getFullMessage(bundleKey));
     }
 
 }
