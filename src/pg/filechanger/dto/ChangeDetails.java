@@ -1,11 +1,11 @@
-package pg.picturefilechanger;
+package pg.filechanger.dto;
 
 import pg.helper.MessageHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static pg.picturefilechanger.Params.*;
+import static pg.filechanger.dto.FileChangerParams.*;
 
 /**
  *

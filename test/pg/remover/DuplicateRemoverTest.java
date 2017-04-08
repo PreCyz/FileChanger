@@ -1,4 +1,4 @@
-package pg.duplicat;
+package pg.remover;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -21,7 +21,6 @@ import java.util.*;
 import org.junit.*;
 import org.junit.runners.MethodSorters;
 import org.mockito.runners.MockitoJUnitRunner;
-import pg.duplicat.DuplicateRemover;
 
 /**
  *

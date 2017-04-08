@@ -13,9 +13,9 @@ import javafx.stage.DirectoryChooser;
 import pg.exception.ProgramException;
 import pg.helper.AppConfigHelper;
 import pg.logger.impl.FileLogger;
-import pg.picturefilechanger.ChangeDetails;
-import pg.picturefilechanger.impl.FileChangerImpl;
-import pg.picturefilechanger.validator.impl.ArgsValidator;
+import pg.filechanger.dto.ChangeDetails;
+import pg.filechanger.core.FileChangerImpl;
+import pg.filechanger.validator.impl.FileChangerValidator;
 import pg.view.WindowHandler;
 
 import java.io.File;
@@ -127,7 +127,7 @@ public class MainController extends AbstractController {
                 alert.showAndWait();
             } else {
                 try {
-                    new ArgsValidator(changeDetails, bundle);
+                    new FileChangerValidator(changeDetails, bundle);
                     new FileChangerImpl(changeDetails, bundle).run();
                     AppConfigHelper.getInstance().updateAppConfiguration(changeDetails);
                 } catch (ProgramException ex) {

@@ -1,4 +1,4 @@
-package pg.picturefilechanger.impl;
+package pg.filechanger.core;
 
 import java.io.File;
 import java.util.HashMap;
@@ -8,9 +8,8 @@ import java.util.ResourceBundle;
 import pg.constant.AppConstants;
 import pg.exception.ErrorCode;
 import pg.exception.ProgramException;
-import pg.picturefilechanger.ChangeDetails;
-import pg.picturefilechanger.AbstractFileChanger;
-import pg.picturefilechanger.Params;
+import pg.filechanger.dto.ChangeDetails;
+import pg.filechanger.dto.FileChangerParams;
 
 /**
  * @author Paweł Gawędzki
@@ -29,10 +28,10 @@ public class FileChangerImpl extends AbstractFileChanger {
     protected ChangeDetails createChangeDetails(String[] parameters) {
         Properties properties = AbstractFileChanger.transformArgumentsToProperties(parameters);
         changeDetails = new ChangeDetails(
-                properties.getProperty(Params.source.name()),
-                properties.getProperty(Params.destination.name()),
-                properties.getProperty(Params.coreName.name()),
-                properties.getProperty(Params.nameConnector.name()));
+                properties.getProperty(FileChangerParams.source.name()),
+                properties.getProperty(FileChangerParams.destination.name()),
+                properties.getProperty(FileChangerParams.coreName.name()),
+                properties.getProperty(FileChangerParams.nameConnector.name()));
         return changeDetails;
     }
 

@@ -1,7 +1,8 @@
-package pg;
+package pg.remover;
 
-import pg.duplicat.DuplicateRemover;
+import pg.exception.*;
 import pg.helper.TimeHelper;
+import pg.filechanger.validator.impl.DuplicateRemoverValidator;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -11,11 +12,11 @@ import java.time.*;
  *
  * @author Gawa
  */
-public class DuplicateFileRemover {
+public class DuplicateRemoverMain {
 
     private DuplicateRemover duplicateRemover;
 
-    public DuplicateFileRemover(String srcDirPath) {
+    public DuplicateRemoverMain(String srcDirPath) {
         this.duplicateRemover = new DuplicateRemover(srcDirPath);
     }
 
@@ -25,24 +26,16 @@ public class DuplicateFileRemover {
 
     public static void main(String[] args) {
         try {
-            validateArgs(args);
+        	new DuplicateRemoverValidator(args).validate();
             String sourcePath = args[0];
             LocalTime start = LocalTime.now();
-            DuplicateFileRemover dfr = new DuplicateFileRemover(sourcePath);
+            DuplicateRemoverMain dfr = new DuplicateRemoverMain(sourcePath);
             dfr.getDuplicateRemover().processDuplicates();
             LocalTime stop = LocalTime.now();
             System.out.println(TimeHelper.durationInfo(start, stop));
-        } catch (NoSuchAlgorithmException | IOException | UnsupportedOperationException ex) {
+        } catch (NoSuchAlgorithmException | IOException | ProgramException ex) {
             System.out.println(ex.getMessage());
         }
     }
 
-    protected static void validateArgs(String[] args) {
-        if(args == null || args.length == 0){
-            throw new UnsupportedOperationException("Nie podano scieżki do katalogu.");
-        }
-        if(args[0] == null || "".equals(args[0].trim())){
-            throw new UnsupportedOperationException("Niewłaściwy parametr.");
-        }
-    }
 }

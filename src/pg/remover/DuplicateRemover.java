@@ -1,4 +1,4 @@
-package pg.duplicat;
+package pg.remover;
 
 import java.io.*;
 import java.nio.file.*;

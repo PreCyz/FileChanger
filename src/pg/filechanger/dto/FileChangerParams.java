@@ -1,4 +1,4 @@
-package pg.picturefilechanger;
+package pg.filechanger.dto;
 
 import pg.helper.MessageHelper;
 
@@ -7,8 +7,8 @@ import java.util.ResourceBundle;
 
 import static pg.constant.AppConstants.RESOURCE_BUNDLE;
 
-/** Created by gawa*/
-public enum Params {
+/** Created by gawa */
+public enum FileChangerParams {
 
     source("param.source"),
     destination("param.destination"),
@@ -19,7 +19,7 @@ public enum Params {
     private String msg;
     private MessageHelper messageHelper;
 
-    Params(String msg) {
+    FileChangerParams(String msg) {
         this.msg = msg;
         messageHelper = MessageHelper.getInstance(
                 ResourceBundle.getBundle(RESOURCE_BUNDLE, Locale.getDefault()));

@@ -7,7 +7,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import pg.exception.ErrorCode;
 import pg.exception.ProgramException;
-import pg.picturefilechanger.ChangeDetails;
+import pg.filechanger.dto.ChangeDetails;
 
 import java.util.Arrays;
 import java.util.List;

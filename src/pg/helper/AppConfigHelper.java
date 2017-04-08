@@ -2,7 +2,7 @@ package pg.helper;
 
 import pg.constant.AppConstants;
 import pg.exception.ProgramException;
-import pg.picturefilechanger.ChangeDetails;
+import pg.filechanger.dto.ChangeDetails;
 
 import java.net.URL;
 import java.util.Arrays;
