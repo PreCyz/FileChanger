@@ -17,32 +17,24 @@
                      <children>
                         <Pane layoutX="6.0" layoutY="10.0" prefHeight="382.0" prefWidth="311.0">
                            <children>
-                              <TitledPane fx:id="optionalTitledPane" expanded="false" layoutX="5.0" layoutY="228.0" prefHeight="145.0" prefWidth="300.0" text="%changerTab.optional">
+                              <TitledPane fx:id="mandatoryTitledPane" animated="false" collapsible="false" layoutX="5.0" layoutY="79.0" prefHeight="200.0" prefWidth="300.0" text="%changerTab.parameters">
                                 <content>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="76.0" prefWidth="298.0">
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="138.0" prefWidth="298.0">
                                        <children>
-                                          <ComboBox fx:id="fileConnectorComboBox" layoutX="10.0" layoutY="17.0" prefHeight="25.0" prefWidth="60.0" />
-                                          <Label layoutX="83.0" layoutY="21.0" prefHeight="17.0" prefWidth="207.0" text="%changerTab.fileConnector" />
-                                       </children>
-                                    </AnchorPane>
-                                </content>
-                              </TitledPane>
-                              <TitledPane fx:id="mandatoryTitledPane" animated="false" collapsible="false" layoutX="5.0" layoutY="79.0" prefHeight="144.0" prefWidth="300.0" text="%changerTab.mandatory">
-                                <content>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="118.0" prefWidth="294.0">
-                                       <children>
-                                          <Button fx:id="sourceButton" layoutX="14.0" layoutY="9.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="45.0">
+                                          <Button fx:id="sourceButton" layoutX="14.0" layoutY="18.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="45.0">
                                              <cursor>
                                                 <Cursor fx:constant="OPEN_HAND" />
                                              </cursor></Button>
-                                          <Label fx:id="sourceLabel" layoutX="63.0" layoutY="16.0" prefHeight="17.0" prefWidth="230.0" text="%changerTab.source" />
-                                          <Button fx:id="destinationButton" layoutX="14.0" layoutY="47.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="45.0">
+                                          <Label fx:id="sourceLabel" layoutX="63.0" layoutY="25.0" prefHeight="17.0" prefWidth="230.0" text="%changerTab.source" />
+                                          <Button fx:id="destinationButton" layoutX="14.0" layoutY="57.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="45.0">
                                              <cursor>
                                                 <Cursor fx:constant="OPEN_HAND" />
                                              </cursor></Button>
-                                          <Label fx:id="destinationLabel" layoutX="63.0" layoutY="53.0" prefHeight="17.0" prefWidth="230.0" text="%changerTab.destination" />
-                                          <TextField fx:id="coreNameTextField" layoutX="13.0" layoutY="87.0" prefHeight="25.0" prefWidth="122.0" />
-                                          <Label layoutX="142.0" layoutY="91.0" prefHeight="17.0" prefWidth="144.0" text="%changerTab.fileCoreName" />
+                                          <Label fx:id="destinationLabel" layoutX="63.0" layoutY="63.0" prefHeight="17.0" prefWidth="230.0" text="%changerTab.destination" />
+                                          <TextField fx:id="coreNameTextField" layoutX="13.0" layoutY="97.0" prefHeight="25.0" prefWidth="122.0" />
+                                          <Label layoutX="142.0" layoutY="101.0" prefHeight="17.0" prefWidth="144.0" text="%changerTab.fileCoreName" />
+                                          <ComboBox fx:id="fileConnectorComboBox" layoutX="14.0" layoutY="132.0" prefHeight="25.0" prefWidth="60.0" />
+                                          <Label layoutX="87.0" layoutY="136.0" prefHeight="17.0" prefWidth="207.0" text="%changerTab.fileConnector" />
                                        </children>
                                     </AnchorPane>
                                 </content>
@@ -55,18 +47,15 @@
                               <TextField fx:id="fileExtensionsTextField" editable="false" layoutX="5.0" layoutY="27.0" prefHeight="25.0" prefWidth="300.0" style="-fx-background-color: #ececec;" />
                            </children>
                         </Pane>
-                        <Pane layoutX="319.0" layoutY="10.0" prefHeight="384.0" prefWidth="165.0">
+                        <Pane layoutX="319.0" layoutY="7.0" prefHeight="387.0" prefWidth="165.0">
                            <children>
-                              <Button fx:id="runButton" layoutX="5.0" layoutY="5.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0">
+                              <Label fx:id="fileNamePatternLabel" alignment="TOP_LEFT" layoutX="4.0" prefHeight="55.0" prefWidth="156.0" style="-fx-background-color: #ececec;" />
+                              <Button fx:id="runButton" layoutX="5.0" layoutY="65.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0">
                                  <cursor>
                                     <Cursor fx:constant="OPEN_HAND" />
                                  </cursor></Button>
-                              <Label fx:id="maxIndexesLabel" layoutX="4.0" layoutY="44.0" prefHeight="100.0" prefWidth="156.0" style="-fx-border-color: black;" text="max file indexes" />
-                              <Button fx:id="exitButton" layoutX="116.0" layoutY="5.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0">
-                                 <cursor>
-                                    <Cursor fx:constant="OPEN_HAND" />
-                                 </cursor></Button>
-                              <Button fx:id="showLogsButton" layoutX="5.0" layoutY="149.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="97.0" text="%changerTab.button.showLogs">
+                              <Label fx:id="maxIndexesLabel" alignment="TOP_LEFT" layoutX="4.0" layoutY="105.0" prefHeight="242.0" prefWidth="156.0" style="-fx-background-color: #ececec;" />
+                              <Button fx:id="exitButton" layoutX="116.0" layoutY="65.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0">
                                  <cursor>
                                     <Cursor fx:constant="OPEN_HAND" />
                                  </cursor></Button>
@@ -89,11 +78,16 @@
       </TabPane>
       <Pane layoutX="484.0" prefHeight="433.0" prefWidth="462.0">
          <children>
-            <ListView fx:id="logListView" disable="true" prefHeight="433.0" prefWidth="462.0" style="-fx-border-color: black;">
+            <ListView fx:id="logListView" disable="true" prefHeight="387.0" prefWidth="462.0" style="-fx-border-color: black;">
                <effect>
                   <Blend />
                </effect>
             </ListView>
+            <Button fx:id="showLogsButton" layoutX="299.0" layoutY="398.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="155.0" text="%changerTab.button.showLogs">
+               <cursor>
+                  <Cursor fx:constant="OPEN_HAND" />
+               </cursor>
+            </Button>
          </children>
       </Pane>
    </children>

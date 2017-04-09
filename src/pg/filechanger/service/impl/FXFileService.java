@@ -67,8 +67,7 @@ public class FXFileService extends AbstractFileService {
 	public String buildMaxIndexesLabelText() {
 		StringBuilder builder = new StringBuilder();
 		final String eof = "\n";
-		builder.append(messageHelper.getFullMessage("log.fileName.pattern", eof,
-				changeDetails.getFileNameIndexConnector()));
+		builder.append(messageHelper.getFullMessage("log.next.indexes", eof));
 		maxExtIdxMap.forEach((key, value) -> builder.append(key).append(" = ").append(value).append(eof));
 		return builder.toString();
 

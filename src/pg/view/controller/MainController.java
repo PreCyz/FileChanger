@@ -41,6 +41,7 @@ public class MainController extends AbstractController {
     @FXML private Label maxIndexesLabel;
     @FXML private Label sourceLabel;
     @FXML private Label destinationLabel;
+    @FXML private Label fileNamePatternLabel;
     @FXML private ListView<String> logListView;
     @FXML private TextField fileExtensionsTextField;
     @FXML private CheckBox editExtensionsCheckBox;
@@ -76,6 +77,8 @@ public class MainController extends AbstractController {
 	        fileExtensionsTextField.setOnAction(fileExtensionsAction());
 	        fxFileService.addFileExtension(appConfigHelper.getExtensions());
             hideLogCheckBox.setSelected(appConfigHelper.getHideLogs());
+            fileNamePatternLabel.setText(messageHelper.getFullMessage("log.fileName.pattern", "\n"
+		            , fileConnectorComboBox.getValue()));
         } catch (ProgramException ex) {
             logger.log(messageHelper.getErrorMsg(ex.getErrorCode()));
         } finally {
@@ -87,6 +90,8 @@ public class MainController extends AbstractController {
 		return (ChangeListener<String>) (observableValue, oldValue, currentValue) -> {
 			logger.log(messageHelper.getFullMessage("log.fileConnector.valueChanged", currentValue));
 			fxFileService.addFileNameIndexConnector(currentValue);
+			fileNamePatternLabel.setText(messageHelper.getFullMessage("log.fileName.pattern", "\n"
+					, fileConnectorComboBox.getValue()));
 			setMaxIndexesLabelText();
 		};
 	}
