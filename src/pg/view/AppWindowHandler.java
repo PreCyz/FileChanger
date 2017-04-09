@@ -63,7 +63,9 @@ public class AppWindowHandler extends AbstractWindowHandler {
         try {
             stage.setTitle(bundle.getString(window.windowTitleBundle()));
             stage.setResizable(window.resizable());
-            stage.setScene(new Scene(window.root()));
+	        Scene scene = new Scene(window.root());
+	        scene.getStylesheets().add(window.css());
+	        stage.setScene(scene);
             stage.show();
             window.refreshWindowSize();
         } catch (IOException ex) {

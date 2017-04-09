@@ -38,7 +38,7 @@ public class MainController extends AbstractController {
     @FXML private Button destinationButton;
     @FXML private Button exitButton;
     @FXML private Button showLogsButton;
-    @FXML private Label maxIndexesLabel;
+    @FXML private TextArea maxIndexesAreaText;
     @FXML private Label sourceLabel;
     @FXML private Label destinationLabel;
     @FXML private Label fileNamePatternLabel;
@@ -99,7 +99,7 @@ public class MainController extends AbstractController {
     private void setMaxIndexesLabelText() {
         if (fxFileService.isUpdateIndexesPossible()) {
 	        fxFileService.createMaxIndexMap();
-            maxIndexesLabel.setText(fxFileService.buildMaxIndexesLabelText());
+            maxIndexesAreaText.setText(fxFileService.buildMaxIndexesLabelText());
         }
     }
 
@@ -145,7 +145,6 @@ public class MainController extends AbstractController {
     private EventHandler<ActionEvent> runAction() {
         return e -> {
             logger.log(messageHelper.getFullMessage("log.button.pressed", runButton.getId()));
-            maxIndexesLabel.setText("YOU PRESSED RUN MAN !!");
             fxFileService.addFileCoreName(coreNameTextField.getText());
 	        fxFileService.addFileNameIndexConnector(fileConnectorComboBox.getValue());
 	        fxFileService.addFileExtension(fileExtensionsTextField.getText());
