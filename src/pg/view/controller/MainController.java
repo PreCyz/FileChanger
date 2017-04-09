@@ -12,11 +12,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import pg.exception.ProgramException;
+import pg.filechanger.service.impl.FXFileService;
 import pg.helper.*;
 import pg.logger.impl.FileLogger;
-import pg.filechanger.dto.ChangeDetails;
-import pg.filechanger.core.FileChangerImpl;
-import pg.filechanger.validator.impl.FileChangerValidator;
 import pg.view.WindowHandler;
 
 import java.io.File;
@@ -48,7 +46,7 @@ public class MainController extends AbstractController {
     @FXML private CheckBox editExtensionsCheckBox;
     @FXML private CheckBox hideLogCheckBox;
 
-    private ChangeDetails changeDetails;
+    private FXFileService fxFileService;
 
 	public MainController(WindowHandler windowHandler) {
         super(windowHandler);
@@ -57,9 +55,9 @@ public class MainController extends AbstractController {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         super.initialize(location, resources);
-        changeDetails = new ChangeDetails();
         logger = new FileLogger(logListView);
         logger.log(messageHelper.getFullMessage("log.fileLog.initialized", FileLogger.class.getSimpleName()));
+        fxFileService = new FXFileService(resources, logger);
         editExtensionsCheckBox.setOnAction(extensionsAction());
         hideLogCheckBox.setOnAction(hideLogAction());
         setUpFromAppProperties();
@@ -73,10 +71,10 @@ public class MainController extends AbstractController {
             fileConnectorComboBox.setItems(FXCollections.observableList(appConfigHelper.getFileConnectors()));
             fileConnectorComboBox.setValue(appConfigHelper.getFileConnectorLastUsed());
             fileConnectorComboBox.valueProperty().addListener(fileConnectorChangeListener());
-            changeDetails.setFileNameIndexConnector(appConfigHelper.getFileConnectorLastUsed());
+	        fxFileService.addFileNameIndexConnector(appConfigHelper.getFileConnectorLastUsed());
             fileExtensionsTextField.setText(appConfigHelper.getExtensions());
 	        fileExtensionsTextField.setOnAction(fileExtensionsAction());
-	        changeDetails.setFileExtension(appConfigHelper.getExtensions());
+	        fxFileService.addFileExtension(appConfigHelper.getExtensions());
             hideLogCheckBox.setSelected(appConfigHelper.getHideLogs());
         } catch (ProgramException ex) {
             logger.log(messageHelper.getErrorMsg(ex.getErrorCode()));
@@ -88,32 +86,24 @@ public class MainController extends AbstractController {
 	private ChangeListener<? super String> fileConnectorChangeListener() {
 		return (ChangeListener<String>) (observableValue, oldValue, currentValue) -> {
 			logger.log(messageHelper.getFullMessage("log.fileConnector.valueChanged", currentValue));
-			changeDetails.setFileNameIndexConnector(currentValue);
-			updateIndexes();
+			fxFileService.addFileNameIndexConnector(currentValue);
+			setMaxIndexesLabelText();
 		};
 	}
 
-    private void updateIndexes() {
-
-        if (!MessageHelper.empty(changeDetails.getDestinationDir())
-                && !MessageHelper.empty(changeDetails.getFileExtension())) {
-            Map<String, Integer> maxIndexMap =
-		            new FileChangerImpl(logger, bundle).createMaxIndexMap(changeDetails);
-            StringBuilder builder = new StringBuilder();
-	        final String eof = "\n";
-	        builder.append(messageHelper.getFullMessage("log.fileName.pattern", eof,
-			        changeDetails.getFileNameIndexConnector()));
-            maxIndexMap.forEach((key, value) -> builder.append(key).append(" = ").append(value).append(eof));
-            maxIndexesLabel.setText(builder.toString());
+    private void setMaxIndexesLabelText() {
+        if (fxFileService.isUpdateIndexesPossible()) {
+	        fxFileService.createMaxIndexMap();
+            maxIndexesLabel.setText(fxFileService.buildMaxIndexesLabelText());
         }
     }
 
 	private EventHandler<ActionEvent> fileExtensionsAction() {
 		return e -> {
-			changeDetails.setFileExtension(fileExtensionsTextField.getText());
+			fxFileService.addFileExtension(fileExtensionsTextField.getText());
 			logger.log(messageHelper.getFullMessage("log.fileExtensions.valueChanged",
 					fileExtensionsTextField.getText()));
-			updateIndexes();
+			setMaxIndexesLabelText();
 		};
 	}
 
@@ -151,21 +141,19 @@ public class MainController extends AbstractController {
         return e -> {
             logger.log(messageHelper.getFullMessage("log.button.pressed", runButton.getId()));
             maxIndexesLabel.setText("YOU PRESSED RUN MAN !!");
-            changeDetails.setFileCoreName(coreNameTextField.getText());
-            changeDetails.setFileNameIndexConnector(fileConnectorComboBox.getValue());
-            changeDetails.setFileExtension(fileExtensionsTextField.getText());
-            if (!changeDetails.isReady()) {
+            fxFileService.addFileCoreName(coreNameTextField.getText());
+	        fxFileService.addFileNameIndexConnector(fileConnectorComboBox.getValue());
+	        fxFileService.addFileExtension(fileExtensionsTextField.getText());
+            if (!fxFileService.isChangePossible()) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle(messageHelper.getFullMessage("alert.title", Alert.AlertType.ERROR.name()));
                 alert.setHeaderText(messageHelper.getFullMessage("alert.header.text"));
                 alert.setContentText(messageHelper.getFullMessage("alert.required.parameters.not.set"));
-
                 alert.showAndWait();
             } else {
                 try {
-                    new FileChangerValidator(changeDetails, bundle).validate();
-                    new FileChangerImpl(changeDetails, bundle, logger).run();
-                    AppConfigHelper.getInstance().updateAppConfiguration(changeDetails);
+	                fxFileService.run();
+                    fxFileService.updateAppConfiguration();
                 } catch (ProgramException ex) {
                     buildErrorAlertWithSolution(ex);
                 } finally {
@@ -194,7 +182,7 @@ public class MainController extends AbstractController {
             configureDirectoryChooser(directoryChooser);
             File sourceDir = directoryChooser.showDialog(windowHandler.window());
             if (sourceDir != null) {
-                changeDetails.setSourceDir(sourceDir.getAbsolutePath());
+                fxFileService.addSourceDir(sourceDir.getAbsolutePath());
                 sourceLabel.setText(fitValueToLabel(sourceDir.getAbsolutePath()));
             } else {
                 logger.log(messageHelper.getFullMessage("alert.source.noDir"));
@@ -223,9 +211,9 @@ public class MainController extends AbstractController {
             configureDirectoryChooser(directoryChooser);
             File destinationDir = directoryChooser.showDialog(windowHandler.window());
             if (destinationDir != null) {
-                changeDetails.setDestinationDir(destinationDir.getAbsolutePath());
+                fxFileService.addDestinationDir(destinationDir.getAbsolutePath());
                 destinationLabel.setText(fitValueToLabel(destinationDir.getAbsolutePath()));
-	            updateIndexes();
+	            setMaxIndexesLabelText();
             } else {
                 logger.log(messageHelper.getFullMessage("alert.destination.noDir"));
                 buildAlert(messageHelper.getFullMessage("alert.destination.noDir"), Alert.AlertType.WARNING);

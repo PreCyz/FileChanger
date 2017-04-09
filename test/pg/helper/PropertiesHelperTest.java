@@ -19,6 +19,7 @@ import pg.exception.*;
  */
 public class PropertiesHelperTest {
 
+	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
     private static Properties backup = new Properties();
 	private static URL propertiesUrl;
 
@@ -107,6 +108,30 @@ public class PropertiesHelperTest {
 		PropertiesHelper.saveProgramProperties(properties, propertiesUrl.getPath());
 		properties = PropertiesHelper.loadProgramProperties(propertiesUrl.getPath());
 		assertThat(properties.get(testKey), nullValue());
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void givenNullWhenTransformNullToPropertiesThenThrowNullPointerException() {
+		assertNull(PropertiesHelper.transformArgumentsToProperties(null));
+	}
+
+	@Test
+	public void givenStringArrayWithArgumentsWhenTransformArgumentsToPropertiesThenReturnProperties() {
+		String[] args = new String[] {
+				String.format("source=d:%stesty%ssrc%s", FILE_SEPARATOR, FILE_SEPARATOR, FILE_SEPARATOR),
+				String.format("destination=d:%stesty%sdst%s", FILE_SEPARATOR, FILE_SEPARATOR, FILE_SEPARATOR),
+				"extensions=jpg,jpeg,gif,mp4", "coreName=xperiaM2", "nameConnector=_"};
+		Properties properties = new Properties();
+		properties.put("source",
+				String.format("d:%stesty%ssrc%s", FILE_SEPARATOR, FILE_SEPARATOR, FILE_SEPARATOR));
+		properties.put("destination",
+				String.format("d:%stesty%sdst%s", FILE_SEPARATOR, FILE_SEPARATOR, FILE_SEPARATOR));
+		properties.put("extensions", "jpg,jpeg,gif,mp4");
+		properties.put("coreName", "xperiaM2");
+		properties.put("nameConnector", "_");
+		Properties expected = PropertiesHelper.transformArgumentsToProperties(args);
+		assertNotSame(expected, properties);
+		assertEquals(expected, properties);
 	}
 
 }

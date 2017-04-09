@@ -47,4 +47,13 @@ public final class PropertiesHelper {
         }
         return bundle;
     }
+
+    //example source=srcPath destination=destPath extensions=ext1,ext2,ext3,ext4...
+    public static Properties transformArgumentsToProperties(String[] stringArray) {
+        Properties properties = new Properties();
+        for (String s : stringArray) {
+            properties.put(s.substring(0, s.indexOf("=")), s.substring(s.indexOf("=") + 1));
+        }
+        return properties;
+    }
 }

@@ -1,20 +1,18 @@
-package pg.filechanger;
+package pg;
 
 import java.util.ResourceBundle;
 import pg.exception.ProgramException;
-import pg.filechanger.core.*;
-import pg.filechanger.validator.ArgsValidator;
+import pg.filechanger.service.impl.ConsoleFileService;
 import pg.logger.impl.ConsoleLogger;
 import pg.helper.MessageHelper;
 import pg.helper.PropertiesHelper;
 import pg.logger.AppLogger;
-import pg.filechanger.validator.impl.FileChangerValidator;
 
 /**
  *
  * @author Paweł Gawędzki
  */
-public class FileChangerMain {
+public class ConsoleFileChangerMain {
     
     private static ResourceBundle bundle;
 
@@ -28,8 +26,6 @@ public class FileChangerMain {
     private static void runProgramWithExceptionHandling(String[] args) {
         AppLogger logger = new ConsoleLogger();
         MessageHelper messageHelper = null;
-	    ArgsValidator argsValidator;
-	    AbstractFileChanger fileChanger;
         try {
 	        bundle = PropertiesHelper.readBundles();
 	        messageHelper = MessageHelper.getInstance(bundle);
@@ -38,10 +34,8 @@ public class FileChangerMain {
 	        System.err.println(ex.getMessage());
 	        System.exit(-1);
         }
-	    argsValidator = new FileChangerValidator(args, bundle);
-        try {
-	        argsValidator.validate();
-	        fileChanger = new FileChangerImpl(args, bundle, logger);
+	    ConsoleFileService fileChanger = new ConsoleFileService(args, bundle, logger);
+	    try {
 	        fileChanger.run();
         } catch (ProgramException ex) {
             logger.log(messageHelper.getErrorMsg(ex.getErrorCode(), ex.getArgument()));

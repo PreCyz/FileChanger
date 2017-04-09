@@ -3,15 +3,13 @@ package pg.filechanger.validator.impl;
 import pg.constant.AppConstants;
 import pg.exception.ErrorCode;
 import pg.exception.ProgramException;
-import pg.helper.MessageHelper;
+import pg.helper.*;
 import pg.filechanger.dto.ChangeDetails;
 import pg.filechanger.dto.FileChangerParams;
 import pg.filechanger.validator.ArgsValidator;
 
 import java.util.Properties;
 import java.util.ResourceBundle;
-
-import static pg.filechanger.core.AbstractFileChanger.transformArgumentsToProperties;
 
 public class FileChangerValidator implements ArgsValidator {
 
@@ -31,7 +29,7 @@ public class FileChangerValidator implements ArgsValidator {
     @Override
     public void validate() throws ProgramException {
         argumentsValidation();
-        Properties properties = transformArgumentsToProperties(args);
+        Properties properties = PropertiesHelper.transformArgumentsToProperties(args);
         throwProgramExceptionOnEmptyProperties(properties);
         displayPropertiesDetails(properties);
         throwProgramExceptionWhenPropertiesValidationError(properties);

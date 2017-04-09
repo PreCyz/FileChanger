@@ -9,7 +9,7 @@ import pg.view.AppWindowHandler;
  * @author Gawa [Paweł Gawędzki]
  * 2016-11-21 20:27:57
  */
-public class ChangerFXMain extends Application {
+public class FXFileChangerMain extends Application {
 
     @Override
     public void start(Stage stage) {
