@@ -10,7 +10,7 @@ public final class AppConstants {
     public static final String FILE_SEPARATOR = System.getProperty("file.separator");
     public static final String RESOURCE_BUNDLE = "pg.resource.bundle";
     public static final String DEFAULT_BUNDLE_NAME = "bundle";
-    public static final String APP_CONFIG = "appConfiguration.properties";
+    public static final String APP_CONFIG = "application.properties";
     public static final String RESOURCE_PATH = "pg/resource/";
     public static final String BUNDLE_PATH = String.format("%s%s", RESOURCE_PATH.replace("/", "."), DEFAULT_BUNDLE_NAME);
     public static final String APP_CONFIG_PATH = String.format("%s%s", RESOURCE_PATH, APP_CONFIG);
