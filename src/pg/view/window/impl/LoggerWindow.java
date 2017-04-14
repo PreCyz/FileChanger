@@ -26,7 +26,7 @@ public class LoggerWindow extends AbstractWindow {
 
 	@Override
 	protected String cssFileName() {
-		return null;
+		return "logger.css";
 	}
 
 	@Override
