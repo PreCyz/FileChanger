@@ -2,9 +2,15 @@
 /dist/
 /nbproject/
 /build/
+/gradle/
+/.gradle/
 /lib/
 /out/
+/log/
 manifest.mf
 build.xml
 *.iml
-/log/
+*.ipr
+*.iws
+gradlew
+gradlew.bat

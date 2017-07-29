@@ -1,0 +1,23 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'application'
+
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+mainClassName="pg.FXFileChangerMain"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    compile 'org.apache.logging.log4j:log4j-core:2.8.2'
+    compile 'org.apache.logging.log4j:log4j-api:2.8.2'
+
+    testCompile 'org.hamcrest:java-hamcrest:2.0.0.0'
+    testCompile 'org.mockito:mockito-all:2.0.2-beta'
+    testCompile 'junit:junit:4.12'
+
+}
