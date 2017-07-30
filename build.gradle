@@ -33,3 +33,19 @@ task fatJar(type: Jar) {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
+
+task copyToLib( type: Copy ) {
+    into "$buildDir/libs/lib"
+    from configurations.runtime
+}
+
+jar {
+    dependsOn copyToLib
+    manifest {
+        attributes 'Implementation-Title': 'FileChanger',
+                'Implementation-Version': version,
+                'Main-Class': mainClassName,
+                'Class-path': configurations.compile.collect { 'lib/' + it.getName() }.join(' ')
+    }
+    baseName = project.name + '-core'
+ }
