@@ -2,10 +2,10 @@ apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'application'
 
-version = '0.0.1-SNAPSHOT'
+version = '2.0'
 sourceCompatibility = 1.8
 
-mainClassName="pg.FXFileChangerMain"
+mainClassName = 'pg.FXFileChangerMain'
 
 repositories {
     mavenCentral()
@@ -20,4 +20,16 @@ dependencies {
     testCompile 'org.mockito:mockito-all:2.0.2-beta'
     testCompile 'junit:junit:4.12'
 
+}
+
+//create a single Jar with all dependencies
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'FileChanger',
+                'Implementation-Version': version,
+                'Main-Class': mainClassName
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
 }
